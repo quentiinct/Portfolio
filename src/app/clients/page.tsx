@@ -39,7 +39,7 @@ function ChannelCard({ channel }: { channel: Channel }) {
     <motion.div
       variants={item}
       whileHover={{ scale: 1.012, transition: { duration: 0.2 } }}
-      className="rounded-2xl border border-white/5 bg-[#111111] p-5 flex flex-col gap-4"
+      className="bento-card rounded-2xl p-5 flex flex-col gap-4"
     >
       {/* ① En-tête */}
       <div className="flex items-start justify-between gap-2">
@@ -114,10 +114,10 @@ function ChannelCard({ channel }: { channel: Channel }) {
           <img
             src={thumbnailUrl}
             alt={channel.featuredVideo.title}
-            className="h-[130px] w-full object-cover opacity-60 transition-opacity duration-300 group-hover:opacity-90"
+            className="h-32.5 w-full object-cover opacity-60 transition-opacity duration-300 group-hover:opacity-90"
           />
         ) : (
-          <div className="flex h-[130px] w-full items-center justify-center">
+          <div className="flex h-32.5 w-full items-center justify-center">
             <p className="text-[11px] text-zinc-700">
               → Renseigne le{" "}
               <code className="text-zinc-500">videoId</code> dans data.ts
@@ -138,7 +138,7 @@ function ChannelCard({ channel }: { channel: Channel }) {
         </div>
 
         {/* Titre vidéo */}
-        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3">
+        <div className="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/80 to-transparent p-3">
           <p className="truncate text-left text-xs text-zinc-300">
             {channel.featuredVideo.title}
           </p>
@@ -154,7 +154,7 @@ function ChannelCard({ channel }: { channel: Channel }) {
 
 export default function ClientsPage() {
   return (
-    <div className="min-h-screen bg-[#0a0a0a] px-4 py-10 md:px-8 lg:px-12 lg:py-16">
+    <div className="min-h-screen px-4 py-10 md:px-8 lg:px-12 lg:py-16">
       <div className="mx-auto max-w-6xl">
 
         {/* Bouton retour */}

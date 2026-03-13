@@ -18,7 +18,9 @@
 }
 
 body {
-  background: #0a0a0a;
+  background:
+    radial-gradient(ellipse at 75% 55%, rgba(222, 62, 74, 0.12) 0%, transparent 55%),
+    #0a0a0a;
   color: #ededed;
   font-family: var(--font-geist-sans), Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -26,6 +28,54 @@ body {
 
 * {
   box-sizing: border-box;
+}
+
+/*
+  Bordure lumineuse tournante — @property + conic-gradient
+
+  @property enregistre --border-angle comme propriété animable (CSS Houdini).
+  Sans ça, le navigateur ne sait pas interpoler un angle dans un gradient.
+  Le conic-gradient crée une tache lumineuse étroite qui tourne sur le contour.
+*/
+@property --border-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes border-rotate {
+  to { --border-angle: 360deg; }
+}
+
+.bento-card {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(#111111, #111111) padding-box,
+    conic-gradient(
+      from var(--border-angle) at 50% 50%,
+      rgba(255, 255, 255, 0.02)  0deg,
+      rgba(255, 255, 255, 0.40) 60deg,
+      rgba(255, 255, 255, 0.02) 120deg,
+      rgba(255, 255, 255, 0.02) 360deg
+    ) border-box;
+  animation: border-rotate 6s linear infinite;
+}
+
+/*
+  Grain / bruit de fond
+  Un pseudo-element fixed couvre toute la page avec un SVG feTurbulence.
+  opacity: 0.035 → grain très léger, juste perceptible.
+  pointer-events: none → n'interfère pas avec les clics.
+  z-index: 9999 → au-dessus de tout le contenu.
+*/
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='250' height='250' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.035;
+  pointer-events: none;
+  z-index: 9999;
 }
 
 /* Scrollbar discrète */

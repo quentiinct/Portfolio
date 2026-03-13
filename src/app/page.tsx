@@ -13,18 +13,36 @@ const WIP_PROJECTS = [
   {
     id: "cyber",
     category: "Cybersécurité",
-    icon: "🔐",
+    icon: (
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-zinc-500">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+        <rect x="9" y="11" width="6" height="5" rx="1" />
+        <path d="M12 11V9a2 2 0 0 1 2-2" />
+      </svg>
+    ),
     description: "CTF, pentest & projets de sécurité — prochainement.",
     tags: ["CTF", "Pentest", "Kali Linux", "OSCP"],
-    colClass: "col-span-12 md:col-span-6",
+    colClass: "col-span-12 md:col-span-4",
   },
   {
     id: "ai",
     category: "Intelligence Artificielle",
-    icon: "⚡",
+    icon: (
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-zinc-500">
+        <path d="M12 2a2 2 0 0 1 2 2v1a2 2 0 0 1-4 0V4a2 2 0 0 1 2-2z" />
+        <path d="M12 19a2 2 0 0 1 2 2v1a2 2 0 0 1-4 0v-1a2 2 0 0 1 2-2z" />
+        <path d="M4.22 4.22a2 2 0 0 1 2.83 0l.7.7a2 2 0 0 1-2.83 2.83l-.7-.7a2 2 0 0 1 0-2.83z" />
+        <path d="M16.24 16.24a2 2 0 0 1 2.83 0l.7.7a2 2 0 0 1-2.83 2.83l-.7-.7a2 2 0 0 1 0-2.83z" />
+        <path d="M2 12a2 2 0 0 1 2-2h1a2 2 0 0 1 0 4H4a2 2 0 0 1-2-2z" />
+        <path d="M19 12a2 2 0 0 1 2-2h1a2 2 0 0 1 0 4h-1a2 2 0 0 1-2-2z" />
+        <path d="M4.22 19.78a2 2 0 0 1 0-2.83l.7-.7a2 2 0 0 1 2.83 2.83l-.7.7a2 2 0 0 1-2.83 0z" />
+        <path d="M16.24 7.76a2 2 0 0 1 0-2.83l.7-.7a2 2 0 0 1 2.83 2.83l-.7.7a2 2 0 0 1-2.83 0z" />
+        <circle cx="12" cy="12" r="3" />
+      </svg>
+    ),
     description: "Automatisation, LLMs & projets IA — prochainement.",
     tags: ["Python", "LLMs", "Claude API", "Automation"],
-    colClass: "col-span-12 md:col-span-6",
+    colClass: "col-span-12 md:col-span-4",
   },
 ];
 
@@ -57,7 +75,7 @@ function BentoCard({
     <motion.div
       variants={card}
       whileHover={{ scale: 1.015, transition: { duration: 0.2 } }}
-      className={`rounded-2xl border border-white/5 bg-[#111111] p-5 ${className}`}
+      className={`bento-card rounded-2xl p-5 ${className}`}
     >
       {children}
     </motion.div>
@@ -98,18 +116,22 @@ function WIPBadge() {
 // ─── HERO ─────────────────────────────────────────────────────
 function HeroCard() {
   return (
-    <BentoCard className="col-span-12 flex min-h-[210px] flex-col justify-between md:col-span-10">
+    <BentoCard className="col-span-12 flex flex-col md:col-span-4 md:row-span-3 md:h-full">
       <div>
         <SectionLabel text="Portfolio" />
         <h1 className="mb-4 text-5xl font-semibold tracking-tight text-white">
           Quentin<span style={{ color: "#DE3E4A" }}>.</span>
         </h1>
-        <p className="max-w-sm text-[15px] leading-relaxed text-zinc-400">
-          Monteur vidéo freelance travaillant avec des créateurs YouTube.
-          Passionné par le développement, la cybersécurité et l&apos;IA.
+        <p className="text-[15px] leading-relaxed text-zinc-400">
+          I build tools, agents, and systems •
+          focused on AI and cybersecurity.
+          I want the logic to hold and the code to be clean. Not done until both are right.
         </p>
       </div>
-      <div className="mt-5 flex flex-wrap gap-2">
+
+      {/* Memoji animé — s'étire pour remplir l'espace vertical restant */}
+
+      <div className="mt-4 flex flex-wrap gap-2">
         {["Montage Vidéo", "Développement", "Cybersécurité", "IA"].map((tag) => (
           <span
             key={tag}
@@ -126,7 +148,7 @@ function HeroCard() {
 // ─── CONTACT ──────────────────────────────────────────────────
 function ContactCard() {
   return (
-    <BentoCard className="col-span-12 flex min-h-[210px] flex-col justify-between md:col-span-2">
+    <BentoCard className="col-span-12 flex flex-col justify-between md:col-span-4">
       <SectionLabel text="Contact" />
       <div className="flex flex-col gap-3">
         <p className="text-sm text-zinc-500">Disponible pour vos projets.</p>
@@ -156,10 +178,10 @@ function YoutubeTeaserCard() {
     <motion.div
       variants={card}
       whileHover={{ scale: 1.015, transition: { duration: 0.2 } }}
-      className="col-span-12"
+      className="col-span-12 md:col-span-8"
     >
       <Link href="/clients" className="block">
-        <div className="rounded-2xl border border-white/5 bg-[#111111] p-5 cursor-pointer">
+        <div className="bento-card rounded-2xl p-5 cursor-pointer">
           <div className="flex items-center justify-between mb-5">
             <div>
               <SectionLabel text="Clients YouTube" />
@@ -254,7 +276,7 @@ function GitHubCard() {
   };
 
   return (
-    <BentoCard className="col-span-12 flex min-h-50 flex-col gap-4 md:col-span-6">
+    <BentoCard className="col-span-12 flex flex-col gap-4 md:col-span-4">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -392,7 +414,7 @@ function WIPCard({ project }: { project: (typeof WIP_PROJECTS)[0] }) {
     <BentoCard className={`${project.colClass} flex min-h-40 flex-col justify-between`}>
       <div>
         <div className="mb-2 flex items-center gap-2">
-          <span className="text-base">{project.icon}</span>
+          {project.icon}
           <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-600">
             {project.category}
           </p>
@@ -413,33 +435,35 @@ function WIPCard({ project }: { project: (typeof WIP_PROJECTS)[0] }) {
 // PAGE PRINCIPALE
 //
 // Grille 12 colonnes :
-//   Ligne 1 : HeroCard (10) + ContactCard (2) = 12
-//   Ligne 2 : YoutubeTeaserCard (12)
-//   Ligne 3 : GitHubCard (6) + CyberWIP (6) = 12
-//   Ligne 4 : AI WIP (12)
+//   Col 1-4  (row 1-3) : HeroCard — colonne verticale gauche (row-span-3)
+//   Col 5-12 (row 1)   : YoutubeTeaserCard (8 cols)
+//   Col 5-8  (row 2)   : GitHubCard        (4 cols)
+//   Col 9-12 (row 2)   : ContactCard       (4 cols)
+//   Col 5-8  (row 3)   : Cyber WIP         (4 cols)
+//   Col 9-12 (row 3)   : AI WIP            (4 cols)
 // ═══════════════════════════════════════════════════════════════
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-[#0a0a0a] px-4 py-10 md:px-8 lg:px-12 lg:py-16">
+    <div className="min-h-screen px-4 py-10 md:px-8 lg:px-12 lg:py-16">
       <motion.div
         className="mx-auto grid max-w-6xl grid-cols-12 gap-3"
         variants={container}
         initial="hidden"
         animate="visible"
       >
-        {/* Ligne 1 */}
+        {/* Col gauche — s'étire sur 3 rangées */}
         <HeroCard />
-        <ContactCard />
 
-        {/* Ligne 2 */}
+        {/* Col droite — rangée 1 */}
         <YoutubeTeaserCard />
 
-        {/* Ligne 3 */}
+        {/* Col droite — rangée 2 */}
         <GitHubCard />
-        <WIPCard project={WIP_PROJECTS[0]} />
+        <ContactCard />
 
-        {/* Ligne 4 */}
+        {/* Col droite — rangée 3 */}
+        <WIPCard project={WIP_PROJECTS[0]} />
         <WIPCard project={WIP_PROJECTS[1]} />
       </motion.div>
     </div>
