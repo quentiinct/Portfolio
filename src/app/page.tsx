@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence, useAnimation, useMotionValue, useAnimationFrame, useTransform } from "framer-motion";
+import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { CHANNELS } from "./data";
@@ -283,22 +284,25 @@ function HeroCard() {
           onMouseEnter={() => { setHovered(true); setGifKey((k) => k + 1); }}
           onMouseLeave={() => setHovered(false)}
         >
-          {/* idle — toujours dans le DOM */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          {/* idle — optimisé via Next.js Image */}
+          <Image
             src="/memoji/frame-01.PNG"
             alt="Memoji Quentin"
+            width={108}
+            height={108}
+            priority
             className="w-full rounded-2xl"
             style={{ opacity: hovered ? 0 : 1, transition: "opacity 0.15s ease" }}
             draggable={false}
           />
-          {/* GIF — superposé, key change au mouseEnter pour repartir de 0 */}
+          {/* GIF — <img> conservé : Next.js Image ne supporte pas les GIFs animés */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             key={gifKey}
             src="/memoji/memogif.gif"
             alt=""
             aria-hidden
+            loading="lazy"
             className="absolute inset-0 w-full rounded-2xl"
             style={{ opacity: hovered ? 1 : 0, transition: "opacity 0.15s ease" }}
             draggable={false}
@@ -568,6 +572,8 @@ function GitHubCard() {
   const [repos, setRepos] = useState<Repo[]>([]);
   const [index, setIndex] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [retryKey, setRetryKey] = useState(0);
   const [direction, setDirection] = useState(0); // -1 = prev, 1 = next
 
   useEffect(() => {
@@ -575,6 +581,9 @@ function GitHubCard() {
     const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
     const load = async () => {
+      setLoading(true);
+      setError(false);
+
       try {
         const cached = localStorage.getItem(CACHE_KEY);
         if (cached) {
@@ -589,6 +598,7 @@ function GitHubCard() {
 
       try {
         const r = await fetch("https://api.github.com/users/quentiinct/repos?sort=updated&per_page=20");
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
         const data: Repo[] = await r.json();
         const filtered = data
           .filter((repo) => !("fork" in repo && (repo as unknown as { fork: boolean }).fork))
@@ -596,14 +606,14 @@ function GitHubCard() {
         setRepos(filtered);
         try { localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data: filtered })); } catch { /* quota */ }
       } catch {
-        setRepos([]);
+        setError(true);
       } finally {
         setLoading(false);
       }
     };
 
     load();
-  }, []);
+  }, [retryKey]);
 
   const prev = () => {
     setDirection(-1);
@@ -661,14 +671,31 @@ function GitHubCard() {
       {/* Contenu */}
       <div className="flex-1 overflow-hidden">
         {loading ? (
-          // Skeleton de chargement
           <div className="flex flex-col gap-2 animate-pulse">
             <div className="h-4 w-2/3 rounded bg-white/5" />
             <div className="h-3 w-full rounded bg-white/5" />
-            <div className="h-3 w-1/2 rounded bg-white/5" />
+            <div className="h-3 w-4/5 rounded bg-white/5" />
+            <div className="mt-1 flex gap-1.5">
+              <div className="h-5 w-14 rounded-full bg-white/5" />
+              <div className="h-5 w-16 rounded-full bg-white/5" />
+            </div>
+          </div>
+        ) : error ? (
+          <div className="flex flex-col items-start gap-2">
+            <p className="text-xs text-zinc-500">GitHub API unavailable.</p>
+            <button
+              onClick={() => setRetryKey((k) => k + 1)}
+              className="flex items-center gap-1.5 rounded-lg border border-white/8 px-2.5 py-1.5 text-xs text-zinc-400 transition-colors hover:border-white/20 hover:text-zinc-200"
+            >
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
+                <path d="M21 3v5h-5" />
+              </svg>
+              Retry
+            </button>
           </div>
         ) : repos.length === 0 ? (
-          <p className="text-sm text-zinc-600">Aucun repo trouvé.</p>
+          <p className="text-xs text-zinc-600">No repos found.</p>
         ) : (
           <AnimatePresence mode="wait" custom={direction}>
             <motion.div
@@ -888,7 +915,6 @@ function WIPCard({ project }: { project: (typeof WIP_PROJECTS)[0] }) {
     <motion.div
       variants={card}
       className={`${project.colClass} bento-card overflow-hidden rounded-2xl flex flex-col`}
-      style={{ minHeight: "10rem" }}
     >
       <div className="h-2.5 w-full shrink-0 overflow-hidden relative">
         <AnimatedStripe dir={-1} bg={stripes} />
