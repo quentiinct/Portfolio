@@ -114,7 +114,13 @@ function WIPBadge() {
 // ═══════════════════════════════════════════════════════════════
 
 // ─── HERO ─────────────────────────────────────────────────────
+// Memoji : idle.png affiché par défaut, wink.gif swappé au hover.
+// Le changement de `gifKey` force React à re-monter le <img>,
+// ce qui redémarre le GIF depuis le début à chaque entrée de souris.
 function HeroCard() {
+  const [hovered, setHovered] = useState(false);
+  const [gifKey, setGifKey] = useState(0);
+
   return (
     <BentoCard className="col-span-12 flex flex-col md:col-span-4 md:row-span-3 md:h-full">
       <div>
@@ -129,9 +135,27 @@ function HeroCard() {
         </p>
       </div>
 
-      {/* Memoji animé — s'étire pour remplir l'espace vertical restant */}
+      {/* Memoji — centré, occupe l'espace vertical libre.
+          Hover : redémarre le GIF depuis le début via changement de key + scale.
+          Pour l'état idle, pose frame-01.png dans public/memoji/ ;
+          en attendant, le GIF tourne en boucle. */}
+      <div
+        className="flex flex-1 cursor-pointer items-center justify-center py-4"
+        onMouseEnter={() => { setHovered(true); setGifKey((k) => k + 1); }}
+        onMouseLeave={() => setHovered(false)}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          key={hovered ? gifKey : "idle"}
+          src={hovered ? "/memoji/memogif.gif" : "/memoji/frame-01.PNG"}
+          alt="Memoji Quentin"
+          className="w-40 select-none rounded-2xl drop-shadow-2xl transition-transform duration-300"
+          style={{ transform: hovered ? "scale(1.08)" : "scale(1)" }}
+          draggable={false}
+        />
+      </div>
 
-      <div className="mt-4 flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2">
         {["Montage Vidéo", "Développement", "Cybersécurité", "IA"].map((tag) => (
           <span
             key={tag}
