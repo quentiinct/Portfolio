@@ -24,45 +24,45 @@ export const CHANNELS: Channel[] = [
     id: "azpaztv",
     name: "AzpazTV",
     channelUrl: "https://www.youtube.com/@AzpazTV",  // ← Vérifie l'URL exacte
-    since: "??? 2024",                                // ← Ex : "Janvier 2024"
-    role: "Montage & Motion Design",
-    subsStart: "???K",                                // ← Abonnés au début
-    subsCurrent: "???K",                              // ← Abonnés aujourd'hui
-    growth: "+??%",                                   // ← (actuel - début) / début × 100
+    since: "November 2022",                                // ← Ex : "Janvier 2024"
+    role: "YouTube editing with growth-oriented iteration",
+    subsStart: "350K",                                // ← Abonnés au début
+    subsCurrent: "750K",                              // ← Abonnés aujourd'hui
+    growth: "+114%",                                   // ← (actuel - début) / début × 100
     featuredVideo: {
-      title: "Titre de la vidéo mise en avant",       // ← Mets à jour
-      url: "https://youtu.be/VIDEO_ID",               // ← Lien YouTube complet
-      videoId: "VIDEO_ID",                            // ← Remplace par l'ID réel
+      title: "J'ai volé TOUS les Minerais de Mon Pote sur Minecraft !",       // ← Mets à jour
+      url: "https://www.youtube.com/watch?v=vWD3lpeQonc&t",               // ← Lien YouTube complet
+      videoId: "vWD3lpeQonc&t",                            // ← Remplace par l'ID réel
     },
   },
   {
     id: "meliow",
     name: "Meliow",
     channelUrl: "https://www.youtube.com/@meliow",
-    since: "??? 2024",
-    role: "Montage & Direction Créative",
-    subsStart: "???K",
-    subsCurrent: "???K",
-    growth: "+??%",
+    since: "January 2026",
+    role: "Short-form editing focused on maximizing retention.",
+    subsStart: "60K",
+    subsCurrent: "85K",
+    growth: "+33%",
     featuredVideo: {
-      title: "Titre de la vidéo mise en avant",
-      url: "https://youtu.be/VIDEO_ID",
-      videoId: "VIDEO_ID",
+      title: "Combien de temps tu SURVIS ? 🤣",
+      url: "https://www.youtube.com/shorts/IRhSmncLWOg",
+      videoId: "IRhSmncLWOg",
     },
   },
   {
     id: "sigmaclub",
     name: "Sigma Club",
-    channelUrl: "https://www.youtube.com/@sigmaclub",
-    since: "??? 2024",
-    role: "Montage & Storytelling",
-    subsStart: "???K",
-    subsCurrent: "???K",
-    growth: "+??%",
+    channelUrl: "https://www.youtube.com/@SigmaClub_eth",
+    since: "June 2023",
+    role: "Long-form editing, pacing and motion support",
+    subsStart: "7K",
+    subsCurrent: "12K",
+    growth: "+71%",
     featuredVideo: {
-      title: "Titre de la vidéo mise en avant",
-      url: "https://youtu.be/VIDEO_ID",
-      videoId: "VIDEO_ID",
+      title: "BITURE AU MONT BATUR LA PRESSION MONTE 🌋🍻",
+      url: "https://www.youtube.com/watch?v=J_fsm8S6aEg",
+      videoId: "J_fsm8S6aEg",
     },
   },
 ];

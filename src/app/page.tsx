@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useAnimation } from "framer-motion";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { CHANNELS } from "./data";
@@ -12,7 +12,7 @@ import { CHANNELS } from "./data";
 const WIP_PROJECTS = [
   {
     id: "cyber",
-    category: "Cybersécurité",
+    category: "Cybersecurity",
     icon: (
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-zinc-500">
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
@@ -20,13 +20,13 @@ const WIP_PROJECTS = [
         <path d="M12 11V9a2 2 0 0 1 2-2" />
       </svg>
     ),
-    description: "CTF, pentest & projets de sécurité — prochainement.",
+    description: "CTF, pentest & security projects — soon.",
     tags: ["CTF", "Pentest", "Kali Linux", "OSCP"],
     colClass: "col-span-12 md:col-span-4",
   },
   {
     id: "ai",
-    category: "Intelligence Artificielle",
+    category: "Artificial Intelligence",
     icon: (
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-zinc-500">
         <path d="M12 2a2 2 0 0 1 2 2v1a2 2 0 0 1-4 0V4a2 2 0 0 1 2-2z" />
@@ -40,7 +40,7 @@ const WIP_PROJECTS = [
         <circle cx="12" cy="12" r="3" />
       </svg>
     ),
-    description: "Automatisation, LLMs & projets IA — prochainement.",
+    description: "Automation, LLMs & AI Projects — soon.",
     tags: ["Python", "LLMs", "Claude API", "Automation"],
     colClass: "col-span-12 md:col-span-4",
   },
@@ -363,7 +363,7 @@ function ContactCard() {
     <BentoCard className="col-span-12 flex flex-col justify-between md:col-span-4">
       <SectionLabel text="Contact" />
       <div className="flex flex-col gap-3">
-        <p className="text-sm text-zinc-500">Disponible pour vos projets.</p>
+        <p className="text-sm text-zinc-500">Available for your projects.</p>
         <a
           href="mailto:quentincourtade33@gmail.com"
           className="flex items-center justify-center gap-2 rounded-xl border px-3 py-2.5 text-sm font-medium transition-all hover:brightness-110"
@@ -385,6 +385,52 @@ function ContactCard() {
 }
 
 // ─── YOUTUBE TEASER ───────────────────────────────────────────
+const parseSubs = (s: string) => parseFloat(s) * (s.includes("M") ? 1_000_000 : s.includes("K") ? 1_000 : 1);
+
+function FlashBorder({ children }: { children: React.ReactNode }) {
+  const controls = useAnimation();
+
+  const handleHoverStart = async () => {
+    await controls.start({
+      boxShadow: "0 0 0 1px rgba(255,255,255,0.30), 0 0 18px rgba(255,255,255,0.06)",
+      transition: { duration: 0.15 },
+    });
+    controls.start({
+      boxShadow: "0 0 0 1px rgba(255,255,255,0), 0 0 0px rgba(255,255,255,0)",
+      transition: { duration: 0.85 },
+    });
+  };
+
+  return (
+    <motion.div animate={controls} className="bento-card rounded-2xl p-5 cursor-pointer" onHoverStart={handleHoverStart}>
+      {children}
+    </motion.div>
+  );
+}
+
+function Sparkline({ start, current, id }: { start: number; current: number; id: string }) {
+  const W = 100;
+  const H = 32;
+  const ratio = start / current;
+  const startY = ratio * H;
+  const path = `M 0,${startY} C ${W * 0.4},${startY} ${W * 0.6},0 ${W},0`;
+  const area = `M 0,${startY} C ${W * 0.4},${startY} ${W * 0.6},0 ${W},0 L ${W},${H} L 0,${H} Z`;
+  const gradId = `sg-${id}`;
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} width="100%" height={H} preserveAspectRatio="none">
+      <defs>
+        <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#4ade80" stopOpacity="0.15" />
+          <stop offset="100%" stopColor="#4ade80" stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      <path d={area} fill={`url(#${gradId})`} />
+      <path d={path} fill="none" stroke="#4ade80" strokeWidth="1.5" strokeOpacity="0.7" strokeLinecap="round" />
+      <circle cx={W} cy={0} r="2.5" fill="#4ade80" opacity="0.9" />
+    </svg>
+  );
+}
+
 function YoutubeTeaserCard() {
   return (
     <motion.div
@@ -393,41 +439,60 @@ function YoutubeTeaserCard() {
       className="col-span-12 md:col-span-8"
     >
       <Link href="/clients" className="block">
-        <div className="bento-card rounded-2xl p-5 cursor-pointer">
+        <FlashBorder>
           <div className="flex items-center justify-between mb-5">
             <div>
-              <SectionLabel text="Clients YouTube" />
-              <p className="text-lg font-semibold text-white">Montage vidéo freelance</p>
+              <SectionLabel text="YouTube Clients" />
+              <p className="text-lg font-semibold text-white">YouTube Growth Editing</p>
               <p className="text-sm text-zinc-500 mt-1">
-                3 chaînes accompagnées — croissance, contenu & direction créative
+                3 channels supported across editing, growth and creative direction
               </p>
             </div>
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/8 text-zinc-400">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <div
+              className="group flex shrink-0 items-center gap-2 rounded-full border px-3 py-2 text-xs font-medium transition-all duration-200"
+              style={{
+                borderColor: "rgba(222,62,74,0.25)",
+                backgroundColor: "rgba(222,62,74,0.06)",
+                color: "#DE3E4A",
+              }}
+            >
+              <span>See all</span>
+              <svg
+                width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+                className="transition-transform duration-200 group-hover:translate-x-0.5"
+              >
                 <path d="M5 12h14M12 5l7 7-7 7" />
               </svg>
             </div>
           </div>
           <div className="grid grid-cols-1 gap-2 md:grid-cols-3">
-            {CHANNELS.map((channel) => (
-              <div
-                key={channel.id}
-                className="flex items-center justify-between rounded-xl bg-white/3 px-4 py-3"
-              >
-                <div>
-                  <p className="text-sm font-medium text-white">{channel.name}</p>
-                  <p className="text-xs text-zinc-600">{channel.role}</p>
+            {CHANNELS.map((channel) => {
+              const start = parseSubs(channel.subsStart);
+              const current = parseSubs(channel.subsCurrent);
+              return (
+                <div
+                  key={channel.id}
+                  className="flex flex-col gap-2 rounded-xl bg-white/3 px-4 py-3"
+                >
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-white">{channel.name}</p>
+                      <p className="text-xs text-zinc-600">{channel.role}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-semibold text-white">{channel.subsCurrent}</p>
+                      <p className="text-xs font-medium" style={{ color: "#DE3E4A" }}>
+                        {channel.growth}
+                      </p>
+                    </div>
+                  </div>
+                  <Sparkline start={start} current={current} id={channel.id} />
                 </div>
-                <div className="text-right">
-                  <p className="text-sm font-semibold text-white">{channel.subsCurrent}</p>
-                  <p className="text-xs font-medium" style={{ color: "#DE3E4A" }}>
-                    {channel.growth}
-                  </p>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
-        </div>
+        </FlashBorder>
       </Link>
     </motion.div>
   );
