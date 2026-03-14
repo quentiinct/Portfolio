@@ -302,7 +302,7 @@ function HeroCard({ onKill }: { onKill?: () => void }) {
         >
           {/* idle — optimisé via Next.js Image */}
           <Image
-            src="/memoji/frame-01.PNG"
+            src="/memoji/frame-01.png"
             alt="Memoji Quentin"
             width={108}
             height={108}
