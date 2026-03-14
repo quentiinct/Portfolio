@@ -12,6 +12,8 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://quentincourtade.com"),
   title: "Quentin Courtade — Video Editor & Developer",

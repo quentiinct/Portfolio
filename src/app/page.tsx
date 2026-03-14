@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence, useAnimation, useMotionValue, useAnimationFrame, useTransform } from "framer-motion";
+import { motion, AnimatePresence, useAnimation, useMotionValue, useAnimationFrame, useTransform, animate as animateEl } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
@@ -65,18 +65,23 @@ const card = {
 // COMPOSANTS UI
 // ═══════════════════════════════════════════════════════════════
 
-function BentoCard({
-  children,
-  className = "",
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
+function BentoCard({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  const x = useMotionValue(0);
+  const boxShadow = useMotionValue("none");
+
+  const handleHoverStart = async () => {
+    animateEl(x, [0, 1.5, 0], { duration: 0.35, ease: "easeOut" });
+    await animateEl(boxShadow, "0 0 0 1px rgba(255,255,255,0.30), 0 0 18px rgba(255,255,255,0.06)", { duration: 0.15 });
+    animateEl(boxShadow, "0 0 0 1px rgba(255,255,255,0), 0 0 0px rgba(255,255,255,0)", { duration: 0.85 });
+  };
+
   return (
     <motion.div
       variants={card}
       whileHover={{ scale: 1.015, transition: { duration: 0.2 } }}
       className={`bento-card rounded-2xl p-5 ${className}`}
+      style={{ x, boxShadow }}
+      onHoverStart={handleHoverStart}
     >
       {children}
     </motion.div>
@@ -118,12 +123,13 @@ const TERMINAL_LINES = [
 
 const delay = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
 
-function TerminalWidget() {
+function TerminalWidget({ onKill }: { onKill?: () => void }) {
   const [activeLine, setActiveLine] = useState<number | null>(null);
   const [revealed, setRevealed] = useState<number[]>(TERMINAL_LINES.map(() => 0));
   const [typingDone, setTypingDone] = useState(false);
   const [currentInput, setCurrentInput] = useState("");
   const [focused, setFocused] = useState(false);
+  const [killLine, setKillLine] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -162,6 +168,10 @@ function TerminalWidget() {
     if (e.key === "Backspace") {
       setCurrentInput((v) => v.slice(0, -1));
     } else if (e.key === "Enter") {
+      if (currentInput === "/kill") {
+        setKillLine(true);
+        setTimeout(() => onKill?.(), 800);
+      }
       setCurrentInput("");
     } else if (e.key.length === 1) {
       setCurrentInput((v) => v + e.key);
@@ -228,9 +238,16 @@ function TerminalWidget() {
           </div>
         ))}
 
+        {killLine && (
+          <div className="mt-1 flex items-center gap-2 py-[3px]">
+            <span style={{ color: "#DE3E4A" }}>!</span>
+            <span className="text-xs font-semibold tracking-widest" style={{ color: "#DE3E4A" }}>SYSTEM TERMINATED</span>
+          </div>
+        )}
+
         <div
           className="mt-2 flex items-center gap-2"
-          style={{ opacity: typingDone ? 1 : 0, transition: "opacity 0.4s ease" }}
+          style={{ opacity: typingDone && !killLine ? 1 : 0, transition: "opacity 0.4s ease" }}
         >
           <span style={{ color: "#DE3E4A" }}>$</span>
           <span className="text-zinc-300">{currentInput}</span>
@@ -247,11 +264,10 @@ function TerminalWidget() {
 // Memoji : idle.png affiché par défaut, wink.gif swappé au hover.
 // Le changement de `gifKey` force React à re-monter le <img>,
 // ce qui redémarre le GIF depuis le début à chaque entrée de souris.
-function HeroCard() {
+function HeroCard({ onKill }: { onKill?: () => void }) {
   const [hovered, setHovered] = useState(false);
   const [gifKey, setGifKey] = useState(0);
   const [hoveredTag, setHoveredTag] = useState<string | null>(null);
-
   return (
     <BentoCard className="col-span-12 flex flex-col md:col-span-4 md:row-span-3 md:h-full">
       <SectionLabel text="AI • CYBERSECURITY" />
@@ -327,7 +343,7 @@ function HeroCard() {
             <br />
             Useful. Reliable. Built clean.
           </p>
-          <TerminalWidget />
+          <TerminalWidget onKill={onKill} />
         </div>
         <div className="mt-5 flex gap-1.5">
           {["Video Editing", "Development", "CyberSecurity", "AI"].map((tag) => (
@@ -442,21 +458,17 @@ function ContactCard() {
 const parseSubs = (s: string) => parseFloat(s) * (s.includes("M") ? 1_000_000 : s.includes("K") ? 1_000 : 1);
 
 function FlashBorder({ children }: { children: React.ReactNode }) {
-  const controls = useAnimation();
+  const x = useMotionValue(0);
+  const boxShadow = useMotionValue("none");
 
   const handleHoverStart = async () => {
-    await controls.start({
-      boxShadow: "0 0 0 1px rgba(255,255,255,0.30), 0 0 18px rgba(255,255,255,0.06)",
-      transition: { duration: 0.15 },
-    });
-    controls.start({
-      boxShadow: "0 0 0 1px rgba(255,255,255,0), 0 0 0px rgba(255,255,255,0)",
-      transition: { duration: 0.85 },
-    });
+    animateEl(x, [0, 1.5, 0], { duration: 0.35, ease: "easeOut" });
+    await animateEl(boxShadow, "0 0 0 1px rgba(255,255,255,0.30), 0 0 18px rgba(255,255,255,0.06)", { duration: 0.15 });
+    animateEl(boxShadow, "0 0 0 1px rgba(255,255,255,0), 0 0 0px rgba(255,255,255,0)", { duration: 0.85 });
   };
 
   return (
-    <motion.div animate={controls} className="bento-card rounded-2xl p-5 cursor-pointer" onHoverStart={handleHoverStart}>
+    <motion.div style={{ x, boxShadow }} className="bento-card rounded-2xl p-5 cursor-pointer" onHoverStart={handleHoverStart}>
       {children}
     </motion.div>
   );
@@ -486,6 +498,19 @@ function Sparkline({ start, current, id }: { start: number; current: number; id:
 }
 
 function YoutubeTeaserCard() {
+  const seeAllControls = useAnimation();
+
+  const handleSeeAllHover = async () => {
+    await seeAllControls.start({
+      boxShadow: "0 0 0 1.5px rgba(222,62,74,0.9), 0 0 24px rgba(222,62,74,0.28)",
+      transition: { duration: 0.12 },
+    });
+    seeAllControls.start({
+      boxShadow: "0 0 0 1px rgba(222,62,74,0.25), 0 0 0px rgba(222,62,74,0)",
+      transition: { duration: 0.88 },
+    });
+  };
+
   return (
     <motion.div
       variants={card}
@@ -502,13 +527,15 @@ function YoutubeTeaserCard() {
                 3 channels supported across editing, growth and creative direction
               </p>
             </div>
-            <div
-              className="group flex shrink-0 items-center gap-2 rounded-full border px-3 py-2 text-xs font-medium transition-all duration-200"
+            <motion.div
+              className="group flex shrink-0 items-center gap-2 rounded-full border px-3 py-2 text-xs font-medium"
               style={{
                 borderColor: "rgba(222,62,74,0.25)",
                 backgroundColor: "rgba(222,62,74,0.06)",
                 color: "#DE3E4A",
               }}
+              animate={seeAllControls}
+              onHoverStart={handleSeeAllHover}
             >
               <span>See all</span>
               <svg
@@ -518,7 +545,7 @@ function YoutubeTeaserCard() {
               >
                 <path d="M5 12h14M12 5l7 7-7 7" />
               </svg>
-            </div>
+            </motion.div>
           </div>
           <div className="grid grid-cols-1 gap-2 md:grid-cols-3">
             {CHANNELS.map((channel) => {
@@ -910,11 +937,21 @@ function ConstructionScene() {
 
 function WIPCard({ project }: { project: (typeof WIP_PROJECTS)[0] }) {
   const stripes = "repeating-linear-gradient(110deg, #f59e0b 0px, #f59e0b 6px, #1a1a1a 6px, #1a1a1a 14px)";
+  const x = useMotionValue(0);
+  const boxShadow = useMotionValue("none");
+
+  const handleHoverStart = async () => {
+    animateEl(x, [0, 1.5, 0], { duration: 0.35, ease: "easeOut" });
+    await animateEl(boxShadow, "0 0 0 1px rgba(255,255,255,0.30), 0 0 18px rgba(255,255,255,0.06)", { duration: 0.15 });
+    animateEl(boxShadow, "0 0 0 1px rgba(255,255,255,0), 0 0 0px rgba(255,255,255,0)", { duration: 0.85 });
+  };
 
   return (
     <motion.div
       variants={card}
       className={`${project.colClass} bento-card overflow-hidden rounded-2xl flex flex-col`}
+      style={{ x, boxShadow }}
+      onHoverStart={handleHoverStart}
     >
       <div className="h-2.5 w-full shrink-0 overflow-hidden relative">
         <AnimatedStripe dir={-1} bg={stripes} />
@@ -961,6 +998,60 @@ function WIPCard({ project }: { project: (typeof WIP_PROJECTS)[0] }) {
   );
 }
 
+// ─── DUST EFFECT ──────────────────────────────────────────────
+// Canvas de particules pixel — déclenché par /kill.
+// 500 carrés colorés partent en vol depuis des positions aléatoires,
+// montent puis retombent légèrement avant de s'estomper.
+
+function DustEffect() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    type Particle = { x: number; y: number; vx: number; vy: number; size: number; opacity: number; color: string };
+    const COLORS = ["#ffffff", "#ededed", "#a1a1aa", "#DE3E4A", "#71717a", "#52525b"];
+    const particles: Particle[] = Array.from({ length: 500 }, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      vx: (Math.random() - 0.5) * 5,
+      vy: -(Math.random() * 4 + 0.5),
+      size: [1, 1, 2, 2, 2, 3][Math.floor(Math.random() * 6)],
+      opacity: Math.random() * 0.8 + 0.2,
+      color: COLORS[Math.floor(Math.random() * COLORS.length)],
+    }));
+
+    let raf: number;
+    const tick = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      let alive = false;
+      for (const p of particles) {
+        if (p.opacity <= 0) continue;
+        alive = true;
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.07;
+        p.vx *= 0.98;
+        p.opacity -= 0.006;
+        ctx.globalAlpha = Math.max(0, p.opacity);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(p.x, p.y, p.size, p.size);
+      }
+      if (alive) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
+  return <canvas ref={canvasRef} style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 9998 }} />;
+}
+
 // ═══════════════════════════════════════════════════════════════
 // PAGE PRINCIPALE
 //
@@ -974,16 +1065,46 @@ function WIPCard({ project }: { project: (typeof WIP_PROJECTS)[0] }) {
 // ═══════════════════════════════════════════════════════════════
 
 export default function Home() {
+  const [killed, setKilled] = useState(false);
+  const gridControls = useAnimation();
+
+  useEffect(() => {
+    gridControls.start("visible");
+  }, [gridControls]);
+
+  useEffect(() => {
+    if (!killed) return;
+    gridControls.start({
+      opacity: 0,
+      scale: 0.97,
+      filter: "blur(12px)",
+      y: -30,
+      transition: { duration: 1.4, ease: [0.4, 0, 1, 1], delay: 0.5 },
+    });
+  }, [killed, gridControls]);
+
   return (
     <div className="min-h-screen px-4 py-10 md:px-8 lg:px-12 lg:py-16">
+      {killed && <DustEffect />}
+      {killed && (
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 2.2, duration: 0.6 }}
+          className="fixed inset-0 z-9999 flex items-center justify-center font-mono text-[11px] tracking-[0.25em]"
+          style={{ color: "#DE3E4A" }}
+        >
+          SYSTEM TERMINATED — refresh to restore
+        </motion.p>
+      )}
       <motion.div
         className="mx-auto grid max-w-6xl grid-cols-12 gap-3"
         variants={container}
         initial="hidden"
-        animate="visible"
+        animate={gridControls}
       >
         {/* Col gauche — s'étire sur 3 rangées */}
-        <HeroCard />
+        <HeroCard onKill={() => setKilled(true)} />
 
         {/* Col droite — rangée 1 */}
         <YoutubeTeaserCard />
