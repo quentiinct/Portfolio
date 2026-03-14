@@ -114,6 +114,24 @@ body::after {
   z-index: 9999;
 }
 
+/* Worker pixel art — marche de gauche à droite */
+@keyframes walk-worker {
+  from { transform: translateX(-40px); }
+  to   { transform: translateX(520px); }
+}
+
+/* Bandes de chantier coulissantes
+   translateX sur un enfant élargi — parent overflow:hidden clip les bords.
+   21.28px = period / sin(110°) = 1 répétition exacte → loop invisible */
+@keyframes stripe-left {
+  from { transform: translateX(0px); }
+  to   { transform: translateX(-21.28px); }
+}
+@keyframes stripe-right {
+  from { transform: translateX(0px); }
+  to   { transform: translateX(21.28px); }
+}
+
 /* Scrollbar discrète */
 ::-webkit-scrollbar {
   width: 6px;

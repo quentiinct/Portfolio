@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence, useAnimation } from "framer-motion";
+import { motion, AnimatePresence, useAnimation, useMotionValue, useAnimationFrame, useTransform } from "framer-motion";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { CHANNELS } from "./data";
@@ -98,16 +98,6 @@ function Tag({ label }: { label: string }) {
   );
 }
 
-function WIPBadge() {
-  return (
-    <span
-      className="rounded-full px-2 py-0.5 text-[10px] font-semibold"
-      style={{ backgroundColor: "rgba(222,62,74,0.12)", color: "#DE3E4A" }}
-    >
-      WIP
-    </span>
-  );
-}
 
 // ═══════════════════════════════════════════════════════════════
 // SECTIONS
@@ -746,25 +736,181 @@ function GitHubCard() {
 }
 
 // ─── WIP CARD ─────────────────────────────────────────────────
-function WIPCard({ project }: { project: (typeof WIP_PROJECTS)[0] }) {
+
+// Bande coulissante — backgroundPositionX animé en JS, sans reset CSS
+// Gradient period = 14px (dernier stop), X-period = 14 / sin(110°) ≈ 14.90px
+const STRIPE_PERIOD = 14 / Math.sin(110 * Math.PI / 180);
+
+function AnimatedStripe({ dir, bg }: { dir: -1 | 1; bg: string }) {
+  const pos = useMotionValue(0);
+  useAnimationFrame((_, delta) => {
+    let v = pos.get() + dir * 40 * (delta / 1000);
+    if (dir === -1) { if (v <= -STRIPE_PERIOD) v += STRIPE_PERIOD; }
+    else            { if (v >=  STRIPE_PERIOD) v -= STRIPE_PERIOD; }
+    pos.set(v);
+  });
+  const backgroundPositionX = useTransform(pos, v => `${v}px`);
+  return <motion.div style={{ position: "absolute", inset: 0, backgroundImage: bg, backgroundPositionX }} />;
+}
+
+type WorkerVariant = { hat: string; vest: string; pants: string };
+
+const WORKER_VARIANTS: WorkerVariant[] = [
+  { hat: "#f59e0b", vest: "#f97316", pants: "#2563eb" },  // casque jaune, gilet orange, bleu
+  { hat: "#e2e8f0", vest: "#eab308", pants: "#7c2d12" },  // casque blanc, gilet jaune, marron
+  { hat: "#f97316", vest: "#16a34a", pants: "#171717" },  // casque orange, gilet vert, noir
+  { hat: "#ef4444", vest: "#7c3aed", pants: "#1e3a5f" },  // casque rouge, gilet violet, marine
+];
+
+function PixelWorker({ variant, duration, delay }: { variant: WorkerVariant; duration: number; delay: number }) {
+  const [frame, setFrame] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setFrame((f) => 1 - f), 260);
+    return () => clearInterval(id);
+  }, []);
+
+  const P = 2;
+  const C: Record<string, string | null> = {
+    H: variant.hat, S: "#fcd34d", e: "#292524",
+    V: variant.vest, P: variant.pants, b: "#1c1917", ".": null,
+  };
+
+  const FRAMES = [
+    ["..HH...", ".HHHH..", ".SSSS..", ".SeS...", ".VVVV..", "VVVVVVV", ".VVVV..", "..PP...", ".P..P..", ".P..P..", "bb..bb."],
+    ["..HH...", ".HHHH..", ".SSSS..", ".SeS...", ".VVVV..", "VVVVVVV", ".VVVV..", "..PP...", "..PP...", ".P..P..", ".bb.bb."],
+  ];
+
+  const rects: React.ReactNode[] = [];
+  FRAMES[frame].forEach((row, r) =>
+    [...row].forEach((ch, c) => {
+      const color = C[ch];
+      if (color) rects.push(<rect key={`${r}-${c}`} x={c * P} y={r * P} width={P} height={P} fill={color} />);
+    })
+  );
+
   return (
-    <BentoCard className={`${project.colClass} flex min-h-40 flex-col justify-between`}>
-      <div>
-        <div className="mb-2 flex items-center gap-2">
-          {project.icon}
-          <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-600">
-            {project.category}
-          </p>
-          <WIPBadge />
+    <div style={{ position: "absolute", bottom: 8, left: 0, animation: `walk-worker ${duration}s linear ${delay}s infinite`, zIndex: 2 }}>
+      <svg viewBox={`0 0 ${7 * P} ${11 * P}`} width={7 * P} height={11 * P} style={{ imageRendering: "pixelated", display: "block" }}>
+        {rects}
+      </svg>
+    </div>
+  );
+}
+
+function ConstructionScene() {
+  const A = "#f59e0b";
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden" style={{ zIndex: 0 }}>
+      {/* Grue — coin droit */}
+      <svg viewBox="0 0 60 82" width={54} height={74} aria-hidden
+        style={{ position: "absolute", right: 6, bottom: 8, opacity: 0.18, imageRendering: "pixelated" }}>
+        <rect x={27} y={14} width={4} height={60} fill={A} />
+        <rect x={4} y={14} width={52} height={4} fill={A} />
+        <line x1={29} y1={34} x2={46} y2={14} stroke={A} strokeWidth={2.5} />
+        <rect x={0} y={18} width={10} height={6} fill={A} />
+        <motion.g
+          style={{ transformOrigin: "47px 18px" } as React.CSSProperties}
+          animate={{ rotate: [-8, 8, -8] }}
+          transition={{ duration: 3.6, ease: "easeInOut", repeat: Infinity }}
+        >
+          <rect x={45} y={18} width={2} height={26} fill={A} />
+          <rect x={41} y={44} width={8} height={3} fill={A} />
+          <rect x={44} y={47} width={2} height={5} fill={A} />
+        </motion.g>
+        <rect x={22} y={74} width={14} height={4} fill={A} />
+      </svg>
+
+      {/* Tractopelle — coin gauche */}
+      <svg viewBox="0 0 72 52" width={64} height={46} aria-hidden
+        style={{ position: "absolute", left: 10, bottom: 8, opacity: 0.15, imageRendering: "pixelated" }}>
+        <rect x={2} y={38} width={58} height={10} rx={3} fill={A} />
+        <rect x={6} y={40} width={50} height={6} rx={2} fill="#1a1a1a" />
+        <circle cx={14} cy={43} r={3} fill={A} />
+        <circle cx={30} cy={43} r={3} fill={A} />
+        <circle cx={46} cy={43} r={3} fill={A} />
+        <rect x={6} y={22} width={48} height={18} rx={2} fill={A} />
+        <rect x={12} y={10} width={26} height={14} rx={1} fill={A} />
+        <rect x={16} y={13} width={10} height={8} fill="#1a1a1a" />
+        <motion.g
+          style={{ transformOrigin: "54px 22px" } as React.CSSProperties}
+          animate={{ rotate: [-16, 2, -16] }}
+          transition={{ duration: 2.4, ease: "easeInOut", repeat: Infinity }}
+        >
+          <rect x={52} y={12} width={5} height={22} rx={1} fill={A} />
+          <rect x={50} y={32} width={13} height={8} rx={1} fill={A} />
+          <rect x={50} y={38} width={15} height={3} fill={A} />
+        </motion.g>
+      </svg>
+
+      {/* Cônes */}
+      <svg viewBox="0 0 14 18" width={11} height={14} aria-hidden
+        style={{ position: "absolute", left: 88, bottom: 8, opacity: 0.22 }}>
+        <polygon points="7,0 13,13 1,13" fill={A} />
+        <rect x={0} y={13} width={14} height={4} rx={1} fill={A} />
+      </svg>
+      <svg viewBox="0 0 14 18" width={9} height={12} aria-hidden
+        style={{ position: "absolute", right: 74, bottom: 8, opacity: 0.18 }}>
+        <polygon points="7,0 13,13 1,13" fill={A} />
+        <rect x={0} y={13} width={14} height={4} rx={1} fill={A} />
+      </svg>
+
+      {/* Ligne de sol */}
+      <div style={{ position: "absolute", bottom: 7, left: 0, right: 0, height: 1, backgroundColor: A, opacity: 0.10 }} />
+    </div>
+  );
+}
+
+function WIPCard({ project }: { project: (typeof WIP_PROJECTS)[0] }) {
+  const stripes = "repeating-linear-gradient(110deg, #f59e0b 0px, #f59e0b 6px, #1a1a1a 6px, #1a1a1a 14px)";
+
+  return (
+    <motion.div
+      variants={card}
+      className={`${project.colClass} bento-card overflow-hidden rounded-2xl flex flex-col`}
+      style={{ minHeight: "10rem" }}
+    >
+      <div className="h-2.5 w-full shrink-0 overflow-hidden relative">
+        <AnimatedStripe dir={-1} bg={stripes} />
+      </div>
+
+      <div
+        className="relative flex flex-1 flex-col justify-between p-5 pb-10"
+        style={{ backgroundColor: "rgba(245,158,11,0.025)" }}
+      >
+        <ConstructionScene />
+
+        <PixelWorker variant={WORKER_VARIANTS[0]} duration={9}  delay={0}  />
+        <PixelWorker variant={WORKER_VARIANTS[1]} duration={14} delay={-4} />
+        <PixelWorker variant={WORKER_VARIANTS[2]} duration={11} delay={-8} />
+        <PixelWorker variant={WORKER_VARIANTS[3]} duration={16} delay={-2} />
+
+        <div className="relative z-10">
+          <div className="mb-2 flex items-center gap-2">
+            {project.icon}
+            <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-600">{project.category}</p>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="font-mono text-xs font-bold uppercase tracking-widest" style={{ color: "#f59e0b" }}>
+              Under Construction
+            </span>
+            <span className="flex gap-0.5">
+              {[0, 1, 2].map((i) => (
+                <span key={i} className="inline-block h-1.5 w-1.5 rounded-full"
+                  style={{ backgroundColor: "#f59e0b", animation: `pulse 1.4s ease-in-out ${i * 0.22}s infinite` }} />
+              ))}
+            </span>
+          </div>
         </div>
-        <p className="text-sm text-zinc-600">{project.description}</p>
+
+        <div className="relative z-10 mt-4 flex flex-wrap gap-2">
+          {project.tags.map((tag) => <Tag key={tag} label={tag} />)}
+        </div>
       </div>
-      <div className="mt-4 flex flex-wrap gap-2">
-        {project.tags.map((tag) => (
-          <Tag key={tag} label={tag} />
-        ))}
+
+      <div className="h-2.5 w-full shrink-0 overflow-hidden relative">
+        <AnimatedStripe dir={1} bg={stripes} />
       </div>
-    </BentoCard>
+    </motion.div>
   );
 }
 
