@@ -13,9 +13,26 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Quentin — Portfolio",
+  metadataBase: new URL("https://quentincourtade.com"),
+  title: "Quentin Courtade — Video Editor & Developer",
   description:
-    "Monteur vidéo freelance & passionné de développement, cybersécurité et IA.",
+    "Freelance video editor working with YouTube creators from 7K to 750K subs. Editing, motion design & web dev.",
+  openGraph: {
+    title: "Quentin Courtade — Video Editor & Developer",
+    description:
+      "Freelance video editor working with YouTube creators from 7K to 750K subs. Editing, motion design & web dev.",
+    url: "https://quentincourtade.com",
+    siteName: "Quentin Courtade",
+    images: [{ url: "/og-image.png", width: 1200, height: 630 }],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Quentin Courtade — Video Editor & Developer",
+    description:
+      "Freelance video editor working with YouTube creators from 7K to 750K subs. Editing, motion design & web dev.",
+    images: ["/og-image.png"],
+  },
 };
 
 export default function RootLayout({
