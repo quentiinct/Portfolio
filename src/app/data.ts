@@ -32,7 +32,7 @@ export const CHANNELS: Channel[] = [
     featuredVideo: {
       title: "J'ai volé TOUS les Minerais de Mon Pote sur Minecraft !",       // ← Mets à jour
       url: "https://www.youtube.com/watch?v=vWD3lpeQonc&t",               // ← Lien YouTube complet
-      videoId: "vWD3lpeQonc&t",                            // ← Remplace par l'ID réel
+      videoId: "vWD3lpeQonc",                            // ← Remplace par l'ID réel
     },
   },
   {

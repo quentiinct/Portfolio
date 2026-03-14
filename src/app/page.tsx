@@ -359,27 +359,87 @@ function HeroCard() {
 
 // ─── CONTACT ──────────────────────────────────────────────────
 function ContactCard() {
+  const [hovered, setHovered] = useState(false);
+  const borderControls = useAnimation();
+
+  const handleHoverStart = async () => {
+    setHovered(true);
+    await borderControls.start({
+      boxShadow: "0 0 0 1.5px rgba(222,62,74,0.9), 0 0 24px rgba(222,62,74,0.28)",
+      transition: { duration: 0.12 },
+    });
+    borderControls.start({
+      boxShadow: "0 0 0 1px rgba(222,62,74,0.25), 0 0 0px rgba(222,62,74,0)",
+      transition: { duration: 0.88 },
+    });
+  };
+
   return (
-    <BentoCard className="col-span-12 flex flex-col justify-between md:col-span-4">
+    <BentoCard className="col-span-12 relative flex flex-col gap-4 overflow-hidden md:col-span-4">
+      {/* SVG de fond — enveloppe discrète, coin bas-droit */}
+      <svg
+        className="pointer-events-none absolute -bottom-6 -right-6 opacity-[0.04]"
+        width="160" height="160" viewBox="0 0 24 24" fill="none"
+        stroke="white" strokeWidth="0.6" strokeLinecap="round" strokeLinejoin="round"
+        aria-hidden
+      >
+        <rect width="20" height="16" x="2" y="4" rx="2" />
+        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+      </svg>
+
       <SectionLabel text="Contact" />
-      <div className="flex flex-col gap-3">
-        <p className="text-sm text-zinc-500">Available for your projects.</p>
-        <a
-          href="mailto:quentincourtade33@gmail.com"
-          className="flex items-center justify-center gap-2 rounded-xl border px-3 py-2.5 text-sm font-medium transition-all hover:brightness-110"
-          style={{
-            borderColor: "rgba(222,62,74,0.25)",
-            backgroundColor: "rgba(222,62,74,0.08)",
-            color: "#DE3E4A",
-          }}
-        >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <rect width="20" height="16" x="2" y="4" rx="2" />
-            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-          </svg>
-          Me contacter
-        </a>
+      <div>
+        <p className="text-xl font-semibold leading-snug text-white">
+          Open to the right<br />opportunity<span style={{ color: "#DE3E4A" }}>.</span>
+        </p>
+        <p className="mt-1.5 text-sm leading-relaxed text-zinc-500">
+          Editing, dev, or something in between — if the project is interesting, I&apos;m in.
+        </p>
       </div>
+      <motion.a
+        href="mailto:quentincourtade33@gmail.com"
+        className="relative flex items-center justify-center gap-2.5 overflow-hidden rounded-xl border px-4 py-3.5 text-sm font-medium"
+        style={{
+          borderColor: "rgba(222,62,74,0.30)",
+          backgroundColor: "rgba(222,62,74,0.10)",
+          color: "#DE3E4A",
+        }}
+        animate={borderControls}
+        onHoverStart={handleHoverStart}
+        onHoverEnd={() => setHovered(false)}
+      >
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
+          <rect width="20" height="16" x="2" y="4" rx="2" />
+          <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+        </svg>
+        <span className="relative flex-1 overflow-hidden" style={{ height: "1.25rem" }}>
+          <AnimatePresence mode="wait" initial={false}>
+            {hovered ? (
+              <motion.span
+                key="email"
+                initial={{ y: "100%" }}
+                animate={{ y: "0%" }}
+                exit={{ y: "-100%" }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
+                className="absolute inset-0 flex items-center whitespace-nowrap text-xs"
+              >
+                quentincourtade33@gmail.com
+              </motion.span>
+            ) : (
+              <motion.span
+                key="label"
+                initial={{ y: "100%" }}
+                animate={{ y: "0%" }}
+                exit={{ y: "-100%" }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
+                className="absolute inset-0 flex items-center"
+              >
+                Let&apos;s talk
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </span>
+      </motion.a>
     </BentoCard>
   );
 }
