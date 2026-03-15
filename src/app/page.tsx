@@ -23,7 +23,7 @@ const WIP_PROJECTS = [
     ),
     description: "CTF, pentest & security projects — soon.",
     tags: ["CTF", "Pentest", "Kali Linux", "OSCP"],
-    colClass: "col-span-12 md:col-span-4",
+    colClass: "col-span-4",
   },
   {
     id: "ai",
@@ -43,7 +43,7 @@ const WIP_PROJECTS = [
     ),
     description: "Automation, LLMs & AI Projects — soon.",
     tags: ["Python", "LLMs", "Claude API", "Automation"],
-    colClass: "col-span-12 md:col-span-4",
+    colClass: "col-span-4",
   },
 ];
 
@@ -359,7 +359,7 @@ function HeroCard({ onKill }: { onKill?: () => void }) {
   const [gifKey, setGifKey] = useState(0);
   const [hoveredTag, setHoveredTag] = useState<string | null>(null);
   return (
-    <BentoCard className="col-span-12 relative flex flex-col overflow-hidden md:col-span-4 md:row-span-3 md:h-full">
+    <BentoCard className="col-span-4 row-span-3 h-full relative flex flex-col overflow-hidden">
       <MatrixBg />
       <div className="relative z-[1] flex flex-col flex-1">
       <SectionLabel text="AI • CYBERSECURITY" />
@@ -478,7 +478,7 @@ function ContactCard() {
   };
 
   return (
-    <BentoCard className="col-span-12 relative flex flex-col gap-4 overflow-hidden md:col-span-4">
+    <BentoCard className="col-span-4 relative flex flex-col gap-4 overflow-hidden">
       <SignalBg />
       <div className="relative z-[1] flex flex-col gap-4">
       <SectionLabel text="Contact" />
@@ -600,7 +600,7 @@ function YoutubeTeaserCard() {
     <motion.div
       variants={card}
       whileHover={{ scale: 1.015, transition: { duration: 0.2 } }}
-      className="col-span-12 md:col-span-8"
+      className="col-span-8"
     >
       <Link href="/clients" className="block">
         <FlashBorder>
@@ -749,7 +749,7 @@ function GitHubCard() {
   };
 
   return (
-    <BentoCard className="col-span-12 relative flex flex-col gap-4 overflow-hidden md:col-span-4">
+    <BentoCard className="col-span-4 relative flex flex-col gap-4 overflow-hidden">
       <CircuitBg />
       <div className="relative z-[1] flex flex-col gap-4 flex-1">
       {/* Header */}
@@ -1175,7 +1175,7 @@ export default function Home() {
   }, [killed, gridControls]);
 
   return (
-    <div className="min-h-screen overflow-x-hidden px-4 py-10 md:px-8 lg:px-12 lg:py-16">
+    <div className="min-h-screen py-10 md:py-16">
       {killed && <DustEffect />}
       {killed && (
         <motion.p
@@ -1188,8 +1188,9 @@ export default function Home() {
           SYSTEM TERMINATED — refresh to restore
         </motion.p>
       )}
+      <div className="overflow-x-auto scrollbar-hide px-4 md:overflow-visible md:px-8 lg:px-12">
       <motion.div
-        className="flex overflow-x-auto gap-3 pb-4 snap-x snap-mandatory scrollbar-hide *:min-w-[80vw] *:shrink-0 *:snap-start md:grid md:mx-auto md:max-w-6xl md:grid-cols-12 md:overflow-visible md:pb-0 md:*:min-w-0 md:*:shrink"
+        className="grid grid-cols-12 gap-3 min-w-[900px] md:max-w-6xl md:mx-auto md:min-w-0"
         variants={container}
         initial="hidden"
         animate={gridControls}
@@ -1208,6 +1209,7 @@ export default function Home() {
         <WIPCard project={WIP_PROJECTS[0]} />
         <WIPCard project={WIP_PROJECTS[1]} />
       </motion.div>
+      </div>
     </div>
   );
 }
