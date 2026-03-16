@@ -54,12 +54,12 @@ const WIP_PROJECTS = [
 
 const container = {
   hidden: {},
-  visible: { transition: { staggerChildren: 0.07 } },
+  visible: { transition: { staggerChildren: 0.1, delayChildren: 0.15 } },
 };
 
 const card = {
-  hidden: { opacity: 0, y: 24 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.45, ease: "easeOut" as const } },
+  hidden: { opacity: 0, y: 28, scale: 0.98 },
+  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.55, ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number] } },
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -71,15 +71,15 @@ function BentoCard({ children, className = "" }: { children: React.ReactNode; cl
   const boxShadow = useMotionValue("none");
 
   const handleHoverStart = async () => {
-    animateEl(x, [0, 1.5, 0], { duration: 0.35, ease: "easeOut" });
-    await animateEl(boxShadow, "0 0 0 1px rgba(255,255,255,0.30), 0 0 18px rgba(255,255,255,0.06)", { duration: 0.15 });
-    animateEl(boxShadow, "0 0 0 1px rgba(255,255,255,0), 0 0 0px rgba(255,255,255,0)", { duration: 0.85 });
+    animateEl(x, [0, 1.2, 0], { duration: 0.3, ease: "easeOut" });
+    await animateEl(boxShadow, "0 0 0 1px rgba(255,255,255,0.25), 0 0 24px rgba(255,255,255,0.06)", { duration: 0.15 });
+    animateEl(boxShadow, "0 0 0 1px rgba(255,255,255,0), 0 0 0px rgba(255,255,255,0)", { duration: 1 });
   };
 
   return (
     <motion.div
       variants={card}
-      whileHover={{ scale: 1.015, transition: { duration: 0.2 } }}
+      whileHover={{ scale: 1.012, transition: { duration: 0.25, ease: "easeOut" } }}
       className={`bento-card rounded-2xl p-5 relative ${className}`}
       style={{ x, boxShadow }}
       onHoverStart={handleHoverStart}
@@ -91,7 +91,7 @@ function BentoCard({ children, className = "" }: { children: React.ReactNode; cl
 
 function SectionLabel({ text }: { text: string }) {
   return (
-    <p className="mb-3 text-[10px] uppercase tracking-[0.2em] text-zinc-600">
+    <p className="mb-3 text-[11px] uppercase tracking-[0.22em] text-zinc-500 font-medium">
       {text}
     </p>
   );
@@ -99,7 +99,7 @@ function SectionLabel({ text }: { text: string }) {
 
 function Tag({ label }: { label: string }) {
   return (
-    <span className="rounded-full border border-white/8 px-2.5 py-1 text-xs text-zinc-500">
+    <span className="rounded-full border border-white/10 px-2.5 py-1 text-xs text-zinc-400">
       {label}
     </span>
   );
@@ -289,39 +289,32 @@ function HeroScene() {
   );
 }
 
-
 function ForestScene() {
   const fireflies: [number, number, number][] = [[105,130,0],[165,112,0.6],[228,145,1.2],[272,125,0.3],[142,155,0.9],[308,138,1.5]];
   return (
     <svg viewBox="0 0 360 240" width="100%" height="100%" style={{ imageRendering: "pixelated" }} shapeRendering="crispEdges" aria-hidden>
       <rect width="360" height="240" fill="#050f05" />
-      {/* Stars */}
       {[[30,10],[70,22],[120,8],[170,16],[220,5],[265,20],[300,12],[340,25],[50,30],[315,35]].map(([x,y],i) => (
         <motion.rect key={i} x={x} y={y} width={2} height={2} fill="#aaccaa"
           animate={{ opacity: [0.1, 0.9, 0.1] }} transition={{ duration: 2.5 + i * 0.3, repeat: Infinity, delay: i * 0.25 }} />
       ))}
-      {/* Moon */}
       {[[328,6,12],[324,4,20],[322,3,24],[322,6,24],[324,12,20],[326,18,16],[328,22,10]].map(([x,y,w],i) => (
         <rect key={i} x={x} y={y} width={w} height={3} fill="#d4e8cc" />
       ))}
-      {/* Trees */}
       <PineTree x={18} by={200} h={62} />
       <PineTree x={58} by={196} h={72} />
       <PineTree x={95} by={198} h={56} />
       <PineTree x={205} by={197} h={68} />
       <PineTree x={272} by={200} h={60} />
       <PineTree x={322} by={194} h={76} />
-      {/* Ground */}
       <rect x="0" y="200" width="360" height="40" fill="#0a180a" />
       {Array.from({ length: 30 }, (_, i) => (
         <rect key={i} x={i * 12 + 2} y={197} width={3} height={5} fill={i % 2 === 0 ? "#1a4a1a" : "#2a6a2a"} />
       ))}
-      {/* Fireflies */}
       {fireflies.map(([x, y, delay], i) => (
         <motion.rect key={i} x={x} y={y} width={2} height={2} fill="#aaff44"
           animate={{ opacity: [0, 1, 0] }} transition={{ duration: 1.8, repeat: Infinity, delay }} />
       ))}
-      {/* Owl */}
       <rect x="96" y="128" width="30" height="3" fill="#4a2800" />
       <rect x="100" y="114" width="14" height="14" fill="#665533" />
       <rect x="99" y="106" width="16" height="10" fill="#886644" />
@@ -352,27 +345,22 @@ function CityScene() {
   return (
     <svg viewBox="0 0 360 240" width="100%" height="100%" style={{ imageRendering: "pixelated" }} shapeRendering="crispEdges" aria-hidden>
       <rect width="360" height="240" fill="#07020e" />
-      {/* Stars */}
       {[[40,12],[90,8],[150,18],[200,5],[240,15],[285,22],[320,9],[350,18],[60,30],[130,28],[220,32],[305,26]].map(([x,y],i) => (
         <motion.rect key={i} x={x} y={y} width={2} height={2} fill="#ccbbee"
           animate={{ opacity: [0.15, 0.9, 0.15] }} transition={{ duration: 2 + i * 0.3, repeat: Infinity, delay: i * 0.2 }} />
       ))}
-      {/* Moon */}
       {[[8,8,12],[4,6,20],[2,5,24],[2,8,24],[4,14,20],[6,20,16],[8,24,10]].map(([x,y,w],i) => (
         <rect key={i} x={x} y={y} width={w} height={3} fill="#d4c8e8" />
       ))}
-      {/* Buildings */}
       {buildings.map(([x,y,w,h,col],i) => (
         <rect key={i} x={x} y={y} width={w} height={h} fill={col} />
       ))}
-      {/* Windows */}
       {windows.map(([x,y,col,anim],i) => anim ? (
         <motion.rect key={i} x={x} y={y} width={3} height={4} fill={col}
           animate={{ opacity: [1, 0.15, 1] }} transition={{ duration: 2.5 + i * 0.35, repeat: Infinity, delay: i * 0.4 }} />
       ) : (
         <rect key={i} x={x} y={y} width={3} height={4} fill={col} />
       ))}
-      {/* Antenna */}
       <rect x="177" y="38" width="6" height="153" fill="#1e0e30" />
       {[52,72,92,112].map((y,i) => (
         <rect key={i} x={177 - 8 - i * 2} y={y} width={22 + i * 4} height={2} fill="#1e0e30" />
@@ -478,7 +466,7 @@ function TerminalWidget({ onKill }: { onKill?: () => void }) {
           <div className="h-2 w-2 rounded-full bg-white/10" />
           <div className="h-2 w-2 rounded-full bg-white/10" />
           <div className="h-2 w-2 rounded-full bg-white/10" />
-          <span className="ml-2 text-[10px] text-zinc-600">quentin@portfolio ~ zsh</span>
+          <span className="ml-2 text-[10px] text-zinc-500">quentin@portfolio ~ zsh</span>
         </div>
 
         {TERMINAL_LINES.map((line, i) => (
@@ -571,7 +559,7 @@ function HeroCard({ onKill }: { onKill?: () => void }) {
       <div className="pointer-events-none absolute inset-0" style={{ zIndex: 0 }}>
         <HeroScene />
       </div>
-      <div className="pointer-events-none absolute inset-0" style={{ zIndex: 1, background: "linear-gradient(to top, rgba(2,2,14,0.97) 40%, rgba(2,2,14,0.55) 70%, transparent 100%)" }} />
+      <div className="pointer-events-none absolute inset-0" style={{ zIndex: 1, background: "linear-gradient(to top, rgba(2,2,14,0.98) 35%, rgba(2,2,14,0.85) 60%, rgba(2,2,14,0.45) 80%, transparent 100%)" }} />
 
       <div className="relative flex flex-col flex-1" style={{ zIndex: 2 }}>
 
@@ -588,14 +576,18 @@ function HeroCard({ onKill }: { onKill?: () => void }) {
         </div>
 
         {/* ── Identity */}
-        <div className="mt-1">
-          <p className="font-mono text-[8px] uppercase tracking-[0.25em] text-zinc-700">Courtade</p>
-          <h1 className="font-mono text-[32px] font-black uppercase leading-none tracking-tight text-white">
-            Quentin<span className="text-white/20">_</span>
+        <div className="mt-2">
+          <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-zinc-500">Courtade</p>
+          <h1 className="font-mono text-[38px] font-black uppercase leading-none tracking-tight text-white">
+            Quentin<motion.span
+              className="text-white/30"
+              animate={{ opacity: [0.3, 0.8, 0.3] }}
+              transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+            >_</motion.span>
           </h1>
-          <p className="mt-1 font-mono text-[10px] uppercase tracking-wider text-zinc-500">Full·Stack · AI · Sec · Editing</p>
-          <div className="mt-2 flex items-center gap-1 font-mono text-[10px] text-zinc-600">
-            <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <p className="mt-1.5 font-mono text-[11px] uppercase tracking-wider text-zinc-400">Full Stack · AI · Sec · Editing</p>
+          <div className="mt-2.5 flex items-center gap-1.5 font-mono text-[10px] text-zinc-500">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
             </svg>
             Bordeaux · Remote
@@ -603,17 +595,19 @@ function HeroCard({ onKill }: { onKill?: () => void }) {
         </div>
 
         {/* ── Description */}
-        <p className="mt-4 text-sm leading-relaxed text-zinc-400">
-          I build AI tools and secure systems for real-world use.<br />
-          <span className="text-zinc-500">Useful. Reliable. Built clean.</span>
+        <p className="mt-5 text-[15px] leading-relaxed text-zinc-300">
+          I build AI tools and secure systems for real-world use.
+        </p>
+        <p className="mt-1 text-sm text-zinc-300">
+          Useful. Reliable. Built clean.
         </p>
 
         {/* ── Active Missions + easter egg pinned to bottom */}
         <div className="mt-auto">
         {/* ── Divider */}
         <div className="mb-3 flex items-center gap-2">
-          <span className="font-mono text-[8px] uppercase tracking-widest text-zinc-700">Active Missions</span>
-          <div className="h-px flex-1" style={{ backgroundColor: "rgba(255,255,255,0.06)" }} />
+          <span className="font-mono text-[9px] uppercase tracking-widest text-zinc-500">Active Missions</span>
+          <div className="h-px flex-1" style={{ backgroundColor: "rgba(255,255,255,0.08)" }} />
         </div>
 
         {/* ── Missions */}
@@ -621,8 +615,8 @@ function HeroCard({ onKill }: { onKill?: () => void }) {
           {MISSIONS.map(m => (
             <div key={m.name} className="flex items-center justify-between">
               <div className="flex items-center gap-2 font-mono text-[11px]">
-                <span style={{ color: "rgba(255,255,255,0.20)" }}>▸</span>
-                <span className="text-zinc-400">{m.name}</span>
+                <span style={{ color: "rgba(255,255,255,0.25)" }}>▸</span>
+                <span className="text-zinc-300">{m.name}</span>
               </div>
               <span className="font-mono text-[9px] uppercase tracking-wider px-1.5 py-0.5" style={{
                 backgroundColor: m.live ? "rgba(74,222,128,0.10)" : "rgba(239,68,68,0.10)",
@@ -680,7 +674,7 @@ function ContactCard() {
       <div className="pointer-events-none absolute inset-0" style={{ zIndex: 0 }}>
         <CityScene />
       </div>
-      <div className="pointer-events-none absolute inset-0" style={{ zIndex: 1, background: "linear-gradient(to top, rgba(7,2,14,0.97) 45%, rgba(7,2,14,0.6) 75%, transparent 100%)" }} />
+      <div className="pointer-events-none absolute inset-0" style={{ zIndex: 1, background: "linear-gradient(to top, rgba(7,2,14,0.98) 40%, rgba(7,2,14,0.93) 65%, rgba(7,2,14,0.88) 85%, rgba(7,2,14,0.85) 100%)" }} />
       <div className="relative flex flex-col flex-1 gap-4" style={{ zIndex: 2 }}>
       {/* SVG de fond — enveloppe discrète, coin bas-droit */}
       <svg
@@ -698,7 +692,7 @@ function ContactCard() {
         <p className="text-xl font-semibold leading-snug text-white">
           Open to the right<br />opportunity<span style={{ color: "#ffffff" }}>.</span>
         </p>
-        <p className="mt-1.5 text-sm leading-relaxed text-zinc-500">
+        <p className="mt-1.5 text-sm leading-relaxed text-zinc-400">
           Editing, dev, or something in between — if the project is interesting, I&apos;m in.
         </p>
       </div>
@@ -769,7 +763,7 @@ function FlashBorder({ children }: { children: React.ReactNode }) {
       <div className="pointer-events-none absolute inset-0" style={{ zIndex: 0 }}>
         <StageScene />
       </div>
-      <div className="pointer-events-none absolute inset-0" style={{ zIndex: 1, background: "linear-gradient(to top, rgba(16,5,0,0.97) 40%, rgba(16,5,0,0.6) 70%, transparent 100%)" }} />
+      <div className="pointer-events-none absolute inset-0" style={{ zIndex: 1, background: "linear-gradient(to top, rgba(16,5,0,0.98) 35%, rgba(16,5,0,0.90) 60%, rgba(16,5,0,0.55) 85%, transparent 100%)" }} />
       <div className="relative" style={{ zIndex: 2 }}>
         {children}
       </div>
@@ -826,7 +820,7 @@ function YoutubeTeaserCard() {
             <div>
               <SectionLabel text="YouTube Clients" />
               <p className="text-lg font-semibold text-white">YouTube Growth Editing</p>
-              <p className="text-sm text-zinc-500 mt-1">
+              <p className="text-sm text-zinc-400 mt-1">
                 3 channels supported across editing, growth and creative direction
               </p>
             </div>
@@ -862,7 +856,7 @@ function YoutubeTeaserCard() {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm font-medium text-white">{channel.name}</p>
-                      <p className="text-xs text-zinc-600">{channel.role}</p>
+                      <p className="text-xs text-zinc-500">{channel.role}</p>
                     </div>
                     <div className="text-right">
                       <p className="text-sm font-semibold text-white">{channel.subsCurrent}</p>
@@ -968,7 +962,7 @@ function GitHubCard() {
       <div className="pointer-events-none absolute inset-0" style={{ zIndex: 0 }}>
         <ForestScene />
       </div>
-      <div className="pointer-events-none absolute inset-0" style={{ zIndex: 1, background: "linear-gradient(to top, rgba(5,15,5,0.97) 40%, rgba(5,15,5,0.55) 70%, transparent 100%)" }} />
+      <div className="pointer-events-none absolute inset-0" style={{ zIndex: 1, background: "linear-gradient(to top, rgba(5,15,5,0.98) 35%, rgba(5,15,5,0.93) 60%, rgba(5,15,5,0.88) 80%, rgba(5,15,5,0.85) 100%)" }} />
       <div className="relative flex flex-col flex-1 gap-4" style={{ zIndex: 2 }}>
       {/* Header */}
       <div className="flex items-center justify-between">
@@ -1063,7 +1057,7 @@ function GitHubCard() {
               </div>
 
               {/* Description */}
-              <p className="text-xs leading-relaxed text-zinc-500 line-clamp-2">
+              <p className="text-xs leading-relaxed text-zinc-400 line-clamp-2">
                 {repo.description ?? "Pas de description."}
               </p>
 
@@ -1107,7 +1101,7 @@ function GitHubCard() {
         href="https://github.com/quentiinct"
         target="_blank"
         rel="noopener noreferrer"
-        className="flex items-center gap-1.5 text-xs text-zinc-600 hover:text-zinc-400 transition-colors"
+        className="flex items-center gap-1.5 text-xs text-zinc-500 hover:text-zinc-300 transition-colors"
       >
         <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor">
           <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
@@ -1280,7 +1274,7 @@ function WIPCard({ project }: { project: (typeof WIP_PROJECTS)[0] }) {
         <div className="relative z-10">
           <div className="mb-2 flex items-center gap-2">
             {project.icon}
-            <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-600">{project.category}</p>
+            <p className="text-[11px] uppercase tracking-[0.2em] text-zinc-500">{project.category}</p>
           </div>
           <div className="flex items-center gap-2">
             <span className="font-mono text-xs font-bold uppercase tracking-widest" style={{ color: "#f59e0b" }}>
@@ -1409,7 +1403,7 @@ export default function Home() {
         </motion.p>
       )}
       <motion.div
-        className="mx-auto grid max-w-6xl grid-cols-12 gap-3"
+        className="mx-auto grid max-w-6xl grid-cols-12 gap-4"
         variants={container}
         initial="hidden"
         animate={gridControls}

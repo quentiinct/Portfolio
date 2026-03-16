@@ -64,12 +64,12 @@ function ChannelCard({ channel }: { channel: Channel }) {
       <div className="pointer-events-none absolute inset-0" style={{ zIndex: 0 }}>
         <StageScene />
       </div>
-      <div className="pointer-events-none absolute inset-0" style={{ zIndex: 1, background: "rgba(10,3,0,0.88)" }} />
+      <div className="pointer-events-none absolute inset-0" style={{ zIndex: 1, background: "rgba(10,3,0,0.92)" }} />
       <div className="relative flex flex-col gap-3" style={{ zIndex: 2 }}>
       {/* En-tête */}
       <div className="flex items-start justify-between gap-2">
         <div>
-          <p className="mb-0.5 text-[10px] uppercase tracking-[0.2em] text-zinc-600">YouTube</p>
+          <p className="mb-0.5 text-[11px] uppercase tracking-[0.2em] text-zinc-500 font-medium">YouTube</p>
           <a
             href={channel.channelUrl}
             target="_blank"
@@ -83,21 +83,21 @@ function ChannelCard({ channel }: { channel: Channel }) {
             </svg>
           </a>
         </div>
-        <span className="shrink-0 text-xs text-zinc-600">Since {channel.since}</span>
+        <span className="shrink-0 text-xs text-zinc-500">Since {channel.since}</span>
       </div>
 
       {/* Rôle */}
-      <p className="text-xs leading-relaxed text-zinc-500">{channel.role}</p>
+      <p className="text-xs leading-relaxed text-zinc-400">{channel.role}</p>
 
       {/* Stats */}
       <div className="grid grid-cols-2 gap-2">
         <div className="rounded-xl bg-white/3 px-3 py-2">
-          <p className="text-[10px] uppercase tracking-widest text-zinc-600">Start</p>
+          <p className="text-[10px] uppercase tracking-widest text-zinc-500">Start</p>
           <p className="mt-0.5 text-xl font-semibold text-white">{channel.subsStart}</p>
-          <p className="text-[10px] text-zinc-600">Subscribers</p>
+          <p className="text-[10px] text-zinc-500">Subscribers</p>
         </div>
         <div className="rounded-xl bg-white/3 px-3 py-2">
-          <p className="text-[10px] uppercase tracking-widest text-zinc-600">Today</p>
+          <p className="text-[10px] uppercase tracking-widest text-zinc-500">Today</p>
           <p className="mt-0.5 text-xl font-semibold text-white">{channel.subsCurrent}</p>
           <p className="text-[10px] font-semibold" style={{ color: "#4ade80" }}>{channel.growth}</p>
         </div>
@@ -106,7 +106,7 @@ function ChannelCard({ channel }: { channel: Channel }) {
       {/* Sparkline */}
       <div className="rounded-xl bg-white/3 px-3 pt-2 pb-1">
         <Sparkline start={start} current={current} id={channel.id} />
-        <div className="flex justify-between text-[10px] text-zinc-700 mt-0.5">
+        <div className="flex justify-between text-[10px] text-zinc-500 mt-0.5">
           <span>{channel.subsStart}</span>
           <span>{channel.subsCurrent}</span>
         </div>
@@ -182,11 +182,11 @@ export default function ClientsPage() {
           transition={{ duration: 0.4, delay: 0.05 }}
           className="mb-7"
         >
-          <p className="mb-1 text-[10px] uppercase tracking-[0.2em] text-zinc-600">YouTube Clients</p>
+          <p className="mb-1 text-[11px] uppercase tracking-[0.22em] text-zinc-500 font-medium">YouTube Clients</p>
           <h2 className="text-4xl font-semibold tracking-tight text-white">
             YouTube Growth Editing<span style={{ color: "#ffffff" }}>.</span>
           </h2>
-          <p className="mt-2 max-w-md text-[15px] leading-relaxed text-zinc-400">
+          <p className="mt-2 max-w-md text-[15px] leading-relaxed text-zinc-300">
             Creators I work with — content, growth & creative direction.
           </p>
         </motion.div>
@@ -210,8 +210,8 @@ export default function ClientsPage() {
           transition={{ duration: 0.4, delay: 0.35 }}
           className="mt-10 flex flex-col items-center gap-3 text-center"
         >
-          <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-600">Work with me</p>
-          <p className="max-w-sm text-sm leading-relaxed text-zinc-500">
+          <p className="text-[11px] uppercase tracking-[0.22em] text-zinc-500 font-medium">Work with me</p>
+          <p className="max-w-sm text-sm leading-relaxed text-zinc-400">
             You have a channel and want to level up the editing? Let&apos;s talk.
           </p>
           <a
