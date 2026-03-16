@@ -17,11 +17,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://quentincourtade.com"),
   icons: { icon: "/favicon.svg" },
-  title: "Quentin Courtade — Video Editor & Developer",
+  title: "Quentin Courtade · Developer & Editor",
   description:
     "Freelance video editor working with YouTube creators from 7K to 750K subs. Editing, motion design & web dev.",
   openGraph: {
-    title: "Quentin Courtade — Video Editor & Developer",
+    title: "Quentin Courtade · Developer & Editor",
     description:
       "Freelance video editor working with YouTube creators from 7K to 750K subs. Editing, motion design & web dev.",
     url: "https://quentincourtade.com",
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Quentin Courtade — Video Editor & Developer",
+    title: "Quentin Courtade · Developer & Editor",
     description:
       "Freelance video editor working with YouTube creators from 7K to 750K subs. Editing, motion design & web dev.",
     images: ["/og-image.png"],

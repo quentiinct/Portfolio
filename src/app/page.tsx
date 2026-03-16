@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { CHANNELS } from "./data";
 import SpaceBackground from "./components/SpaceBackground";
+import StageScene from "./components/StageScene";
 
 // ═══════════════════════════════════════════════════════════════
 // DONNÉES LOCALES
@@ -288,48 +289,6 @@ function HeroScene() {
   );
 }
 
-function StageScene() {
-  return (
-    <svg viewBox="0 0 360 240" width="100%" height="100%" style={{ imageRendering: "pixelated" }} shapeRendering="crispEdges" aria-hidden>
-      <rect width="360" height="240" fill="#100500" />
-      {/* Film strip */}
-      <rect x="0" y="0" width="360" height="16" fill="#111" />
-      {Array.from({ length: 19 }, (_, i) => (
-        <rect key={i} x={i * 19 + 3} y={2} width={11} height={12} fill={i % 2 === 0 ? "#000" : "#c8b890"} rx="1" />
-      ))}
-      {/* Spotlights */}
-      {[80, 180, 280].map((cx, si) =>
-        Array.from({ length: 20 }, (_, row) => (
-          <rect key={`${si}-${row}`} x={cx - row * 2.5} y={16 + row * 8} width={row * 5} height={8}
-            fill={`rgba(255,175,50,${(0.10 - row * 0.004).toFixed(3)})`} />
-        ))
-      )}
-      {/* Curtains */}
-      <rect x="0" y="16" width="48" height="165" fill="#7a0000" />
-      {[12, 24, 36].map(x => <rect key={x} x={x} y="16" width="3" height="165" fill="#5a0000" />)}
-      <rect x="312" y="16" width="48" height="165" fill="#7a0000" />
-      {[322, 334, 346].map(x => <rect key={x} x={x} y="16" width="3" height="165" fill="#5a0000" />)}
-      {/* Floor */}
-      <rect x="0" y="185" width="360" height="55" fill="#180800" />
-      {[192, 202, 215].map((y, i) => <rect key={i} x="0" y={y} width="360" height="2" fill="#251200" />)}
-      <rect x="60" y="178" width="240" height="12" fill="#201000" />
-      {/* Camera */}
-      <rect x="158" y="133" width="40" height="24" fill="#252525" />
-      <rect x="168" y="138" width="20" height="14" fill="#0d0d0d" rx="1" />
-      <rect x="173" y="141" width="10" height="8" fill="#1a1a2a" rx="1" />
-      <rect x="175" y="157" width="6" height="28" fill="#1a1a1a" />
-      <motion.rect x="192" y="135" width="4" height="4" fill="#ff2200"
-        animate={{ opacity: [1, 0, 1] }} transition={{ duration: 0.9, repeat: Infinity }} />
-      {/* Audience */}
-      {[18, 48, 80, 112, 145, 215, 248, 280, 312, 342].map((x, i) => (
-        <g key={i}>
-          <ellipse cx={x + 7} cy={222} rx={7} ry={5} fill="#0a0300" />
-          <rect x={x + 2} y={227} width={10} height={10} fill="#0a0300" />
-        </g>
-      ))}
-    </svg>
-  );
-}
 
 function ForestScene() {
   const fireflies: [number, number, number][] = [[105,130,0],[165,112,0.6],[228,145,1.2],[272,125,0.3],[142,155,0.9],[308,138,1.5]];
@@ -630,11 +589,11 @@ function HeroCard({ onKill }: { onKill?: () => void }) {
 
         {/* ── Identity */}
         <div className="mt-1">
-          <p className="font-mono text-[8px] uppercase tracking-[0.25em] text-zinc-700">PL.01 · PLAYER</p>
+          <p className="font-mono text-[8px] uppercase tracking-[0.25em] text-zinc-700">Courtade</p>
           <h1 className="font-mono text-[32px] font-black uppercase leading-none tracking-tight text-white">
             Quentin<span className="text-white/20">_</span>
           </h1>
-          <p className="mt-1 font-mono text-[10px] uppercase tracking-wider text-zinc-500">Full·Stack · AI · Sec</p>
+          <p className="mt-1 font-mono text-[10px] uppercase tracking-wider text-zinc-500">Full·Stack · AI · Sec · Editing</p>
           <div className="mt-2 flex items-center gap-1 font-mono text-[10px] text-zinc-600">
             <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
@@ -649,14 +608,16 @@ function HeroCard({ onKill }: { onKill?: () => void }) {
           <span className="text-zinc-500">Useful. Reliable. Built clean.</span>
         </p>
 
+        {/* ── Active Missions + easter egg pinned to bottom */}
+        <div className="mt-auto">
         {/* ── Divider */}
-        <div className="my-3 flex items-center gap-2">
+        <div className="mb-3 flex items-center gap-2">
           <span className="font-mono text-[8px] uppercase tracking-widest text-zinc-700">Active Missions</span>
           <div className="h-px flex-1" style={{ backgroundColor: "rgba(255,255,255,0.06)" }} />
         </div>
 
         {/* ── Missions */}
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 mb-3">
           {MISSIONS.map(m => (
             <div key={m.name} className="flex items-center justify-between">
               <div className="flex items-center gap-2 font-mono text-[11px]">
@@ -664,16 +625,16 @@ function HeroCard({ onKill }: { onKill?: () => void }) {
                 <span className="text-zinc-400">{m.name}</span>
               </div>
               <span className="font-mono text-[9px] uppercase tracking-wider px-1.5 py-0.5" style={{
-                backgroundColor: m.live ? "rgba(74,222,128,0.10)" : "rgba(255,255,255,0.05)",
-                color: m.live ? "#4ade80" : "#52525b",
-                border: `1px solid ${m.live ? "rgba(74,222,128,0.20)" : "rgba(255,255,255,0.06)"}`,
+                backgroundColor: m.live ? "rgba(74,222,128,0.10)" : "rgba(239,68,68,0.10)",
+                color: m.live ? "#4ade80" : "#ef4444",
+                border: `1px solid ${m.live ? "rgba(74,222,128,0.20)" : "rgba(239,68,68,0.25)"}`,
               }}>{m.status}</span>
             </div>
           ))}
         </div>
 
         {/* ── Hidden /kill easter egg at bottom */}
-        <div className="mt-auto border-t pt-3" style={{ borderColor: "rgba(255,255,255,0.05)" }}>
+        <div className="border-t pt-3" style={{ borderColor: "rgba(255,255,255,0.05)" }}>
           {killLine && (
             <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-white">! system terminated</p>
           )}
@@ -690,6 +651,7 @@ function HeroCard({ onKill }: { onKill?: () => void }) {
             <span className={cmdFocused ? "animate-pulse text-zinc-500" : "opacity-0"}>▍</span>
           </div>
         </div>
+        </div>{/* end mt-auto */}
 
       </div>
     </BentoCard>
@@ -904,7 +866,7 @@ function YoutubeTeaserCard() {
                     </div>
                     <div className="text-right">
                       <p className="text-sm font-semibold text-white">{channel.subsCurrent}</p>
-                      <p className="text-xs font-medium" style={{ color: "#ffffff" }}>
+                      <p className="text-xs font-medium" style={{ color: "#4ade80" }}>
                         {channel.growth}
                       </p>
                     </div>

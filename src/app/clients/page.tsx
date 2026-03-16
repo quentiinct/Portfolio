@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { CHANNELS, type Channel } from "../data";
 import SpaceBackground from "../components/SpaceBackground";
+import StageScene from "../components/StageScene";
 
 const parseSubs = (s: string) => parseFloat(s) * (s.includes("M") ? 1_000_000 : s.includes("K") ? 1_000 : 1);
 
@@ -58,8 +59,13 @@ function ChannelCard({ channel }: { channel: Channel }) {
     <motion.div
       variants={item}
       whileHover={{ scale: 1.012, transition: { duration: 0.2 } }}
-      className="bento-card rounded-2xl p-4 flex flex-col gap-3"
+      className="bento-card rounded-2xl p-4 flex flex-col gap-3 relative overflow-hidden"
     >
+      <div className="pointer-events-none absolute inset-0" style={{ zIndex: 0 }}>
+        <StageScene />
+      </div>
+      <div className="pointer-events-none absolute inset-0" style={{ zIndex: 1, background: "rgba(10,3,0,0.88)" }} />
+      <div className="relative flex flex-col gap-3" style={{ zIndex: 2 }}>
       {/* En-tête */}
       <div className="flex items-start justify-between gap-2">
         <div>
@@ -93,7 +99,7 @@ function ChannelCard({ channel }: { channel: Channel }) {
         <div className="rounded-xl bg-white/3 px-3 py-2">
           <p className="text-[10px] uppercase tracking-widest text-zinc-600">Today</p>
           <p className="mt-0.5 text-xl font-semibold text-white">{channel.subsCurrent}</p>
-          <p className="text-[10px] font-semibold" style={{ color: "#ffffff" }}>{channel.growth}</p>
+          <p className="text-[10px] font-semibold" style={{ color: "#4ade80" }}>{channel.growth}</p>
         </div>
       </div>
 
@@ -138,6 +144,7 @@ function ChannelCard({ channel }: { channel: Channel }) {
           <p className="truncate text-left text-xs text-zinc-300">{channel.featuredVideo.title}</p>
         </div>
       </button>
+      </div>{/* end z-2 */}
     </motion.div>
   );
 }
