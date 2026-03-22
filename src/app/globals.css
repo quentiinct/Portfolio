@@ -81,6 +81,17 @@ body > * {
   border-color: rgba(255, 255, 255, 0.15);
 }
 
+/* Mobile: hide horizontal scrollbar */
+@media (max-width: 767px) {
+  .mobile-snap {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .mobile-snap::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 /* Selection styling */
 ::selection {
   background: rgba(255, 255, 255, 0.15);

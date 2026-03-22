@@ -24,7 +24,7 @@ const WIP_PROJECTS = [
     ),
     description: "CTF, pentest & security projects — soon.",
     tags: ["CTF", "Pentest", "Kali Linux", "OSCP"],
-    colClass: "col-span-12 md:col-span-4",
+    colClass: "col-span-8",
   },
   {
     id: "ai",
@@ -44,7 +44,7 @@ const WIP_PROJECTS = [
     ),
     description: "Automation, LLMs & AI Projects — soon.",
     tags: ["Python", "LLMs", "Claude API", "Automation"],
-    colClass: "col-span-12 md:col-span-4",
+    colClass: "col-span-4",
   },
 ];
 
@@ -555,7 +555,7 @@ function HeroCard({ onKill }: { onKill?: () => void }) {
   ];
 
   return (
-    <BentoCard className="col-span-12 flex flex-col md:col-span-4 md:row-span-3 md:h-full">
+    <BentoCard className="col-span-4 row-span-3 h-full flex flex-col">
       <div className="pointer-events-none absolute inset-0" style={{ zIndex: 0 }}>
         <HeroScene />
       </div>
@@ -670,7 +670,7 @@ function ContactCard() {
   };
 
   return (
-    <BentoCard className="col-span-12 relative flex flex-col gap-4 overflow-hidden md:col-span-4">
+    <BentoCard className="col-span-4 relative flex flex-col gap-4 overflow-hidden">
       <div className="pointer-events-none absolute inset-0" style={{ zIndex: 0 }}>
         <CityScene />
       </div>
@@ -759,12 +759,12 @@ function FlashBorder({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <motion.div style={{ x, boxShadow }} className="bento-card rounded-2xl p-5 cursor-pointer relative" onHoverStart={handleHoverStart}>
+    <motion.div style={{ x, boxShadow }} className="bento-card rounded-2xl p-5 cursor-pointer relative h-full overflow-hidden" onHoverStart={handleHoverStart}>
       <div className="pointer-events-none absolute inset-0" style={{ zIndex: 0 }}>
         <StageScene />
       </div>
       <div className="pointer-events-none absolute inset-0" style={{ zIndex: 1, background: "linear-gradient(to top, rgba(16,5,0,0.98) 35%, rgba(16,5,0,0.90) 60%, rgba(16,5,0,0.55) 85%, transparent 100%)" }} />
-      <div className="relative" style={{ zIndex: 2 }}>
+      <div className="relative h-full overflow-hidden" style={{ zIndex: 2 }}>
         {children}
       </div>
     </motion.div>
@@ -812,9 +812,9 @@ function YoutubeTeaserCard() {
     <motion.div
       variants={card}
       whileHover={{ scale: 1.015, transition: { duration: 0.2 } }}
-      className="col-span-12 md:col-span-8"
+      className="col-span-8 min-h-0 overflow-hidden"
     >
-      <Link href="/clients" className="block">
+      <Link href="/clients" className="block h-full">
         <FlashBorder>
           <div className="flex items-center justify-between mb-5">
             <div>
@@ -958,7 +958,7 @@ function GitHubCard() {
   };
 
   return (
-    <BentoCard className="col-span-12 flex flex-col gap-4 md:col-span-4">
+    <BentoCard className="col-span-4 flex flex-col gap-4">
       <div className="pointer-events-none absolute inset-0" style={{ zIndex: 0 }}>
         <ForestScene />
       </div>
@@ -1389,7 +1389,7 @@ export default function Home() {
   return (
     <>
     <SpaceBackground />
-    <div className="min-h-screen px-4 py-10 md:px-8 lg:px-12 lg:py-16">
+    <div className="mobile-snap h-dvh overflow-x-auto overflow-y-hidden md:overflow-visible md:h-auto md:min-h-screen px-4 py-2 md:px-8 md:py-10 lg:px-12 lg:py-16">
       {killed && <DustEffect />}
       {killed && (
         <motion.p
@@ -1403,7 +1403,8 @@ export default function Home() {
         </motion.p>
       )}
       <motion.div
-        className="mx-auto grid max-w-6xl grid-cols-12 gap-4"
+        className="mx-auto grid max-w-6xl grid-cols-12 grid-rows-[5fr_3.2fr_2fr] md:grid-rows-none gap-2 md:gap-4 h-full md:h-auto"
+        style={{ minWidth: "900px" }}
         variants={container}
         initial="hidden"
         animate={gridControls}
@@ -1420,7 +1421,7 @@ export default function Home() {
 
         {/* Col droite — rangée 3 */}
         <WIPCard project={WIP_PROJECTS[0]} />
-        <WIPCard project={WIP_PROJECTS[1]} />
+        {/* <WIPCard project={WIP_PROJECTS[1]} /> */}
       </motion.div>
     </div>
     </>
