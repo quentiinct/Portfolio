@@ -113,7 +113,7 @@ components:
 
 The site is the logbook of a ship in orbit. A real-time 3D scene carries the emotion: the stainless-steel hull, the asteroid field, the planet below, then four decks aboard, one per chapter. The HTML layer on top reads like the log's entries and the ship's instruments. It is cinematic in the scene and precise in the interface. The scene is allowed to be spectacular; the interface never competes with it.
 
-Components are treated by layer. The chrome (HUD, deck rail, location read-out, the Security panel) behaves like instruments: dark tinted glass, hairline borders, mono read-outs, one orange signal. The type speaks in two voices: a heavy, wide display face names things, and a slab-serif mono writes the log. The bento cards on the decks are the owner's live-site cards, kept verbatim with their 8-bit pixel scenes. They are the log's personality, framed by the ship rather than restyled to match it.
+Components are treated by layer. The chrome is kept to a minimum: the only fixed element is the deck navigation, bare text links melting into the decor. The Security panel behaves like an instrument: dark tinted glass, hairline borders, mono read-outs, one orange signal. The type speaks in two voices: a heavy, wide display face names things, and a slab-serif mono writes the log. The bento cards on the decks are the owner's live-site cards, kept verbatim with their 8-bit pixel scenes. They are the log's personality, framed by the ship rather than restyled to match it.
 
 The palette is dark only, because the page is a window onto space. Light comes from the 3D scene: sun, planet bounce and deck lighting. Color in the UI is rationed.
 
@@ -131,7 +131,7 @@ The palette is dark only, because the page is a window onto space. Light comes f
 The palette is a black void and cool steel grays, with one ignition orange and one accent per deck.
 
 ### Primary
-- **Ignition Orange** (#ff5a36): what is live or focused. It appears on the full stop after the hero name, the active rail pip, the location dot, the focus ring, the CTA hover tint and text selection. It reads on black (6.8:1) and on the lit decks (3:1).
+- **Ignition Orange** (#ff5a36): what is live or focused. It appears on the mark under the current deck in the navigation, the focus ring, the CTA hover tint and text selection. It reads on black (6.8:1) and on the lit decks (3:1).
 
 ### Secondary
 - **Deck accents**, one per floor, shared by the 3D lights and at most one UI mark:
@@ -146,14 +146,14 @@ The palette is a black void and cool steel grays, with one ignition orange and o
 ### Neutral
 - **Void Black** (#000000): page and canvas clear color.
 - **Hull White** (#e9edf2): primary text (17:1 on black).
-- **Moonlight** (#c8cfd8): secondary text such as the tagline, chips and the HUD read-out (12:1).
-- **Instrument Gray** (#9aa4b1): muted copy, nav links and rail ids (7.9:1).
+- **Moonlight** (#c8cfd8): secondary text such as the legal lines and chips (12:1).
+- **Instrument Gray** (#9aa4b1): muted copy and labels (7.9:1).
 - **Dim Steel** (#7f8896): labels, metadata and quiet links (5.9:1). This is the floor, and nothing dimmer carries text.
 - **Hairline** (rgba 255/255/255 at 0.10) and **Hairline Strong** (0.18): every border and divider.
 - **Panel Glass** (rgba 12/14/20 at 0.84) and **Card Ink** (rgba 10/10/18 at 0.85): surfaces over the scene.
 
 ### Named Rules
-**The Ignition Rule.** Orange marks the single live thing, whether that is the current stop, the focused control or the hero's full stop. It is never a fill for a surface, and never two competing marks on the same screen.
+**The Ignition Rule.** Orange marks the single live thing, whether that is the current deck or the focused control. It is never a fill for a surface, and never two competing marks on the same screen.
 
 **The One Ramp Rule.** UI text uses the neutral ramp tokens (`--foreground`, `--soft`, `--muted`, `--faint`, or `text-soft` / `text-muted` / `text-faint` in Tailwind). No ad-hoc grays and no Tailwind `zinc-*`.
 
@@ -168,28 +168,28 @@ The palette is a black void and cool steel grays, with one ignition orange and o
 **Character:** Two voices, taken from the owner's reference (a heavy, wide, rounded-square logo over slab-serif mono copy). Unbounded Black is round, wide and loud: it names the ship, its decks and its crew. IBM Plex Mono writes the log. Its small slabs on i, l and r keep sentences readable, and it carries the labels and read-outs too, so the whole interface feels typed on the ship's terminal.
 
 ### Hierarchy
-- **Display** (Unbounded 900, clamp(2.8rem, 8.5vw, 8rem) on desktop, up to 15vw on phones, 0.9, -0.02em, uppercase): the hero name only, the first name on one line, glowing ice-white, with the round full stop in ignition orange (no glow).
+- **Display** (Unbounded 900, clamp(2.2rem, 5.6vw, 5.4rem) on desktop, up to 12vw on phones, 0.9, -0.02em, uppercase): the hero name only, the first name alone, with a soft ice-white glow.
 - **Headline** (Unbounded 700, clamp(1.3rem, 1.9vw, 1.7rem), 1.1): panel titles; the boarding status uses the same voice.
 - **Title** (Unbounded 700, 1.125rem, 1.375): card headings (GitHub Projects, Contact).
 - **Body** (Plex Mono 400, clamp(0.95rem, 1.2vw, 1.1rem), 1.6): the hero tagline and panel lead copy, at up to 38rem.
-- **Label** (Plex Mono 400, 11px, 0.22em, uppercase): HUD read-outs, rail ids, panel meta and card section labels.
+- **Label** (Plex Mono 400, 11px, 0.18–0.22em, uppercase): the deck navigation, panel meta and card section labels.
 - **Card Name** (Unbounded 900, 30px, uppercase): the About card's name.
-- **Logo** (Unbounded 700, 13–14px, 0.08–0.3em): "QC-01" in the HUD and the loader. In 3D, the wall signs ("DECK 0N") and the hull decals ("QC-01", "CREW ACCESS") use Unbounded too.
+- **Logo** (Unbounded 700, 14px, 0.3em): "QC-01" on the loader only. In 3D, the wall signs ("DECK 0N") and the hull decals ("QC-01", "CREW ACCESS") use Unbounded too.
 
 ### Named Rules
 **The Two Voices Rule.** Unbounded names things: the hero name, headings, the logo, the 3D signs. IBM Plex Mono says everything else, from sentences to buttons, nav and read-outs. There is no third family.
 
 **The 11px Floor.** No functional text is smaller than 11px, including tracked micro-labels, status pills and read-outs.
 
-**The Width Budget.** Unbounded is about twice as wide as a regular sans. Size display text by the line it must fit (the hero name tops out at 8rem and shares its line with the manifesto on desktop), never by habit, and check the narrowest phone.
+**The Width Budget.** Unbounded is about twice as wide as a regular sans. Size display text by the line it must fit (the hero name tops out at 5.4rem and shares its line with the manifesto on desktop), never by habit, and check the narrowest phone.
 
 ## Layout
 
 The page is six tall chapters (`<section data-chapter>`): hero 120vh, boarding 150vh, three decks at 250vh (230vh on phones) and contact at 160vh. The chapter heights set the pacing of the flight. Each chapter's content sticks to the viewport (`.sticky-screen`, 100svh) and fades with the chapter time.
 
-- **Hero (after the igloo.inc footer):** two blocks on one baseline. Left: the name, the focus line (Cybersecurity · AI) and the legal lines (// Copyright © 2026 / Quentin EI / All Rights Reserved.). Right, right-aligned: “////// Manifesto”, the six-line manifesto (its line breaks are part of the copy) and the “Board the ship” button. Phones stack them, left-aligned, without the scroll hint. A bottom scrim keeps both legible over the planet.
-- **Desktop:** panels sit on the left gutter (`clamp(1rem, 5.5vw, 6.5rem)`), vertically centered, leaving the right two-thirds to the 3D. The HUD is a three-column bar with the logo, a centered deck nav and an empty right column. The deck rail sits mid-right and the location read-out bottom-left.
-- **Phones (≤767px):** panels are full width and anchored to the bottom, under the 3D. The HUD keeps the logo icon and a compact deck switcher with 44px targets. The rail and the read-out are hidden.
+- **Hero (after the igloo.inc footer):** two blocks on one baseline. Left, centred on itself: the name, the focus line (Cybersecurity · AI) and the legal lines (// Copyright © 2026 / Quentin EI / All Rights Reserved.). Right, right-aligned: “////// Manifesto”, the six-line manifesto (its line breaks are part of the copy) and the “Board the ship” button. Phones stack both blocks, centred, without the scroll hint. A bottom scrim keeps both legible over the planet.
+- **Desktop:** panels sit on the left gutter (`clamp(1rem, 5.5vw, 6.5rem)`), vertically centered, leaving the right two-thirds to the 3D. The HUD is only the deck navigation, centred at the top.
+- **Phones (≤767px):** panels are full width and anchored to the bottom, under the 3D. The deck navigation spreads across the top with 44px targets.
 - **Short screens (≤560px tall):** landscape phones, small windows and 200% zoom. The chrome is reduced, and cards and panels scroll inside instead of being cut.
 - Cards cap at 24rem (About), 30rem (Projects) and 31rem (Security panel).
 
@@ -203,13 +203,13 @@ Depth belongs to the 3D scene. UI surfaces are tinted glass over it (panel glass
 - **Hover ring** (`0 0 0 1px rgba(255,255,255,0.25)`, fading out): the bento card's hover acknowledgement.
 
 ### Named Rules
-**The No-Halo Rule.** No colored zero-offset glows on dots, pips, bars or borders. A status dot is a flat dot. The one exception is the hero name: a lit sign in ice white (`text-shadow: 0 0 18px / 46px / 110px`, cooling outwards), at the owner's request.
+**The No-Halo Rule.** No colored zero-offset glows on dots, pips, bars or borders. A status dot is a flat dot. The one exception is the hero name: a soft lit sign in ice white (`text-shadow: 0 0 14px / 38px`, low alpha), at the owner's request.
 
 **The Scrim Rule.** Text that must sit on bright scene areas, such as the planet limb, gets a dark gradient scrim or a tinted pill behind it, never a brighter color.
 
 ## Shapes
 
-Controls are pills: the CTA, the nav, chips, the location read-out. Surfaces step down in radius as they nest: panels at 20px, cards at 16px, rows inside cards at 12px, icon tiles at 10px. Borders are always 1px hairlines. The Security panel adds 14px corner brackets in its deck accent, its one ornament.
+Controls are pills: the CTA and chips. The navigation has no container at all. Surfaces step down in radius as they nest: panels at 20px, cards at 16px, rows inside cards at 12px, icon tiles at 10px. Borders are always 1px hairlines. The Security panel adds 14px corner brackets in its deck accent, its one ornament.
 
 ## Components
 
@@ -228,9 +228,7 @@ Quiet glass that warms to orange on intent.
 - **Repo row:** 12px radius, black at 45%, hairline border, which brightens on hover. Three lines: name with stars, a one-line description, then language and topics.
 
 ### Navigation
-- **HUD nav:** a pill of text links on dark glass. Links are Instrument Gray, the hover is white, and the current deck gets white text on white at 10% with `aria-current="location"`. The links are real anchors (`#about`…). A plain click flies the camera and moves focus to the section.
-- **Deck rail:** a vertical track filled with scroll progress (white to orange), with stops labelled `EXT` then 01–04. The active pip is solid orange, past pips are white at 50%, and labels reveal on hover, focus or when active.
-- **Location read-out:** a mono 11px line in a tinted pill at the bottom left, announced politely to screen readers.
+- **Deck navigation:** bare uppercase mono links (11px, 0.18em) centred at the top, with no bar, border or blur, so they melt into the decor. A soft top shade (black at 50% fading out) and a dark text halo keep them legible on the lit decks. Links are hull white at 72%; hover and the current deck are full white, and the current deck gets a 4px ignition-orange square under its name, with `aria-current="location"`. The links are real anchors (`#about`…). A plain click flies the camera and moves focus to the section.
 
 ### Opening reveal (signature)
 The opening is the one authored moment, after igloo.inc, and it lives in 3D. As the loader fades, a sparse graph draws itself outwards from the ship: points at several depths joined to their two nearest neighbours by thin straight segments, with small numbers (32, 41, 54…) beside some points, mostly dim and a few bright (`three/IntroGraph.tsx`, its own render pass over the image). Meanwhile world positions are rebuilt from the depth buffer (`three/Reveal.tsx`). Ahead of the front the decor is a hologram on black: glowing outlines from depth and luminance edges, rim light and a faint fine mesh. At the front, voxel by voxel in a stair-stepped edge ordered by real distance from the ship, each surface lands as an ice-white flash that settles into the real image while its outlines linger; the sky comes up from black last, in square blocks. It takes 3.8s: the interface fades in as the decor settles and the graph fades out. Both passes sit before bloom so the lines glow, and switch off once done. Reduced motion skips it all.
@@ -254,4 +252,5 @@ Hand-placed SVG pixel art (`shape-rendering: crispEdges`): the control room, the
 - **Don't** redraw or restyle the bento cards' pixel scenes, name block or missions list. They are pinned from the live site.
 - **Don't** introduce grays outside the ramp, Tailwind `zinc-*`, or text under 11px.
 - **Don't** repeat the same fact across layers (deck name on a tag, in the HUD and on the wall). One read-out per fact.
+- **Don't** add fixed chrome over the scene (logo, progress rail, location read-out, bars): the deck navigation is the only fixed element.
 - **Don't** block the page behind the loader: a timeout and a no-JS rule must always let the content through.

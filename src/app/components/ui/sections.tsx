@@ -98,7 +98,6 @@ export function Hero() {
           <h1 className="hero__title">
             {PROFILE.firstName}
             <span className="sr-only"> {PROFILE.lastName}</span>
-            <em aria-hidden>.</em>
           </h1>
           <p className="hero__focus">{HERO.focus.join(" · ")}</p>
           <p className="hero__legal">

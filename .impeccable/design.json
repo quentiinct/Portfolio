@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-25T16:42:50.573Z",
+  "generatedAt": "2026-09-25T17:01:17.277Z",
   "title": "Design System: Quentin Courtade · QC-01",
   "extensions": {
     "colorMeta": {
@@ -183,7 +183,7 @@
     "typographyMeta": {
       "display": {
         "displayName": "Display · Unbounded Black",
-        "purpose": "The hero name only: the first name on one line, glowing ice-white, round full stop in Ignition Orange."
+        "purpose": "The hero name only: the first name alone, soft ice-white glow."
       },
       "headline": {
         "displayName": "Headline · Unbounded Bold",
@@ -203,7 +203,7 @@
       },
       "label": {
         "displayName": "Label · IBM Plex Mono",
-        "purpose": "Uppercase read-outs: HUD location, rail ids, panel meta, card section labels. 11px floor."
+        "purpose": "Uppercase mono: the deck navigation, panel meta, card section labels. 11px floor."
       },
       "card-name": {
         "displayName": "Card Name · Unbounded Black",
@@ -291,25 +291,9 @@
       "name": "HUD Deck Navigation",
       "kind": "nav",
       "refersTo": "nav-link",
-      "description": "Pill of anchor links; the current deck is white on a faint fill with aria-current.",
+      "description": "Bare uppercase mono links melting into the decor; the current deck gets an ignition-orange mark.",
       "html": "<nav class=\"ds-nav\" aria-label=\"Decks\"><a href=\"#about\" class=\"ds-nav-link is-active\" aria-current=\"location\">About</a><a href=\"#security\" class=\"ds-nav-link\">Security</a><a href=\"#projects\" class=\"ds-nav-link\">Projects</a><a href=\"#contact\" class=\"ds-nav-link\">Contact</a></nav>",
-      "css": ".ds-nav { display: inline-flex; gap: 0.3rem; padding: 0.3rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 999px; background: rgba(8,10,14,0.5); backdrop-filter: blur(14px); } .ds-nav-link { display: inline-flex; align-items: center; padding: 0.42rem 0.9rem; border-radius: 999px; font: 400 12.5px/1.2 'IBM Plex Mono', ui-monospace, monospace; color: #9aa4b1; text-decoration: none; transition: color 0.2s ease, background 0.2s ease; } .ds-nav-link:hover { color: #fff; } .ds-nav-link.is-active { color: #fff; background: rgba(255,255,255,0.1); } .ds-nav-link:focus-visible { outline: 2px solid #ff5a36; outline-offset: 3px; }"
-    },
-    {
-      "name": "Deck Rail Stop",
-      "kind": "nav",
-      "refersTo": "nav-link",
-      "description": "Elevator-style deck indicator: mono id, flat pip, label revealed when active or focused.",
-      "html": "<div class=\"ds-rail\"><a href=\"#top\" class=\"ds-rail-stop is-past\"><span class=\"ds-rail-label\">Open space</span><span>EXT</span><span class=\"ds-rail-pip\"></span></a><a href=\"#about\" class=\"ds-rail-stop is-active\" aria-current=\"location\"><span class=\"ds-rail-label\">Crew Quarters</span><span>01</span><span class=\"ds-rail-pip\"></span></a><a href=\"#security\" class=\"ds-rail-stop\"><span class=\"ds-rail-label\">Security Ops</span><span>02</span><span class=\"ds-rail-pip\"></span></a></div>",
-      "css": ".ds-rail { display: inline-flex; flex-direction: column; gap: 1.35rem; padding: 1rem; background: #000; } .ds-rail-stop { display: flex; align-items: center; justify-content: flex-end; gap: 0.7rem; font: 400 11px/1 'IBM Plex Mono', ui-monospace, monospace; letter-spacing: 0.18em; color: #9aa4b1; text-decoration: none; } .ds-rail-label { opacity: 0; text-transform: uppercase; transition: opacity 0.3s ease; } .ds-rail-stop:hover .ds-rail-label, .ds-rail-stop:focus-visible .ds-rail-label, .ds-rail-stop.is-active .ds-rail-label { opacity: 1; } .ds-rail-pip { width: 7px; height: 7px; border: 1px solid rgba(255,255,255,0.4); border-radius: 50%; background: #000; } .ds-rail-stop.is-past .ds-rail-pip { background: rgba(255,255,255,0.5); } .ds-rail-stop.is-active { color: #fff; } .ds-rail-stop.is-active .ds-rail-pip { border-color: #ff5a36; background: #ff5a36; } .ds-rail-stop:focus-visible { outline: 2px solid #ff5a36; outline-offset: 3px; }"
-    },
-    {
-      "name": "Location Read-out",
-      "kind": "custom",
-      "refersTo": null,
-      "description": "Mono status line in a tinted pill, bottom-left over the scene; announced politely.",
-      "html": "<p class=\"ds-loc\" aria-live=\"polite\"><span class=\"ds-loc-dot\"></span>Deck 03 · Engineering Bay</p>",
-      "css": ".ds-loc { display: inline-flex; align-items: center; gap: 0.55rem; margin: 0; padding: 0.4rem 0.75rem; border-radius: 999px; background: rgba(3,5,9,0.55); font: 400 11px/1.2 'IBM Plex Mono', ui-monospace, monospace; letter-spacing: 0.22em; text-transform: uppercase; color: #c8cfd8; } .ds-loc-dot { width: 5px; height: 5px; background: #ff5a36; }"
+      "css": ".ds-nav { display: inline-flex; gap: 2.2rem; padding: 1.2rem 2rem 2.4rem; background: linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0.18) 55%, rgba(0,0,0,0)); } .ds-nav-link { position: relative; font: 400 11px/32px 'IBM Plex Mono', ui-monospace, monospace; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(233,237,242,0.72); text-decoration: none; text-shadow: 0 0 3px rgba(0,0,0,0.95), 0 0 10px rgba(0,0,0,0.8); transition: color 0.2s ease; } .ds-nav-link:hover, .ds-nav-link.is-active { color: #fff; } .ds-nav-link.is-active::after { content: ''; position: absolute; left: 50%; bottom: 1px; width: 4px; height: 4px; background: #ff5a36; transform: translateX(-50%); } .ds-nav-link:focus-visible { outline: 2px solid #ff5a36; outline-offset: 3px; }"
     },
     {
       "name": "Chip",
@@ -346,7 +330,7 @@
   ],
   "narrative": {
     "northStar": "The Ship's Log",
-    "overview": "The site is the logbook of a ship in orbit. A real-time 3D scene carries the emotion: the stainless-steel hull, the asteroid field, the planet below, then four decks aboard, one per chapter. The HTML layer on top reads like the log's entries and the ship's instruments. It is cinematic in the scene and precise in the interface. The scene is allowed to be spectacular; the interface never competes with it.\n\nComponents are treated by layer. The chrome (HUD, deck rail, location read-out, the Security panel) behaves like instruments: dark tinted glass, hairline borders, mono read-outs, one orange signal. The type speaks in two voices: a heavy, wide display face names things, and a slab-serif mono writes the log. The bento cards on the decks are the owner's live-site cards, kept verbatim with their 8-bit pixel scenes. They are the log's personality, framed by the ship rather than restyled to match it.\n\nThe palette is dark only, because the page is a window onto space. Light comes from the 3D scene: sun, planet bounce and deck lighting. Color in the UI is rationed.",
+    "overview": "The site is the logbook of a ship in orbit. A real-time 3D scene carries the emotion: the stainless-steel hull, the asteroid field, the planet below, then four decks aboard, one per chapter. The HTML layer on top reads like the log's entries and the ship's instruments. It is cinematic in the scene and precise in the interface. The scene is allowed to be spectacular; the interface never competes with it.\n\nComponents are treated by layer. The chrome is kept to a minimum: the only fixed element is the deck navigation, bare text links melting into the decor. The Security panel behaves like an instrument: dark tinted glass, hairline borders, mono read-outs, one orange signal. The type speaks in two voices: a heavy, wide display face names things, and a slab-serif mono writes the log. The bento cards on the decks are the owner's live-site cards, kept verbatim with their 8-bit pixel scenes. They are the log's personality, framed by the ship rather than restyled to match it.\n\nThe palette is dark only, because the page is a window onto space. Light comes from the 3D scene: sun, planet bounce and deck lighting. Color in the UI is rationed.",
     "keyCharacteristics": [
       "Opening (after igloo.inc): a sparse 3D graph draws itself, the decor appears as a hologram and lands as a white flash from the ship outwards; the interface arrives last.",
       "Scroll drives a camera flight, and HTML panels fade in sync with it (chapter time `t`).",
@@ -359,7 +343,7 @@
     "rules": [
       {
         "name": "The Ignition Rule",
-        "body": "Orange marks the single live thing, whether that is the current stop, the focused control or the hero's full stop. It is never a fill for a surface, and never two competing marks on the same screen.",
+        "body": "Orange marks the single live thing, whether that is the current deck or the focused control. It is never a fill for a surface, and never two competing marks on the same screen.",
         "section": "colors"
       },
       {
@@ -389,7 +373,7 @@
       },
       {
         "name": "The No-Halo Rule",
-        "body": "No colored zero-offset glows on dots, pips, bars or borders. A status dot is a flat dot. The one exception is the hero name: a lit sign in ice white, at the owner's request.",
+        "body": "No colored zero-offset glows on dots, pips, bars or borders. A status dot is a flat dot. The one exception is the hero name: a soft lit sign in ice white, at the owner's request.",
         "section": "elevation"
       },
       {
@@ -412,7 +396,8 @@
       "Don't redraw or restyle the bento cards' pixel scenes, name block or missions list. They are pinned from the live site.",
       "Don't introduce grays outside the ramp, Tailwind `zinc-*`, or text under 11px.",
       "Don't repeat the same fact across layers (deck name on a tag, in the HUD and on the wall). One read-out per fact.",
-      "Don't block the page behind the loader: a timeout and a no-JS rule must always let the content through."
+      "Don't block the page behind the loader: a timeout and a no-JS rule must always let the content through.",
+      "Don't add fixed chrome over the scene (logo, progress rail, location read-out, bars): the deck navigation is the only fixed element."
     ]
   }
 }
