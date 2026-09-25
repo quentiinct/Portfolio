@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
-import { PROFILE, SECURITY } from "../../data";
+import { HERO, PROFILE, SECURITY } from "../../data";
 import { DECKS } from "../decks";
 import { ContactCard, GitHubCard, HeroCard, SceneActiveContext, killSystem } from "./bento";
 import { deckFade, smooth, useFadeActive, useOverflowScroll, useScrollFade } from "./useChapter";
@@ -94,18 +94,34 @@ export function Hero() {
     <div className="sticky-screen sticky-screen--hero">
       <div ref={scrim} className="hero-scrim" aria-hidden />
       <div ref={ref} className="hero">
-        <h1 className="hero__title">
-          <span>{PROFILE.firstName}</span>
-          <span>
-            {PROFILE.lastName}
-            <em>.</em>
-          </span>
-        </h1>
-        <p className="hero__roles">{PROFILE.roles.join(" · ")}</p>
-        <p className="hero__tagline">{PROFILE.tagline}</p>
-        <button type="button" className="hero__cta" onClick={() => navigateTo(2, DECKS[0].id)}>
-          Board the ship {Icon.arrow}
-        </button>
+        <div className="hero__id">
+          <h1 className="hero__title">
+            {PROFILE.firstName}
+            <span className="sr-only"> {PROFILE.lastName}</span>
+            <em aria-hidden>.</em>
+          </h1>
+          <p className="hero__focus">{HERO.focus.join(" · ")}</p>
+          <p className="hero__legal">
+            <span>
+              <span aria-hidden>{"// "}</span>Copyright © {HERO.copyright.year}
+            </span>
+            <span>{HERO.copyright.holder}</span>
+            <span>All Rights Reserved.</span>
+          </p>
+        </div>
+        <div className="hero__manifesto">
+          <p className="hero__manifesto-label">
+            <span aria-hidden>{"////// "}</span>Manifesto
+          </p>
+          <p className="hero__manifesto-text">
+            {HERO.manifesto.map((line) => (
+              <span key={line}>{line}</span>
+            ))}
+          </p>
+          <button type="button" className="hero__cta" onClick={() => navigateTo(2, DECKS[0].id)}>
+            Board the ship {Icon.arrow}
+          </button>
+        </div>
       </div>
       <ScrollHint />
     </div>

@@ -15,6 +15,20 @@ export const PROFILE = {
   avatar: "/memoji/frame-01.png",
 };
 
+/** Opening screen: the name, two focus areas, the legal line and the manifesto (line breaks are intentional). */
+export const HERO = {
+  focus: ["Cybersecurity", "AI"],
+  copyright: { year: 2026, holder: "Quentin EI" },
+  manifesto: [
+    "My mission is to secure",
+    "the systems of tomorrow",
+    "by thinking like an attacker,",
+    "finding vulnerabilities,",
+    "and turning them into",
+    "stronger, safer systems.",
+  ],
+};
+
 export const MISSIONS = [
   { name: "portfolio-v1", status: "DEPLOYED", live: true },
   { name: "image-search", status: "WIP", live: false },

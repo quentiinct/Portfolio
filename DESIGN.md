@@ -118,7 +118,7 @@ Components are treated by layer. The chrome (HUD, deck rail, location read-out, 
 The palette is dark only, because the page is a window onto space. Light comes from the 3D scene: sun, planet bounce and deck lighting. Color in the UI is rationed.
 
 **Key Characteristics:**
-- Opening: a glowing 3D lattice draws the decor on black, then the voxels fill in from the ship outwards; the interface arrives last.
+- Opening (after igloo.inc): a sparse 3D graph draws itself, the decor appears as a hologram and lands as a white flash from the ship outwards; the interface arrives last.
 - Scroll drives a camera flight, and HTML panels fade in sync with it (chapter time `t`).
 - Two voices: Unbounded Black for names and headings, IBM Plex Mono for every sentence and read-out (11px floor).
 - Instrument chrome: tinted glass, 1px hairlines, one orange signal.
@@ -131,7 +131,7 @@ The palette is dark only, because the page is a window onto space. Light comes f
 The palette is a black void and cool steel grays, with one ignition orange and one accent per deck.
 
 ### Primary
-- **Ignition Orange** (#ff5a36): what is live or focused. It appears on the period after the hero name, the active rail pip, the location dot, the focus ring, the CTA hover tint and text selection. It reads on black (6.8:1) and on the lit decks (3:1).
+- **Ignition Orange** (#ff5a36): what is live or focused. It appears on the full stop after the hero name, the active rail pip, the location dot, the focus ring, the CTA hover tint and text selection. It reads on black (6.8:1) and on the lit decks (3:1).
 
 ### Secondary
 - **Deck accents**, one per floor, shared by the 3D lights and at most one UI mark:
@@ -168,7 +168,7 @@ The palette is a black void and cool steel grays, with one ignition orange and o
 **Character:** Two voices, taken from the owner's reference (a heavy, wide, rounded-square logo over slab-serif mono copy). Unbounded Black is round, wide and loud: it names the ship, its decks and its crew. IBM Plex Mono writes the log. Its small slabs on i, l and r keep sentences readable, and it carries the labels and read-outs too, so the whole interface feels typed on the ship's terminal.
 
 ### Hierarchy
-- **Display** (Unbounded 900, clamp(2.3rem, 6.1vw, 6.3rem), 0.94, -0.02em, uppercase): the hero name only, stacked on two lines, with the round full stop in ignition orange.
+- **Display** (Unbounded 900, clamp(2.8rem, 8.5vw, 8rem) on desktop, up to 15vw on phones, 0.9, -0.02em, uppercase): the hero name only, the first name on one line, glowing ice-white, with the round full stop in ignition orange (no glow).
 - **Headline** (Unbounded 700, clamp(1.3rem, 1.9vw, 1.7rem), 1.1): panel titles; the boarding status uses the same voice.
 - **Title** (Unbounded 700, 1.125rem, 1.375): card headings (GitHub Projects, Contact).
 - **Body** (Plex Mono 400, clamp(0.95rem, 1.2vw, 1.1rem), 1.6): the hero tagline and panel lead copy, at up to 38rem.
@@ -181,12 +181,13 @@ The palette is a black void and cool steel grays, with one ignition orange and o
 
 **The 11px Floor.** No functional text is smaller than 11px, including tracked micro-labels, status pills and read-outs.
 
-**The Width Budget.** Unbounded is about twice as wide as a regular sans. Size display text by the line it must fit (the hero name tops out at 6.3rem), never by habit, and check the narrowest phone.
+**The Width Budget.** Unbounded is about twice as wide as a regular sans. Size display text by the line it must fit (the hero name tops out at 8rem and shares its line with the manifesto on desktop), never by habit, and check the narrowest phone.
 
 ## Layout
 
 The page is six tall chapters (`<section data-chapter>`): hero 120vh, boarding 150vh, three decks at 250vh (230vh on phones) and contact at 160vh. The chapter heights set the pacing of the flight. Each chapter's content sticks to the viewport (`.sticky-screen`, 100svh) and fades with the chapter time.
 
+- **Hero (after the igloo.inc footer):** two blocks on one baseline. Left: the name, the focus line (Cybersecurity · AI) and the legal lines (// Copyright © 2026 / Quentin EI / All Rights Reserved.). Right, right-aligned: “////// Manifesto”, the six-line manifesto (its line breaks are part of the copy) and the “Board the ship” button. Phones stack them, left-aligned, without the scroll hint. A bottom scrim keeps both legible over the planet.
 - **Desktop:** panels sit on the left gutter (`clamp(1rem, 5.5vw, 6.5rem)`), vertically centered, leaving the right two-thirds to the 3D. The HUD is a three-column bar with the logo, a centered deck nav and an empty right column. The deck rail sits mid-right and the location read-out bottom-left.
 - **Phones (≤767px):** panels are full width and anchored to the bottom, under the 3D. The HUD keeps the logo icon and a compact deck switcher with 44px targets. The rail and the read-out are hidden.
 - **Short screens (≤560px tall):** landscape phones, small windows and 200% zoom. The chrome is reduced, and cards and panels scroll inside instead of being cut.
@@ -202,7 +203,7 @@ Depth belongs to the 3D scene. UI surfaces are tinted glass over it (panel glass
 - **Hover ring** (`0 0 0 1px rgba(255,255,255,0.25)`, fading out): the bento card's hover acknowledgement.
 
 ### Named Rules
-**The No-Halo Rule.** No colored zero-offset glows on dots, pips, bars or borders. A status dot is a flat dot.
+**The No-Halo Rule.** No colored zero-offset glows on dots, pips, bars or borders. A status dot is a flat dot. The one exception is the hero name: a lit sign in ice white (`text-shadow: 0 0 18px / 46px / 110px`, cooling outwards), at the owner's request.
 
 **The Scrim Rule.** Text that must sit on bright scene areas, such as the planet limb, gets a dark gradient scrim or a tinted pill behind it, never a brighter color.
 
@@ -232,7 +233,7 @@ Quiet glass that warms to orange on intent.
 - **Location read-out:** a mono 11px line in a tinted pill at the bottom left, announced politely to screen readers.
 
 ### Opening reveal (signature)
-The opening reveal is the one authored moment, and it lives in 3D. Each pixel's world position is rebuilt from the depth buffer. A glowing ice-white voxel lattice first draws itself on the decor: the ship, the asteroids and the planet, with a celestial grid (every 1.2°) on the sky. The voxels then fill in by real distance from the ship: each one lands as a flat block with a brief flash and resolves to full detail, while a bright wave rides the lattice at the front. Voxels are 0.5 units near the camera and double with each octave of distance, so the lattice stays about 12–20px on screen; lines fade where cells get too small to stay crisp, and far objects glow more softly. It takes 3.4s, and the interface arrives as the last voxels land. It is a post pass (`three/Reveal.tsx`, depth-aware) placed before bloom so the lines glow; the loader hands over to it, and the pass is switched off once it ends. Reduced motion skips it.
+The opening is the one authored moment, after igloo.inc, and it lives in 3D. As the loader fades, a sparse graph draws itself outwards from the ship: points at several depths joined to their two nearest neighbours by thin straight segments, with small numbers (32, 41, 54…) beside some points, mostly dim and a few bright (`three/IntroGraph.tsx`, its own render pass over the image). Meanwhile world positions are rebuilt from the depth buffer (`three/Reveal.tsx`). Ahead of the front the decor is a hologram on black: glowing outlines from depth and luminance edges, rim light and a faint fine mesh. At the front, voxel by voxel in a stair-stepped edge ordered by real distance from the ship, each surface lands as an ice-white flash that settles into the real image while its outlines linger; the sky comes up from black last, in square blocks. It takes 3.8s: the interface fades in as the decor settles and the graph fades out. Both passes sit before bloom so the lines glow, and switch off once done. Reduced motion skips it all.
 
 ### Bento pixel scenes (signature)
 Hand-placed SVG pixel art (`shape-rendering: crispEdges`): the control room, the forest and the city. Their loops are CSS (`.px-twinkle`, `.px-rise`, `.px-ping`) so they cost nothing per frame. They pause while their card is faded out (`[data-idle]`) and stop under reduced motion.

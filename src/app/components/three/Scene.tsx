@@ -16,6 +16,7 @@ import ForegroundDust from "./space/ForegroundDust";
 import Rocket from "./rocket/Rocket";
 import Interior from "./interior/Interior";
 import { RevealDriver, useRevealPass } from "./Reveal";
+import { IntroGraphDriver, useIntroGraphPass } from "./IntroGraph";
 import { getRoomEnv } from "./interior/materials";
 import { ROCKET_POSITION, ROCKET_ROTATION } from "./config";
 import { scrollStore } from "../scroll/scrollStore";
@@ -59,18 +60,21 @@ function Effects({ quality }: { quality: Quality }) {
   // A pass of its own (not merged with bloom) so bloom reads the cleaned buffer.
   const sanitize = useMemo(() => new EffectPass(camera, new SanitizeEffect()), [camera]);
   useEffect(() => () => sanitize.dispose(), [sanitize]);
-  // Opening reveal: before bloom, so its grid lines glow.
+  // Opening: the reveal, then the floating graph drawn over it, both before bloom so they glow.
   const reveal = useRevealPass();
+  const graph = useIntroGraphPass();
   return (
     <>
       <EffectComposer multisampling={quality === "high" ? 4 : 0} frameBufferType={THREE.HalfFloatType}>
         <primitive object={sanitize} dispose={null} />
         <primitive object={reveal.pass} dispose={null} />
+        <primitive object={graph.pass} dispose={null} />
         <Bloom mipmapBlur intensity={0.85} luminanceThreshold={1.05} luminanceSmoothing={0.25} radius={0.72} />
         <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
         <Vignette offset={0.28} darkness={0.62} />
       </EffectComposer>
       <RevealDriver pass={reveal.pass} effect={reveal.effect} />
+      <IntroGraphDriver pass={graph.pass} graph={graph.graph} />
     </>
   );
 }

@@ -168,7 +168,8 @@ html[data-intro] .hud {
 }
 .sticky-screen--hero {
   align-items: flex-end;
-  padding-bottom: 15vh;
+  /* Low enough that the manifesto clears the deck rail on the right. */
+  padding-bottom: 8vh;
 }
 .sticky-screen--center {
   justify-content: center;
@@ -183,54 +184,85 @@ html[data-intro] .hud {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0) 30%);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.35) 22%, rgba(0, 0, 0, 0) 42%);
 }
 
+/* Two blocks on one baseline, after the igloo.inc footer: identity left, manifesto right. */
 .hero {
   position: relative;
-  max-width: 46rem;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 3rem;
+  width: 100%;
   will-change: opacity, transform;
+}
+.hero__id,
+.hero__manifesto {
+  display: flex;
+  flex-direction: column;
+  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.85), 0 0 2px rgba(0, 0, 0, 0.6);
 }
 
 .hero__title {
-  display: flex;
-  flex-direction: column;
-  margin: 0 0 1.4rem;
+  margin: 0;
   font-family: var(--display);
-  font-size: clamp(2.3rem, 6.1vw, 6.3rem);
+  /* Sized by the width it shares with the manifesto (one word, ~5.9em wide). */
+  font-size: clamp(2.8rem, 8.5vw, 8rem);
   font-weight: 900;
-  line-height: 0.94;
+  line-height: 0.9;
   letter-spacing: -0.02em;
   text-transform: uppercase;
   color: #fff;
-  text-shadow: 0 10px 60px rgba(0, 0, 0, 0.45);
+  /* The name is the one thing that glows: a lit sign, ice-white like the reveal. */
+  text-shadow:
+    0 0 18px rgba(214, 232, 255, 0.55),
+    0 0 46px rgba(150, 190, 255, 0.35),
+    0 0 110px rgba(120, 170, 255, 0.22);
 }
 .hero__title em {
   color: var(--brand);
   font-style: normal;
+  text-shadow: none;
 }
 
-.hero__roles,
-.hero__tagline {
-  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.85), 0 0 2px rgba(0, 0, 0, 0.6);
-}
-.hero__roles {
-  text-wrap: balance;
+.hero__focus {
+  margin-top: 1.3rem;
   font-family: var(--mono);
   font-size: 12px;
   letter-spacing: 0.22em;
   text-transform: uppercase;
+  color: var(--foreground);
+}
+.hero__legal {
+  display: flex;
+  flex-direction: column;
+  margin-top: 1rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.55;
   color: var(--soft);
 }
 
-.hero__tagline {
-  /* Wide enough for the tagline on one line on desktop (no break inside "real-world"). */
-  max-width: 38rem;
-  text-wrap: pretty;
-  margin-top: 0.9rem;
-  font-size: clamp(0.95rem, 1.2vw, 1.1rem);
-  line-height: 1.6;
+.hero__manifesto {
+  align-items: flex-end;
+  text-align: right;
+}
+.hero__manifesto-label {
+  margin-bottom: 0.85rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
   color: var(--soft);
+}
+.hero__manifesto-text {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--mono);
+  font-size: clamp(0.9rem, 1.05vw, 1rem);
+  line-height: 1.5;
+  color: var(--foreground);
 }
 
 .hero__cta {
@@ -642,7 +674,8 @@ body.system-killed .experience {
 
 .rail {
   position: absolute;
-  top: 50%;
+  /* A little above centre: the hero manifesto sits below it on the right. */
+  top: 44%;
   right: calc(var(--gutter) * 0.55);
   display: flex;
   flex-direction: column;
@@ -859,8 +892,7 @@ body.system-killed .experience {
     padding: 4.5rem 0.75rem 1rem;
   }
   .sticky-screen--hero {
-    /* Clear the scroll hint (3.2vh + label + 42px line) under the CTA. */
-    padding-bottom: calc(3.2vh + 5.75rem);
+    padding-bottom: 1.75rem;
   }
   .sticky-screen--center {
     padding-bottom: 22vh;
@@ -869,7 +901,38 @@ body.system-killed .experience {
     background: linear-gradient(to top, rgba(0, 0, 0, 0.82), rgba(0, 0, 0, 0.6) 38%, rgba(0, 0, 0, 0) 64%);
   }
   .hero {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.4rem;
     padding: 0 0.5rem;
+  }
+  .hero__title {
+    font-size: clamp(2.8rem, 15vw, 5rem);
+  }
+  .hero__focus {
+    margin-top: 0.9rem;
+  }
+  .hero__legal {
+    margin-top: 0.6rem;
+    font-size: 11px;
+  }
+  .hero__manifesto {
+    align-items: flex-start;
+    text-align: left;
+  }
+  .hero__manifesto-label {
+    margin-bottom: 0.5rem;
+    font-size: 11px;
+  }
+  .hero__manifesto-text {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .hero__cta {
+    margin-top: 1.1rem;
+  }
+  .scroll-hint {
+    display: none;
   }
   .panel {
     width: 100%;
@@ -949,11 +1012,17 @@ body.system-killed .experience {
     padding-bottom: 7vh;
   }
   .hero__title {
-    font-size: clamp(1.9rem, 11vh, 4rem);
-    margin-bottom: 1rem;
+    font-size: clamp(1.9rem, 13vh, 4.5rem);
   }
-  .hero__tagline {
-    margin-top: 0.5rem;
+  .hero__focus {
+    margin-top: 0.6rem;
+  }
+  .hero__legal {
+    margin-top: 0.4rem;
+  }
+  .hero__manifesto-text {
+    font-size: 12px;
+    line-height: 1.4;
   }
   .hero__cta {
     margin-top: 1.1rem;
