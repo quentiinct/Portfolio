@@ -166,11 +166,10 @@ html[data-intro] .hud {
 .sticky-screen > * {
   pointer-events: auto;
 }
-/* Manifesto under the navigation, name block above the scroll hint. */
+/* Both blocks sit along the top, under the navigation; the scroll hint stays at the bottom. */
 .sticky-screen--hero {
-  align-items: stretch;
+  align-items: flex-start;
   padding-top: 6.25rem;
-  padding-bottom: calc(3.2vh + 6.5rem);
 }
 .sticky-screen--center {
   justify-content: center;
@@ -180,23 +179,24 @@ html[data-intro] .hud {
 
 /* ─── Hero ─────────────────────────────────────────────────── */
 
-/* Darkens the bright planet limb under the name and the scroll hint, and the corner behind the manifesto. */
+/* Shades the two top corners behind the text, and the bright planet limb under the scroll hint. */
 .sticky-screen > .hero-scrim {
   position: absolute;
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(ellipse 55% 45% at 0% 0%, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0)),
-    linear-gradient(to top, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.35) 22%, rgba(0, 0, 0, 0) 42%);
+    radial-gradient(ellipse 50% 45% at 0% 0%, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0)),
+    radial-gradient(ellipse 40% 45% at 100% 0%, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0)),
+    linear-gradient(to top, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0) 22%);
 }
 
-/* Two blocks: the manifesto in the top-left corner, the name block centred at the bottom. */
+/* Two blocks along the top: the name block on the left, the manifesto on the right. */
 .hero {
   position: relative;
   display: flex;
-  flex-direction: column;
   justify-content: space-between;
-  gap: 2rem;
+  align-items: flex-start;
+  gap: 3rem;
   width: 100%;
   will-change: opacity, transform;
 }
@@ -240,16 +240,19 @@ html[data-intro] .hud {
   color: var(--soft);
 }
 
-/* The block sits in the middle of the screen; its lines stay left-aligned. */
-.hero__id {
-  align-self: center;
+/* Both blocks keep their lines left-aligned. */
+.hero__id,
+.hero__manifesto {
   align-items: flex-start;
   text-align: left;
 }
-.hero__manifesto {
-  align-self: flex-start;
-  align-items: flex-start;
-  text-align: left;
+/* Narrower or squarer screens bring the ship close to the top-right corner:
+   the manifesto moves under the name block there. */
+@media (max-width: 1220px) and (max-aspect-ratio: 16/9), (max-aspect-ratio: 7/5) {
+  .hero {
+    flex-direction: column;
+    gap: 2rem;
+  }
 }
 /* The label is set at the size of the manifesto lines, only bolder. */
 .hero__manifesto-label,
@@ -762,9 +765,8 @@ body.system-killed .experience {
     padding: 4.5rem 0.75rem 1rem;
   }
   .sticky-screen--hero {
-    align-items: stretch;
+    align-items: flex-start;
     padding-top: 4.75rem;
-    padding-bottom: 1.75rem;
   }
   .sticky-screen--center {
     padding-bottom: 22vh;
@@ -773,6 +775,8 @@ body.system-killed .experience {
     background: linear-gradient(to top, rgba(0, 0, 0, 0.82), rgba(0, 0, 0, 0.6) 38%, rgba(0, 0, 0, 0) 64%);
   }
   .hero {
+    flex-direction: column;
+    gap: 1.6rem;
     padding: 0 0.5rem;
   }
   .hero__title {
@@ -857,7 +861,6 @@ body.system-killed .experience {
   }
   .sticky-screen--hero {
     padding-top: 4.25rem;
-    padding-bottom: 7vh;
   }
   .hero__title {
     font-size: clamp(1.6rem, 9vh, 2.8rem);

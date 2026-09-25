@@ -89,16 +89,6 @@ export function Hero() {
     <div className="sticky-screen sticky-screen--hero">
       <div ref={scrim} className="hero-scrim" aria-hidden />
       <div ref={ref} className="hero">
-        <div className="hero__manifesto">
-          <p className="hero__manifesto-label">
-            <span aria-hidden>{"////// "}</span>Manifesto
-          </p>
-          <p className="hero__manifesto-text">
-            {HERO.manifesto.map((line) => (
-              <span key={line}>{line}</span>
-            ))}
-          </p>
-        </div>
         <div className="hero__id">
           <h1 className="hero__title">
             {PROFILE.firstName}
@@ -111,6 +101,16 @@ export function Hero() {
             </span>
             <span>{HERO.copyright.holder}</span>
             <span>All Rights Reserved.</span>
+          </p>
+        </div>
+        <div className="hero__manifesto">
+          <p className="hero__manifesto-label">
+            <span aria-hidden>{"////// "}</span>Manifesto
+          </p>
+          <p className="hero__manifesto-text">
+            {HERO.manifesto.map((line) => (
+              <span key={line}>{line}</span>
+            ))}
           </p>
         </div>
       </div>
