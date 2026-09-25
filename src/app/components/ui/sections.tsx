@@ -5,7 +5,7 @@ import { HERO, PROFILE, SECURITY } from "../../data";
 import { DECKS } from "../decks";
 import { ContactCard, GitHubCard, HeroCard, SceneActiveContext, killSystem } from "./bento";
 import { deckFade, smooth, useFadeActive, useOverflowScroll, useScrollFade } from "./useChapter";
-import { navigateTo, scrollStore } from "../scroll/scrollStore";
+import { scrollStore } from "../scroll/scrollStore";
 
 // ═══════════════════════════════════════════════════════════════
 // STORY SECTIONS — HTML layer above the canvas. Each chapter is a tall
@@ -16,11 +16,6 @@ import { navigateTo, scrollStore } from "../scroll/scrollStore";
 // ─── Icons ────────────────────────────────────────────────────
 
 const Icon = {
-  arrow: (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <path d="M5 12h14M13 5l7 7-7 7" />
-    </svg>
-  ),
   shield: (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
       <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
@@ -94,6 +89,16 @@ export function Hero() {
     <div className="sticky-screen sticky-screen--hero">
       <div ref={scrim} className="hero-scrim" aria-hidden />
       <div ref={ref} className="hero">
+        <div className="hero__manifesto">
+          <p className="hero__manifesto-label">
+            <span aria-hidden>{"////// "}</span>Manifesto
+          </p>
+          <p className="hero__manifesto-text">
+            {HERO.manifesto.map((line) => (
+              <span key={line}>{line}</span>
+            ))}
+          </p>
+        </div>
         <div className="hero__id">
           <h1 className="hero__title">
             {PROFILE.firstName}
@@ -107,19 +112,6 @@ export function Hero() {
             <span>{HERO.copyright.holder}</span>
             <span>All Rights Reserved.</span>
           </p>
-        </div>
-        <div className="hero__manifesto">
-          <p className="hero__manifesto-label">
-            <span aria-hidden>{"////// "}</span>Manifesto
-          </p>
-          <p className="hero__manifesto-text">
-            {HERO.manifesto.map((line) => (
-              <span key={line}>{line}</span>
-            ))}
-          </p>
-          <button type="button" className="hero__cta" onClick={() => navigateTo(2, DECKS[0].id)}>
-            Board the ship {Icon.arrow}
-          </button>
         </div>
       </div>
       <ScrollHint />

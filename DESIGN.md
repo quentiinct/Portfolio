@@ -67,15 +67,6 @@ spacing:
   card-inset: "20px"
   panel-inset: "1.55rem 1.7rem 1.7rem"
 components:
-  button-primary:
-    backgroundColor: "rgba(255, 255, 255, 0.06)"
-    textColor: "#ffffff"
-    rounded: "{rounded.pill}"
-    padding: "0.85rem 1.35rem"
-    typography: "{typography.body-small}"
-  button-primary-hover:
-    backgroundColor: "rgba(255, 90, 54, 0.16)"
-    textColor: "#ffffff"
   nav-link:
     textColor: "{colors.instrument-gray}"
     rounded: "{rounded.pill}"
@@ -131,7 +122,7 @@ The palette is dark only, because the page is a window onto space. Light comes f
 The palette is a black void and cool steel grays, with one ignition orange and one accent per deck.
 
 ### Primary
-- **Ignition Orange** (#ff5a36): what is live or focused. It appears on the mark under the current deck in the navigation, the focus ring, the CTA hover tint and text selection. It reads on black (6.8:1) and on the lit decks (3:1).
+- **Ignition Orange** (#ff5a36): what is live or focused. It appears on the mark under the current deck in the navigation, the focus ring and text selection. It reads on black (6.8:1) and on the lit decks (3:1).
 
 ### Secondary
 - **Deck accents**, one per floor, shared by the 3D lights and at most one UI mark:
@@ -168,7 +159,7 @@ The palette is a black void and cool steel grays, with one ignition orange and o
 **Character:** Two voices, taken from the owner's reference (a heavy, wide, rounded-square logo over slab-serif mono copy). Unbounded Black is round, wide and loud: it names the ship, its decks and its crew. IBM Plex Mono writes the log. Its small slabs on i, l and r keep sentences readable, and it carries the labels and read-outs too, so the whole interface feels typed on the ship's terminal.
 
 ### Hierarchy
-- **Display** (Unbounded 900, clamp(2.2rem, 5.6vw, 5.4rem) on desktop, up to 12vw on phones, 0.9, -0.02em, uppercase): the hero name only, the first name alone, with a soft ice-white glow.
+- **Display** (Unbounded 900, clamp(1.9rem, 4.2vw, 4rem) on desktop, up to 9.5vw on phones, 0.9, -0.02em, uppercase): the hero name only, the first name alone, with a soft ice-white glow.
 - **Headline** (Unbounded 700, clamp(1.3rem, 1.9vw, 1.7rem), 1.1): panel titles; the boarding status uses the same voice.
 - **Title** (Unbounded 700, 1.125rem, 1.375): card headings (GitHub Projects, Contact).
 - **Body** (Plex Mono 400, clamp(0.95rem, 1.2vw, 1.1rem), 1.6): the hero tagline and panel lead copy, at up to 38rem.
@@ -181,13 +172,13 @@ The palette is a black void and cool steel grays, with one ignition orange and o
 
 **The 11px Floor.** No functional text is smaller than 11px, including tracked micro-labels, status pills and read-outs.
 
-**The Width Budget.** Unbounded is about twice as wide as a regular sans. Size display text by the line it must fit (the hero name tops out at 5.4rem and shares its line with the manifesto on desktop), never by habit, and check the narrowest phone.
+**The Width Budget.** Unbounded is about twice as wide as a regular sans. Size display text by the line it must fit (the hero name tops out at 4rem), never by habit, and check the narrowest phone.
 
 ## Layout
 
 The page is six tall chapters (`<section data-chapter>`): hero 120vh, boarding 150vh, three decks at 250vh (230vh on phones) and contact at 160vh. The chapter heights set the pacing of the flight. Each chapter's content sticks to the viewport (`.sticky-screen`, 100svh) and fades with the chapter time.
 
-- **Hero (after the igloo.inc footer):** two blocks on one baseline. Left, centred on itself: the name, the focus line (Cybersecurity · AI) and the legal lines (// Copyright © 2026 / Quentin EI / All Rights Reserved.). Right, right-aligned: “////// Manifesto”, the six-line manifesto (its line breaks are part of the copy) and the “Board the ship” button. Phones stack both blocks, centred, without the scroll hint. A bottom scrim keeps both legible over the planet.
+- **Hero:** two blocks, both left-aligned text. Top-left corner, under the navigation: “////// Manifesto” (set at the size of the lines, only bolder) and the six-line manifesto (its line breaks are part of the copy). Centred horizontally at the bottom, above the scroll hint: the name, the focus line (Cybersecurity · AI) and the legal lines (// Copyright © 2026 / Quentin EI / All Rights Reserved.). There is no call-to-action button: scrolling is the action. On portrait screens the camera frames the ship right of centre so the manifesto stays clear of it; phones drop the scroll hint. A bottom scrim and a top-left corner shade keep both blocks legible.
 - **Desktop:** panels sit on the left gutter (`clamp(1rem, 5.5vw, 6.5rem)`), vertically centered, leaving the right two-thirds to the 3D. The HUD is only the deck navigation, centred at the top.
 - **Phones (≤767px):** panels are full width and anchored to the bottom, under the 3D. The deck navigation spreads across the top with 44px targets.
 - **Short screens (≤560px tall):** landscape phones, small windows and 200% zoom. The chrome is reduced, and cards and panels scroll inside instead of being cut.
@@ -209,15 +200,12 @@ Depth belongs to the 3D scene. UI surfaces are tinted glass over it (panel glass
 
 ## Shapes
 
-Controls are pills: the CTA and chips. The navigation has no container at all. Surfaces step down in radius as they nest: panels at 20px, cards at 16px, rows inside cards at 12px, icon tiles at 10px. Borders are always 1px hairlines. The Security panel adds 14px corner brackets in its deck accent, its one ornament.
+Controls are pills: chips and the buttons inside the cards. The navigation has no container at all. Surfaces step down in radius as they nest: panels at 20px, cards at 16px, rows inside cards at 12px, icon tiles at 10px. Borders are always 1px hairlines. The Security panel adds 14px corner brackets in its deck accent, its one ornament.
 
 ## Components
 
 ### Buttons
-Quiet glass that warms to orange on intent.
-- **Shape:** full pill (999px).
-- **Primary (hero CTA):** white at 6% on blur(12px), a hairline-strong border, white 13px/500 mono text with a trailing arrow.
-- **Hover / Focus:** orange at 16% fill and a 55% orange border, lifted 1px with the arrow nudged 3px (ease-out 250ms). Focus uses the global 2px orange ring at a 3px offset. Reduced motion keeps the color change and drops the movement.
+The page has no primary call to action: scrolling is the action, invited by the scroll hint. Buttons live inside the bento cards (the Contact card's email button, the GitHub card's Retry) and keep the live site's styling. Focus uses the global 2px orange ring at a 3px offset.
 
 ### Chips
 - **Style:** white at 3% fill, hairline-strong border, Moonlight 12.5px text, pill radius. They are static tags and not interactive.

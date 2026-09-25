@@ -85,6 +85,10 @@ export default function CameraRig() {
         look.lerp(fwd, 0.85 * ext).addScaledVector(WORLD_UP, -17 * ext);
         fwd.subVectors(pos, look).multiplyScalar(0.55 * ext);
         pos.add(fwd);
+        // Aim a little left of the ship so it sits right of centre: the manifesto owns the top-left corner.
+        fwd.subVectors(look, pos);
+        right.crossVectors(fwd, WORLD_UP).normalize();
+        look.addScaledVector(right, -0.075 * fwd.length() * ext);
       }
       const aboard = smoothstep(1.7, 2.0, t) * portrait;
       if (aboard > 0) {

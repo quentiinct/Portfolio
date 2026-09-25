@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-25T17:01:17.277Z",
+  "generatedAt": "2026-09-25T17:25:42.091Z",
   "title": "Design System: Quentin Courtade · QC-01",
   "extensions": {
     "colorMeta": {
@@ -236,7 +236,7 @@
       {
         "name": "ease-out",
         "value": "cubic-bezier(0.16, 1, 0.3, 1)",
-        "purpose": "Arrivals: CTA lift, arrow nudge, rail label reveal."
+        "purpose": "Arrivals: panel and hover transitions."
       },
       {
         "name": "state-change",
@@ -279,14 +279,6 @@
     ]
   },
   "components": [
-    {
-      "name": "Primary Button (hero CTA)",
-      "kind": "button",
-      "refersTo": "button-primary",
-      "description": "The one call to action: quiet glass pill that warms to orange on intent.",
-      "html": "<button class=\"ds-cta\">Board the ship <svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14M13 5l7 7-7 7\"/></svg></button>",
-      "css": ".ds-cta { display: inline-flex; align-items: center; gap: 0.65rem; padding: 0.85rem 1.35rem; border: 1px solid rgba(255,255,255,0.18); border-radius: 999px; background: rgba(255,255,255,0.06); backdrop-filter: blur(12px); color: #fff; font: 500 13px/1 'IBM Plex Mono', ui-monospace, monospace; cursor: pointer; transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s cubic-bezier(0.16,1,0.3,1); } .ds-cta svg { transition: transform 0.25s cubic-bezier(0.16,1,0.3,1); } .ds-cta:hover { background: rgba(255,90,54,0.16); border-color: rgba(255,90,54,0.55); transform: translateY(-1px); } .ds-cta:hover svg { transform: translateX(3px); } .ds-cta:focus-visible { outline: 2px solid #ff5a36; outline-offset: 3px; }"
-    },
     {
       "name": "HUD Deck Navigation",
       "kind": "nav",

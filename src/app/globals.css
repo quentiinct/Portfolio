@@ -166,10 +166,11 @@ html[data-intro] .hud {
 .sticky-screen > * {
   pointer-events: auto;
 }
+/* Manifesto under the navigation, name block above the scroll hint. */
 .sticky-screen--hero {
-  align-items: flex-end;
-  /* Name and manifesto share a baseline near the bottom. */
-  padding-bottom: 8vh;
+  align-items: stretch;
+  padding-top: 6.25rem;
+  padding-bottom: calc(3.2vh + 6.5rem);
 }
 .sticky-screen--center {
   justify-content: center;
@@ -179,21 +180,23 @@ html[data-intro] .hud {
 
 /* ─── Hero ─────────────────────────────────────────────────── */
 
-/* Darkens the bright planet limb under the hero text and the scroll hint. */
+/* Darkens the bright planet limb under the name and the scroll hint, and the corner behind the manifesto. */
 .sticky-screen > .hero-scrim {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.35) 22%, rgba(0, 0, 0, 0) 42%);
+  background:
+    radial-gradient(ellipse 55% 45% at 0% 0%, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0)),
+    linear-gradient(to top, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.35) 22%, rgba(0, 0, 0, 0) 42%);
 }
 
-/* Two blocks on one baseline, after the igloo.inc footer: identity left, manifesto right. */
+/* Two blocks: the manifesto in the top-left corner, the name block centred at the bottom. */
 .hero {
   position: relative;
   display: flex;
-  align-items: flex-end;
+  flex-direction: column;
   justify-content: space-between;
-  gap: 3rem;
+  gap: 2rem;
   width: 100%;
   will-change: opacity, transform;
 }
@@ -207,8 +210,7 @@ html[data-intro] .hud {
 .hero__title {
   margin: 0;
   font-family: var(--display);
-  /* Sized by the width it shares with the manifesto (one word, ~5.5em wide). */
-  font-size: clamp(2.2rem, 5.6vw, 5.4rem);
+  font-size: clamp(1.9rem, 4.2vw, 4rem);
   font-weight: 900;
   line-height: 0.9;
   letter-spacing: -0.02em;
@@ -238,62 +240,32 @@ html[data-intro] .hud {
   color: var(--soft);
 }
 
+/* The block sits in the middle of the screen; its lines stay left-aligned. */
 .hero__id {
-  align-items: center;
-  text-align: center;
+  align-self: center;
+  align-items: flex-start;
+  text-align: left;
 }
 .hero__manifesto {
-  align-items: flex-end;
-  text-align: right;
+  align-self: flex-start;
+  align-items: flex-start;
+  text-align: left;
 }
-.hero__manifesto-label {
-  margin-bottom: 0.85rem;
-  font-family: var(--mono);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  color: var(--soft);
-}
+/* The label is set at the size of the manifesto lines, only bolder. */
+.hero__manifesto-label,
 .hero__manifesto-text {
-  display: flex;
-  flex-direction: column;
   font-family: var(--mono);
   font-size: clamp(0.9rem, 1.05vw, 1rem);
   line-height: 1.5;
   color: var(--foreground);
 }
-
-.hero__cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.65rem;
-  margin-top: 2.1rem;
-  padding: 0.85rem 1.35rem;
-  border: 1px solid var(--line-strong);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  color: #fff;
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s var(--ease-out);
+.hero__manifesto-label {
+  margin-bottom: 0.7rem;
+  font-weight: 600;
 }
-.hero__cta:hover {
-  background: rgba(255, 90, 54, 0.16);
-  border-color: rgba(255, 90, 54, 0.55);
-  transform: translateY(-1px);
-}
-.hero__cta:active {
-  transform: translateY(0);
-  background: rgba(255, 90, 54, 0.24);
-}
-.hero__cta svg {
-  transition: transform 0.25s var(--ease-out);
-}
-.hero__cta:hover svg {
-  transform: translateX(3px);
+.hero__manifesto-text {
+  display: flex;
+  flex-direction: column;
 }
 
 .scroll-hint {
@@ -790,6 +762,8 @@ body.system-killed .experience {
     padding: 4.5rem 0.75rem 1rem;
   }
   .sticky-screen--hero {
+    align-items: stretch;
+    padding-top: 4.75rem;
     padding-bottom: 1.75rem;
   }
   .sticky-screen--center {
@@ -799,13 +773,10 @@ body.system-killed .experience {
     background: linear-gradient(to top, rgba(0, 0, 0, 0.82), rgba(0, 0, 0, 0.6) 38%, rgba(0, 0, 0, 0) 64%);
   }
   .hero {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 1.4rem;
     padding: 0 0.5rem;
   }
   .hero__title {
-    font-size: clamp(2.4rem, 12vw, 4rem);
+    font-size: clamp(2rem, 9.5vw, 3rem);
   }
   .hero__focus {
     margin-top: 0.9rem;
@@ -814,20 +785,12 @@ body.system-killed .experience {
     margin-top: 0.6rem;
     font-size: 11px;
   }
-  .hero__manifesto {
-    align-items: center;
-    text-align: center;
-  }
-  .hero__manifesto-label {
-    margin-bottom: 0.5rem;
-    font-size: 11px;
-  }
+  .hero__manifesto-label,
   .hero__manifesto-text {
     font-size: 13px;
-    line-height: 1.5;
   }
-  .hero__cta {
-    margin-top: 1.1rem;
+  .hero__manifesto-label {
+    margin-bottom: 0.45rem;
   }
   .scroll-hint {
     display: none;
@@ -863,6 +826,10 @@ body.system-killed .experience {
 }
 
 @media (max-width: 360px) {
+  .hero__manifesto-label,
+  .hero__manifesto-text {
+    font-size: 12px;
+  }
   .hud__nav {
     gap: 0.75rem;
   }
@@ -889,10 +856,11 @@ body.system-killed .experience {
     padding-bottom: 0.75rem;
   }
   .sticky-screen--hero {
+    padding-top: 4.25rem;
     padding-bottom: 7vh;
   }
   .hero__title {
-    font-size: clamp(1.8rem, 11vh, 3.6rem);
+    font-size: clamp(1.6rem, 9vh, 2.8rem);
   }
   .hero__focus {
     margin-top: 0.6rem;
@@ -900,12 +868,13 @@ body.system-killed .experience {
   .hero__legal {
     margin-top: 0.4rem;
   }
+  .hero__manifesto-label,
   .hero__manifesto-text {
     font-size: 12px;
     line-height: 1.4;
   }
-  .hero__cta {
-    margin-top: 1.1rem;
+  .hero__manifesto-label {
+    margin-bottom: 0.35rem;
   }
   .scroll-hint {
     display: none;
@@ -948,11 +917,6 @@ body.system-killed .experience {
   }
   .boarding__bar::after {
     left: 32%;
-  }
-  .hero__cta:hover,
-  .hero__cta:active,
-  .hero__cta:hover svg {
-    transform: none;
   }
   body.system-killed .story,
   body.system-killed .hud,
