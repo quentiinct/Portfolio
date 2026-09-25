@@ -24,8 +24,8 @@ const END = 1.1;
 const SECONDS = 3.4;
 /** If the loader never hands over (it always should), start anyway this long after ready. */
 const FALLBACK_START_MS = 2500;
-/** Voxel edge near the camera, in world units; doubles with each octave of distance. */
-const CELL = 1.6;
+/** Voxel edge near the camera, in world units (~12-20px on screen); doubles with each octave of distance. */
+const CELL = 0.5;
 
 const FRAG = /* glsl */ `
 uniform float uProgress;
@@ -39,7 +39,7 @@ uniform float uPx;
 uniform vec3 uGlow;
 
 const float LAND = 0.09;
-const float SKY_STEP = 0.1309; // 7.5 degrees
+const float SKY_STEP = 0.02094; // 1.2 degrees
 
 float revealHash(vec3 p) {
   p = fract(p * 0.1031);
@@ -64,13 +64,15 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, const in float depth,
   vec3 dir = normalize(wp - uCamPos);
 
   // Derivatives first (outside any branch).
-  // Surfaces: world-space voxels, coarser with distance so they stay ~40px on screen.
+  // Surfaces: world-space voxels, coarser with distance so they stay ~12-20px on screen.
   float cell = uCell * exp2(floor(log2(max(distance(wp, uCamPos) / 30.0, 1.0))));
   vec3 q = wp / cell;
-  vec3 wq = min(fwidth(q), vec3(0.08));
-  // Sky: meridians and parallels every 7.5 degrees.
+  vec3 wqRaw = fwidth(q);
+  vec3 wq = min(wqRaw, vec3(0.25));
+  // Sky: meridians and parallels every 1.2 degrees.
   vec2 sphere = vec2(atan(dir.z, dir.x), asin(clamp(dir.y, -1.0, 1.0))) / SKY_STEP;
-  vec2 ws = min(fwidth(sphere), vec2(0.08));
+  vec2 wsRaw = fwidth(sphere);
+  vec2 ws = min(wsRaw, vec2(0.25));
 
   float order;   // 0 at the ship → 1 for the farthest sky
   float jitter;
@@ -84,7 +86,8 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, const in float depth,
     mosaic = texture2D(inputBuffer, screenOf(center)).rgb;
     vec3 e = 0.5 - abs(fract(q) - 0.5);
     vec3 l = 1.0 - smoothstep(wq * 0.5 * uPx, wq * 1.5 * uPx, e);
-    line = max(l.x, max(l.y, l.z));
+    // Cells too small on screen (grazing angles, silhouettes) would alias: fade their lines.
+    line = max(l.x, max(l.y, l.z)) * (1.0 - smoothstep(0.15, 0.3, max(wqRaw.x, max(wqRaw.y, wqRaw.z))));
   } else {
     vec2 id = floor(sphere * 2.0);
     vec2 c = (id + 0.5) * 0.5 * SKY_STEP;
@@ -95,7 +98,7 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, const in float depth,
     mosaic = texture2D(inputBuffer, screenOf(uCamPos + cdir * 1000.0)).rgb;
     vec2 e = 0.5 - abs(fract(sphere) - 0.5);
     vec2 l = 1.0 - smoothstep(ws * 0.5 * uPx, ws * 1.5 * uPx, e);
-    line = max(l.x, l.y) * 0.6;
+    line = max(l.x, l.y) * 0.5 * (1.0 - smoothstep(0.15, 0.3, max(wsRaw.x, wsRaw.y)));
   }
 
   float wireIn = smoothstep(0.02 + order * 0.2, 0.1 + order * 0.2, uProgress);
@@ -106,13 +109,14 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, const in float depth,
   vec3 color = inputColor.rgb * 0.05 * wireIn;
   if (local > 0.0) {
     color = mix(mosaic, inputColor.rgb, smoothstep(0.45, 1.0, local));
-    color += uGlow * 0.12 * (1.0 - smoothstep(0.0, 0.5, local));
+    color += uGlow * 0.12 * (1.0 - 0.5 * order) * (1.0 - smoothstep(0.0, 0.5, local));
   }
 
   float wave = exp(-pow((uProgress - start - 0.03) / 0.05, 2.0));
   float pending = 1.0 - smoothstep(start, start + 0.18, uProgress);
   float fadeOut = 1.0 - smoothstep(0.95, ${END.toFixed(2)}, uProgress);
-  color += uGlow * line * wireIn * fadeOut * (0.4 * pending + 1.1 * wave);
+  // Far away (planet, sky) the lattice is dense on screen: calmer glow there.
+  color += uGlow * line * wireIn * fadeOut * (0.3 * pending + 0.85 * wave) * (1.0 - 0.55 * order);
 
   outputColor = vec4(color, inputColor.a);
 }
