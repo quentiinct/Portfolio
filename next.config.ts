@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // Keep `next dev` from writing extra markdown files at the project root.
+  agentRules: false,
 };
 
 export default nextConfig;
