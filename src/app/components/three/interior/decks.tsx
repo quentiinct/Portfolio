@@ -148,7 +148,7 @@ const whoamiCard = (ctx: CanvasRenderingContext2D, w: number, h: number) => {
   ctx.fillText("CREW MANIFEST · QC-01", 24, 40);
   ctx.fillStyle = "#f4f6f8";
   ctx.font = `800 52px ${display}`;
-  ctx.fillText(PROFILE.firstName, 24, 112);
+  ctx.fillText(PROFILE.firstName.toUpperCase(), 24, 112);
   ctx.fillStyle = "#b9c2cd";
   ctx.font = `500 22px ${mono}`;
   ctx.fillText(PROFILE.roles.join(" · "), 24, 150);
@@ -339,7 +339,7 @@ export function AboutDeck() {
   const term = useMemo(
     () =>
       terminalDraw([
-        { cmd: "whoami", out: `${PROFILE.firstName.toLowerCase()} ${PROFILE.lastName.toLowerCase()} — ${PROFILE.roles.join(" · ").toLowerCase()}` },
+        { cmd: "whoami", out: `${PROFILE.firstName.toUpperCase()} ${PROFILE.lastName.toUpperCase()} — ${PROFILE.roles.join(" · ").toLowerCase()}` },
         { cmd: "cat mission.txt", out: PROFILE.tagline.toLowerCase() },
         { cmd: "./status", out: `● available · ${PROFILE.location.toLowerCase()}` },
       ]),

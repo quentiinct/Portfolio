@@ -118,6 +118,7 @@ Components are treated by layer. The chrome (HUD, deck rail, location read-out, 
 The palette is dark only, because the page is a window onto space. Light comes from the 3D scene: sun, planet bounce and deck lighting. Color in the UI is rationed.
 
 **Key Characteristics:**
+- Opening: a glowing grid over black, the scene forms pixel by pixel from the ship outwards, then the interface arrives.
 - Scroll drives a camera flight, and HTML panels fade in sync with it (chapter time `t`).
 - Two voices: Unbounded Black for names and headings, IBM Plex Mono for every sentence and read-out (11px floor).
 - Instrument chrome: tinted glass, 1px hairlines, one orange signal.
@@ -229,6 +230,9 @@ Quiet glass that warms to orange on intent.
 - **HUD nav:** a pill of text links on dark glass. Links are Instrument Gray, the hover is white, and the current deck gets white text on white at 10% with `aria-current="location"`. The links are real anchors (`#about`…). A plain click flies the camera and moves focus to the section.
 - **Deck rail:** a vertical track filled with scroll progress (white to orange), with stops labelled `EXT` then 01–04. The active pip is solid orange, past pips are white at 50%, and labels reveal on hover, focus or when active.
 - **Location read-out:** a mono 11px line in a tinted pill at the bottom left, announced politely to screen readers.
+
+### Opening reveal (signature)
+The opening reveal is the one authored moment. A grid of glowing ice-white lines fades in over black; the scene then forms pixel by pixel from the ship outwards. Each block lands as a flat mosaic pixel with a brief flash and resolves to full detail, while a bright wave rides the grid at the front. It takes 2.8s, and the interface arrives as the last pixels land. It is a screen-space post pass (`three/Reveal.tsx`) placed before bloom so the lines glow; the loader hands over to it, and the pass is switched off once it ends. Reduced motion skips it.
 
 ### Bento pixel scenes (signature)
 Hand-placed SVG pixel art (`shape-rendering: crispEdges`): the control room, the forest and the city. Their loops are CSS (`.px-twinkle`, `.px-rise`, `.px-ping`) so they cost nothing per frame. They pause while their card is faded out (`[data-idle]`) and stop under reduced motion.

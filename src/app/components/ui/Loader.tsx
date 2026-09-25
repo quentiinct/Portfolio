@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { intro } from "../intro";
 import { scrollStore } from "../scroll/scrollStore";
 import { useReady } from "./useChapter";
 
@@ -33,9 +34,11 @@ export default function Loader() {
     return () => window.clearTimeout(id);
   }, []);
 
+  // Fade out and hand over to the pixel-grid reveal of the scene (three/Reveal.tsx).
   useEffect(() => {
     if (!done) return;
-    const id = window.setTimeout(() => setGone(true), 1400);
+    intro.begin();
+    const id = window.setTimeout(() => setGone(true), 700);
     return () => window.clearTimeout(id);
   }, [done]);
 
