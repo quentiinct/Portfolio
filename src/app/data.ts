@@ -1,7 +1,40 @@
 // ═══════════════════════════════════════════════════════════════
 // DONNÉES PARTAGÉES — utilisées dans page.tsx et clients/page.tsx
-// Modifie ici pour mettre à jour les chaînes partout à la fois.
+// Modifie ici pour mettre à jour les contenus partout à la fois.
 // ═══════════════════════════════════════════════════════════════
+
+export const PROFILE = {
+  firstName: "Quentin",
+  lastName: "Courtade",
+  roles: ["Full Stack", "AI", "Cybersecurity", "Editing"],
+  location: "Bordeaux · Remote",
+  available: true,
+  tagline: "I build AI tools and secure systems for real-world use.",
+  motto: "Useful. Reliable. Built clean.",
+  skills: ["AI & ML", "Cybersecurity", "Fullstack Dev", "Video Editing"],
+  avatar: "/memoji/frame-01.png",
+};
+
+export const MISSIONS = [
+  { name: "portfolio-v1", status: "DEPLOYED", live: true },
+  { name: "image-search", status: "WIP", live: false },
+];
+
+export const SECURITY = {
+  summary: "CTF, pentest & security projects — soon.",
+  detail:
+    "Offensive security is the next module being bolted on: capture-the-flag challenges, pentest labs and security tooling. Write-ups will be published here as they land.",
+  modules: ["CTF", "Pentest", "Kali Linux", "OSCP"],
+  status: "Under construction",
+};
+
+export const CONTACT = {
+  email: "quentincourtade33@gmail.com",
+  headline: "Open to the right opportunity.",
+  text: "Editing, dev, or something in between — if the project is interesting, I'm in.",
+};
+
+export const GITHUB_USER = "quentiinct";
 
 export type Channel = {
   id: string;

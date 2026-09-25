@@ -1,73 +1,1004 @@
 @import "tailwindcss";
 
 /*
-  On force toujours le dark mode — pas de switch light/dark.
-  Les variables CSS custom sont définies ici et utilisables partout.
+  Dark only — the page is a window onto space.
+  Design tokens shared by the HUD, the deck panels and the bento cards.
+  Text ramp on black: foreground 17:1 · soft 12:1 · muted 7.9:1 · faint 5.9:1.
 */
 :root {
-  --background: #0a0a0a;
-  --foreground: #ededed;
+  --background: #000000;
+  --foreground: #e9edf2;
+  --soft: #c8cfd8;
+  --muted: #9aa4b1;
+  --faint: #7f8896;
+  --line: rgba(255, 255, 255, 0.1);
+  --line-strong: rgba(255, 255, 255, 0.18);
+  --brand: #ff5a36;
+  --good: #3ddc84;
+  --warn: #ffb45e;
   --accent: #ffffff;
+  --mono: var(--font-geist-mono), ui-monospace, monospace;
+  --gutter: clamp(1rem, 5.5vw, 6.5rem);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-soft: var(--soft);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-line: var(--line);
+  --color-good: var(--good);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
 body {
   position: relative;
-  background: #030305;
-  color: #ededed;
+  background: #000;
+  color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
 }
 
-/* GRID BACKGROUND — commenté temporairement
-/*
-  Grille plate discrète sur toute la page.
-  Deux linear-gradient croisés forment les lignes horizontales et verticales.
-  Une radial-gradient au centre de chaque cellule donne un léger effet
-  "tuile surélevée" (centre légèrement plus clair que les bords).
-* /
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background-image:
-    linear-gradient(to bottom, rgba(0, 0, 0, 0.80) 1px, transparent 10px),
-    linear-gradient(to right,  rgba(0, 0, 0, 0.80) 1px, transparent 10px),
-    linear-gradient(
-      135deg,
-      rgba(255, 255, 255, 0.035)  0%,
-      rgba(255, 255, 255, 0.01)  45%,
-      rgba(0,   0,   0,   0.08) 55%,
-      rgba(0,   0,   0,   0.13) 100%
-    );
-  background-size: 50px 50px, 50px 50px, 50px 50px;
-}
-*/
-
-/* Tout le contenu passe au-dessus de la grille */
+/* Tout le contenu passe au-dessus du fond (canvas /clients en z-index -1) */
 body > * {
   position: relative;
   z-index: 1;
 }
 
-
 * {
   box-sizing: border-box;
 }
+
+::selection {
+  background: rgba(255, 90, 54, 0.35);
+  color: #ffffff;
+}
+
+/* One focus ring for every control: brand orange reads on black space (6.8:1) and on the lit decks (3:1). */
+:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 3px;
+}
+/* Chapters take focus only so navigation can move keyboard users there. */
+.chapter:focus {
+  outline: none;
+}
+
+/* Grain / bruit de fond — très léger, au-dessus de tout */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='250' height='250' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.035;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.mono {
+  font-family: var(--mono);
+}
+.small {
+  font-size: 12px;
+}
+.muted {
+  color: var(--muted);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   3D CANVAS
+   ═══════════════════════════════════════════════════════════════ */
+
+.experience {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+}
+.experience canvas {
+  display: block;
+}
+
+.webgl-fallback {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(1px 1px at 20% 30%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 70% 60%, #cfe0ff 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 40% 80%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 85% 15%, #fff 50%, transparent 51%),
+    radial-gradient(ellipse at 20% 110%, rgba(45, 95, 179, 0.35), transparent 60%),
+    #02030a;
+  background-size: 180px 180px, 240px 240px, 300px 300px, 210px 210px, 100% 100%, 100% 100%;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   STORY CHAPTERS — heights set the pacing of the flight
+   ═══════════════════════════════════════════════════════════════ */
+
+.story {
+  position: relative;
+  z-index: 2;
+}
+.chapter {
+  position: relative;
+}
+.chapter--hero {
+  height: 120vh;
+}
+.chapter--boarding {
+  height: 150vh;
+}
+.chapter--deck {
+  height: 250vh;
+}
+.chapter--last {
+  height: 160vh;
+}
+
+.sticky-screen {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  display: flex;
+  align-items: center;
+  padding: 5rem var(--gutter) 3rem;
+  pointer-events: none;
+}
+.sticky-screen > * {
+  pointer-events: auto;
+}
+.sticky-screen--hero {
+  align-items: flex-end;
+  padding-bottom: 15vh;
+}
+.sticky-screen--center {
+  justify-content: center;
+  align-items: flex-end;
+  padding-bottom: 18vh;
+}
+
+/* ─── Hero ─────────────────────────────────────────────────── */
+
+/* Darkens the bright planet limb under the hero text, the scroll hint and the HUD read-out. */
+.sticky-screen > .hero-scrim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0) 30%);
+}
+
+.hero {
+  position: relative;
+  max-width: 46rem;
+  will-change: opacity, transform;
+}
+
+.hero__title {
+  display: flex;
+  flex-direction: column;
+  margin: 0 0 1.5rem;
+  font-size: clamp(3.3rem, 8.6vw, 8.6rem);
+  font-weight: 700;
+  line-height: 0.86;
+  letter-spacing: -0.04em;
+  color: #fff;
+  text-shadow: 0 10px 60px rgba(0, 0, 0, 0.45);
+}
+.hero__title em {
+  color: var(--brand);
+  font-style: normal;
+}
+
+.hero__roles,
+.hero__tagline {
+  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.85), 0 0 2px rgba(0, 0, 0, 0.6);
+}
+.hero__roles {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--soft);
+}
+
+.hero__tagline {
+  max-width: 30rem;
+  margin-top: 0.9rem;
+  font-size: clamp(1rem, 1.35vw, 1.2rem);
+  line-height: 1.55;
+  color: var(--soft);
+}
+
+.hero__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-top: 2.1rem;
+  padding: 0.85rem 1.35rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s var(--ease-out);
+}
+.hero__cta:hover {
+  background: rgba(255, 90, 54, 0.16);
+  border-color: rgba(255, 90, 54, 0.55);
+  transform: translateY(-1px);
+}
+.hero__cta:active {
+  transform: translateY(0);
+  background: rgba(255, 90, 54, 0.24);
+}
+.hero__cta svg {
+  transition: transform 0.25s var(--ease-out);
+}
+.hero__cta:hover svg {
+  transform: translateX(3px);
+}
+
+.scroll-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 3.2vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+  margin-left: -6rem;
+  width: 12rem;
+  white-space: nowrap;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--soft);
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.9), 0 0 2px rgba(0, 0, 0, 0.8);
+  pointer-events: none;
+}
+.scroll-hint__line {
+  position: relative;
+  width: 1px;
+  height: 42px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.12);
+}
+.scroll-hint__line::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: -40%;
+  width: 1px;
+  height: 40%;
+  background: #fff;
+  animation: scroll-line 1.8s cubic-bezier(0.6, 0, 0.3, 1) infinite;
+}
+
+/* ─── Boarding caption ─────────────────────────────────────── */
+
+.boarding {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.55rem;
+  text-align: center;
+  will-change: opacity, transform;
+}
+.boarding__label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--warn);
+}
+.boarding__status {
+  font-size: clamp(1.4rem, 2.6vw, 2.2rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #fff;
+  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.6);
+}
+.boarding__bar {
+  position: relative;
+  width: 11rem;
+  height: 1px;
+  margin-top: 0.4rem;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.15);
+}
+.boarding__bar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 35%;
+  background: linear-gradient(90deg, transparent, var(--warn), transparent);
+  animation: sweep 1.6s linear infinite;
+}
+
+/* ─── Deck panels ──────────────────────────────────────────── */
+
+.panel {
+  position: relative;
+  width: min(31rem, 100%);
+  padding: 1.55rem 1.7rem 1.7rem;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(12, 14, 20, 0.84), rgba(6, 8, 12, 0.76));
+  backdrop-filter: blur(18px) saturate(130%);
+  -webkit-backdrop-filter: blur(18px) saturate(130%);
+  box-shadow:
+    0 30px 80px -24px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  will-change: opacity, transform;
+}
+.panel::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 1.7rem;
+  width: 3.4rem;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--accent);
+}
+.panel__corner {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-color: var(--accent);
+  opacity: 0.55;
+  pointer-events: none;
+}
+.panel__corner--tl {
+  top: -7px;
+  left: -7px;
+  border-top: 1px solid;
+  border-left: 1px solid;
+}
+.panel__corner--br {
+  right: -7px;
+  bottom: -7px;
+  border-right: 1px solid;
+  border-bottom: 1px solid;
+}
+
+.panel__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.95rem;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.panel__deck {
+  color: var(--accent);
+}
+.panel__of {
+  color: var(--faint);
+}
+
+.panel__title {
+  font-size: clamp(1.55rem, 2.3vw, 2.05rem);
+  font-weight: 650;
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  color: #fff;
+}
+.panel__title--icon {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-bottom: 0.9rem;
+}
+.title-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  color: var(--accent);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.lead {
+  margin-top: 1.05rem;
+  font-size: 1.05rem;
+  line-height: 1.5;
+  color: var(--foreground);
+}
+.panel .muted {
+  margin-top: 0.45rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+.block {
+  margin-top: 1.35rem;
+}
+.label {
+  margin-bottom: 0.6rem;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+.chip {
+  padding: 0.32rem 0.72rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.03);
+  font-size: 12.5px;
+  color: var(--soft);
+}
+
+/* Security */
+.progress {
+  position: relative;
+  height: 8px;
+  overflow: hidden;
+  border: 1px solid var(--line-strong);
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.03);
+}
+.progress__fill {
+  position: absolute;
+  inset: 0;
+  width: 42%;
+  background: repeating-linear-gradient(115deg, var(--warn) 0 7px, rgba(20, 20, 20, 0.9) 7px 14px);
+  background-size: 32px 100%;
+  animation: stripes 1.2s linear infinite;
+}
+.warn {
+  margin-top: 0.55rem;
+  color: var(--warn);
+}
+
+/* ─── Live-site bento cards on the decks ──────────────────── */
+
+.deck-card {
+  display: flex;
+  flex-direction: column;
+  width: min(24rem, 100%);
+  max-height: 100%;
+  will-change: opacity, transform;
+}
+.deck-card--wide {
+  width: min(30rem, 100%);
+}
+/*
+  The body scrolls only when the screen is too short for the card. Its 6px
+  padding (cancelled by the margin) leaves room for the card's hover ring.
+*/
+.deck-card__body {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  margin: -6px;
+  padding: 6px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.22) transparent;
+}
+.deck-card__body > * {
+  width: 100%;
+  flex-shrink: 0;
+}
+.deck-card--tall .deck-card__body {
+  height: calc(min(714px, 100svh - 8rem) + 12px);
+}
+.deck-card--tall .deck-card__body > * {
+  flex: 1 0 auto;
+}
+
+/* /kill — the ship shuts down */
+body.system-killed .story,
+body.system-killed .hud,
+body.system-killed .experience {
+  opacity: 0;
+  filter: blur(12px);
+  transform: translateY(-30px) scale(0.97);
+  pointer-events: none;
+  transition:
+    opacity 1.4s cubic-bezier(0.4, 0, 1, 1) 0.5s,
+    filter 1.4s cubic-bezier(0.4, 0, 1, 1) 0.5s,
+    transform 1.4s cubic-bezier(0.4, 0, 1, 1) 0.5s;
+}
+
+/* ─── Pixel-scene loops (bento cards) ─────────────────────── */
+/* CSS rather than JS: no work per frame, paused with their card. */
+
+.px-twinkle {
+  animation: px-twinkle var(--d, 2s) ease-in-out var(--delay, 0s) infinite both;
+}
+.px-rise {
+  animation: px-rise var(--d, 2.2s) linear var(--delay, 0s) infinite both;
+}
+.px-ping {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: px-ping 2s cubic-bezier(0, 0, 0.58, 1) var(--delay, 0s) infinite both;
+}
+/* A faded-out card (useScrollFade) freezes its loops until it comes back. */
+[data-idle] *,
+[data-idle] *::before,
+[data-idle] *::after {
+  animation-play-state: paused !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   HUD
+   ═══════════════════════════════════════════════════════════════ */
+
+.hud {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+}
+.hud button,
+.hud a {
+  pointer-events: auto;
+}
+.hud a {
+  text-decoration: none;
+}
+
+.hud__top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.35rem var(--gutter);
+}
+.hud__logo {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 44px;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  color: #fff;
+  border-radius: 8px;
+}
+.hud__nav {
+  display: flex;
+  gap: 0.3rem;
+  padding: 0.3rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(8, 10, 14, 0.5);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+.hud__link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.42rem 0.9rem;
+  border-radius: 999px;
+  font-size: 12.5px;
+  white-space: nowrap;
+  color: var(--muted);
+  transition: color 0.2s ease, background 0.2s ease;
+}
+.hud__link:hover {
+  color: #fff;
+}
+.hud__link.is-active {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.rail {
+  position: absolute;
+  top: 50%;
+  right: calc(var(--gutter) * 0.55);
+  display: flex;
+  flex-direction: column;
+  gap: 1.35rem;
+  transform: translateY(-50%);
+}
+.rail__track {
+  position: absolute;
+  top: 0.4rem;
+  bottom: 0.4rem;
+  right: 3px;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.12);
+}
+.rail__fill {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #fff, var(--brand));
+  transform: scaleY(0);
+  transform-origin: top;
+}
+.rail__stop {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.7rem;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: var(--muted);
+  /* Lit decks behind the rail: a dark halo keeps the ids readable. */
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.9), 0 1px 10px rgba(0, 0, 0, 0.85);
+  border-radius: 4px;
+  transition: color 0.3s ease;
+}
+.rail__label {
+  opacity: 0;
+  transform: translateX(6px);
+  text-transform: uppercase;
+  transition: opacity 0.3s ease, transform 0.3s var(--ease-out);
+  white-space: nowrap;
+}
+.rail__stop:hover .rail__label,
+.rail__stop:focus-visible .rail__label,
+.rail__stop.is-active .rail__label {
+  opacity: 1;
+  transform: none;
+}
+.rail__pip {
+  width: 7px;
+  height: 7px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  background: #000;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+.rail__stop.is-past .rail__pip {
+  background: rgba(255, 255, 255, 0.5);
+}
+.rail__stop.is-active {
+  color: #fff;
+}
+.rail__stop.is-active .rail__pip {
+  border-color: var(--brand);
+  background: var(--brand);
+}
+
+.hud__loc {
+  position: absolute;
+  left: calc(var(--gutter) - 0.75rem);
+  bottom: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(3, 5, 9, 0.55);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--soft);
+}
+.hud__loc-dot {
+  width: 5px;
+  height: 5px;
+  background: var(--brand);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   LOADER
+   ═══════════════════════════════════════════════════════════════ */
+
+.loader {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(ellipse at 50% 60%, #0a0d16 0%, #000 70%);
+  transition: opacity 1.2s ease, visibility 1.2s ease;
+}
+.loader--out {
+  opacity: 0;
+  visibility: hidden;
+}
+.loader__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9rem;
+  width: min(18rem, 80vw);
+}
+.loader__logo {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.5em;
+  color: #fff;
+}
+.loader__step {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+}
+.loader__bar {
+  width: 100%;
+  height: 1px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.12);
+}
+.loader__bar span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #fff, var(--brand));
+  transform-origin: left;
+  transition: transform 0.4s ease;
+}
+.loader__pct {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--faint);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ANIMATIONS
+   ═══════════════════════════════════════════════════════════════ */
+
+@keyframes scroll-line {
+  to {
+    top: 110%;
+  }
+}
+@keyframes sweep {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(300%);
+  }
+}
+@keyframes stripes {
+  to {
+    background-position: 32px 0;
+  }
+}
+@keyframes px-twinkle {
+  0%,
+  100% {
+    opacity: var(--a);
+  }
+  50% {
+    opacity: var(--b);
+  }
+}
+@keyframes px-rise {
+  0% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: var(--b);
+    transform: translateY(calc(var(--rise) * -0.5));
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(calc(var(--rise) * -1));
+  }
+}
+@keyframes px-ping {
+  from {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(9);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PHONES — the HUD keeps the logo and a compact deck switcher;
+   cards sit at the bottom, under the 3D.
+   ═══════════════════════════════════════════════════════════════ */
+
+@media (max-width: 767px) {
+  .chapter--deck {
+    height: 230vh;
+  }
+  .sticky-screen {
+    align-items: flex-end;
+    padding: 4.5rem 0.75rem 1rem;
+  }
+  .sticky-screen--hero {
+    padding-bottom: 12vh;
+  }
+  .sticky-screen--center {
+    padding-bottom: 22vh;
+  }
+  .sticky-screen > .hero-scrim {
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.82), rgba(0, 0, 0, 0.6) 38%, rgba(0, 0, 0, 0) 64%);
+  }
+  .hero {
+    padding: 0 0.5rem;
+  }
+  .panel {
+    width: 100%;
+    padding: 1.15rem 1.15rem 1.25rem;
+    border-radius: 16px;
+  }
+  .panel .muted {
+    font-size: 0.88rem;
+  }
+  .panel__head {
+    margin-bottom: 0.9rem;
+    padding-bottom: 0.7rem;
+  }
+  .block {
+    margin-top: 1rem;
+  }
+  .deck-card,
+  .deck-card--wide {
+    width: 100%;
+  }
+  .deck-card--tall .deck-card__body {
+    height: calc(min(520px, 100svh - 5.5rem) + 12px);
+  }
+  .rail,
+  .hud__loc {
+    display: none;
+  }
+  .hud__top {
+    grid-template-columns: auto 1fr;
+    gap: 0.5rem;
+    padding: 0.75rem 0.75rem;
+  }
+  .hud__logo {
+    min-width: 44px;
+    justify-content: center;
+  }
+  .hud__logo span {
+    display: none;
+  }
+  .hud__nav {
+    justify-self: end;
+    gap: 0.15rem;
+  }
+  .hud__link {
+    padding-inline: clamp(0.5rem, 2.6vw, 0.9rem);
+  }
+}
+
+@media (max-width: 350px) {
+  .hud__link {
+    font-size: 12px;
+    padding-inline: 0.42rem;
+  }
+}
+
+/* Touch: every HUD control is a full 44px target. */
+@media (pointer: coarse) {
+  .hud__nav {
+    padding: 0.2rem;
+  }
+  .hud__link {
+    min-height: 44px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SHORT SCREENS (landscape phones, small laptop windows, zoom) —
+   less chrome, and panels scroll inside instead of being cut.
+   ═══════════════════════════════════════════════════════════════ */
+
+@media (max-height: 560px) {
+  .sticky-screen {
+    padding-top: 4.25rem;
+    padding-bottom: 0.75rem;
+  }
+  .sticky-screen--hero {
+    padding-bottom: 7vh;
+  }
+  .hero__title {
+    font-size: clamp(2.4rem, 14vh, 5rem);
+    margin-bottom: 1rem;
+  }
+  .hero__tagline {
+    margin-top: 0.5rem;
+  }
+  .hero__cta {
+    margin-top: 1.1rem;
+  }
+  .scroll-hint,
+  .rail,
+  .hud__loc {
+    display: none;
+  }
+  .hud__top {
+    padding-top: 0.6rem;
+    padding-bottom: 0.6rem;
+  }
+  .deck-card--tall .deck-card__body {
+    height: calc(100svh - 5rem + 12px);
+  }
+  .panel {
+    max-height: 100%;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.22) transparent;
+  }
+  .panel__corner {
+    display: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   REDUCED MOTION — no travelling or looping ornament; fades, colour
+   and state changes stay so feedback is still legible. (Lenis and
+   the card lift are off in JS; the 3D ambient clock runs at 15%.)
+   ═══════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  .px-twinkle,
+  .px-rise,
+  .px-ping,
+  .progress__fill,
+  .boarding__bar::after,
+  .scroll-hint__line::after {
+    animation: none;
+  }
+  .scroll-hint__line::after {
+    top: 30%;
+  }
+  .boarding__bar::after {
+    left: 32%;
+  }
+  .hero__cta:hover,
+  .hero__cta:active,
+  .hero__cta:hover svg {
+    transform: none;
+  }
+  .rail__label {
+    transform: none;
+  }
+  body.system-killed .story,
+  body.system-killed .hud,
+  body.system-killed .experience {
+    transform: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   /clients — page YouTube (inchangée)
+   ═══════════════════════════════════════════════════════════════ */
 
 .bento-card {
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -81,64 +1012,11 @@ body > * {
   border-color: rgba(255, 255, 255, 0.15);
 }
 
-/* Mobile: hide horizontal scrollbar */
-@media (max-width: 767px) {
-  .mobile-snap {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-  .mobile-snap::-webkit-scrollbar {
-    display: none;
-  }
-}
-
-/* Selection styling */
-::selection {
-  background: rgba(255, 255, 255, 0.15);
-  color: #ffffff;
-}
-
-/*
-  Grain / bruit de fond
-  Un pseudo-element fixed couvre toute la page avec un SVG feTurbulence.
-  opacity: 0.035 → grain très léger, juste perceptible.
-  pointer-events: none → n'interfère pas avec les clics.
-  z-index: 9999 → au-dessus de tout le contenu.
-*/
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='250' height='250' filter='url(%23n)'/%3E%3C/svg%3E");
-  opacity: 0.035;
-  pointer-events: none;
-  z-index: 9999;
-}
-
-/* Worker pixel art — marche de gauche à droite */
-@keyframes walk-worker {
-  from { transform: translateX(-40px); }
-  to   { transform: translateX(520px); }
-}
-
-/* Bandes de chantier coulissantes
-   translateX sur un enfant élargi — parent overflow:hidden clip les bords.
-   21.28px = period / sin(110°) = 1 répétition exacte → loop invisible */
-@keyframes stripe-left {
-  from { transform: translateX(0px); }
-  to   { transform: translateX(-21.28px); }
-}
-@keyframes stripe-right {
-  from { transform: translateX(0px); }
-  to   { transform: translateX(21.28px); }
-}
-
-/* Scrollbar discrète */
 ::-webkit-scrollbar {
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0a0a0a;
+  background: #050505;
 }
 ::-webkit-scrollbar-thumb {
   background: #2a2a2a;

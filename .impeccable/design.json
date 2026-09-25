@@ -1,0 +1,153 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-25T00:00:00.000Z",
+  "title": "Design System: Quentin Courtade · QC-01",
+  "extensions": {
+    "colorMeta": {
+      "ignition-orange": { "role": "primary", "displayName": "Ignition Orange", "canonical": "oklch(68.4% 0.207 33.9)", "tonalRamp": ["#1d0100", "#470a00", "#761600", "#a7290a", "#e03c13", "#fd7051", "#feb2a0", "#ffe9e4"] },
+      "caution-amber": { "role": "secondary", "displayName": "Caution Amber · Crew Quarters", "canonical": "oklch(82.5% 0.134 67.7)", "tonalRamp": ["#140800", "#361e01", "#5b3601", "#82510c", "#b07016", "#d89036", "#fdb769", "#feebd7"] },
+      "security-red": { "role": "secondary", "displayName": "Security Red · Security Ops", "canonical": "oklch(65.1% 0.235 22.2)", "tonalRamp": ["#1e0002", "#49040c", "#790a1a", "#af0927", "#ec1438", "#fc6d6e", "#feb0ac", "#ffe8e7"] },
+      "engineering-blue": { "role": "secondary", "displayName": "Engineering Blue · Engineering Bay", "canonical": "oklch(69.2% 0.165 255.0)", "tonalRamp": ["#000b1f", "#00234c", "#073f7a", "#085cb1", "#2f80df", "#5aa3ff", "#a2caff", "#e4f0fe"] },
+      "comms-orange": { "role": "secondary", "displayName": "Comms Orange · Comms Bay", "canonical": "oklch(75.0% 0.167 50.5)", "tonalRamp": ["#180600", "#3c1902", "#652e04", "#934402", "#c65e07", "#f17d2d", "#fdb58c", "#feeadf"] },
+      "telemetry-green": { "role": "tertiary", "displayName": "Telemetry Green", "canonical": "oklch(79.3% 0.180 154.0)", "tonalRamp": ["#000f05", "#002d15", "#0a4d29", "#0c703e", "#179856", "#28bf6f", "#4ee890", "#c8fed8"] },
+      "void-black": { "role": "neutral", "displayName": "Void Black", "canonical": "#000000" },
+      "hull-white": { "role": "neutral", "displayName": "Hull White", "canonical": "oklch(94.4% 0.008 253.9)", "tonalRamp": ["#090b0f", "#212428", "#3d4044", "#5b5e62", "#7d8185", "#9ea2a6", "#c4c8cc", "#ebeff4"] },
+      "moonlight": { "role": "neutral", "displayName": "Moonlight", "canonical": "oklch(85.2% 0.015 254.6)", "tonalRamp": ["#070b11", "#1f242b", "#3b4048", "#585e66", "#7a8189", "#9ba2ab", "#c1c8d1", "#e8eff8"] },
+      "instrument-gray": { "role": "neutral", "displayName": "Instrument Gray", "canonical": "oklch(71.5% 0.022 255.0)", "tonalRamp": ["#050c14", "#1d252f", "#38404b", "#555e6a", "#78818e", "#99a2af", "#bec8d6", "#e5f0fe"] },
+      "dim-steel": { "role": "neutral", "displayName": "Dim Steel", "canonical": "oklch(62.4% 0.024 259.2)", "tonalRamp": ["#060b15", "#1d2430", "#38404c", "#565e6b", "#78818f", "#99a2b1", "#bec8d7", "#e5efff"] },
+      "hairline": { "role": "neutral", "displayName": "Hairline", "canonical": "rgba(255, 255, 255, 0.1)" },
+      "hairline-strong": { "role": "neutral", "displayName": "Hairline Strong", "canonical": "rgba(255, 255, 255, 0.18)" },
+      "panel-glass": { "role": "neutral", "displayName": "Panel Glass", "canonical": "rgba(12, 14, 20, 0.84)" },
+      "card-ink": { "role": "neutral", "displayName": "Card Ink", "canonical": "rgba(10, 10, 18, 0.85)" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "The hero name only, two stacked lines, full stop in Ignition Orange." },
+      "headline": { "displayName": "Headline", "purpose": "Deck panel titles." },
+      "title": { "displayName": "Title", "purpose": "Card headings (Contact)." },
+      "body": { "displayName": "Body", "purpose": "Hero tagline and panel lead copy, 30–46rem measure." },
+      "body-small": { "displayName": "Body Small", "purpose": "Card copy, buttons, repo descriptions." },
+      "label": { "displayName": "Label", "purpose": "Mono read-outs: HUD location, rail ids, panel meta, card section labels. Uppercase, 11px floor." },
+      "card-name": { "displayName": "Card Name", "purpose": "The About bento card's name block (pinned from the live site)." }
+    },
+    "shadows": [
+      { "name": "deep-ambient", "value": "0 30px 80px -24px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.06)", "purpose": "Lifts deck panels off the 3D scene." },
+      { "name": "scene-text-halo", "value": "0 1px 14px rgba(0,0,0,0.85), 0 0 2px rgba(0,0,0,0.6)", "purpose": "Text-shadow for copy set directly on the scene; legibility, not glow." },
+      { "name": "hover-ring", "value": "0 0 0 1px rgba(255,255,255,0.25), 0 0 24px rgba(255,255,255,0.06)", "purpose": "Bento card hover acknowledgement, fades out over 1s." }
+    ],
+    "motion": [
+      { "name": "ease-out", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Arrivals: CTA lift, arrow nudge, rail label reveal." },
+      { "name": "state-change", "value": "200–300ms ease", "purpose": "Color and background changes on links, pips and borders." },
+      { "name": "chapter-flight", "value": "Lenis scrollTo 1.8s (0.7s when following keyboard focus)", "purpose": "Navigation between decks; instant jump under reduced motion." },
+      { "name": "panel-fade", "value": "opacity 0→1 with a 26px lift, driven by chapter time", "purpose": "Deck panels arrive with the camera; no lift under reduced motion." },
+      { "name": "pixel-loops", "value": ".px-twinkle / .px-rise / .px-ping (CSS keyframes)", "purpose": "Bento pixel scenes; paused offscreen ([data-idle]), off under reduced motion." }
+    ],
+    "breakpoints": [
+      { "name": "phone", "value": "max-width: 767px" },
+      { "name": "narrow-phone", "value": "max-width: 350px" },
+      { "name": "short", "value": "max-height: 560px" },
+      { "name": "touch", "value": "pointer: coarse" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button (hero CTA)",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one call to action: quiet glass pill that warms to orange on intent.",
+      "html": "<button class=\"ds-cta\">Board the ship <svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14M13 5l7 7-7 7\"/></svg></button>",
+      "css": ".ds-cta { display: inline-flex; align-items: center; gap: 0.65rem; padding: 0.85rem 1.35rem; border: 1px solid rgba(255,255,255,0.18); border-radius: 999px; background: rgba(255,255,255,0.06); backdrop-filter: blur(12px); color: #fff; font: 500 14px/1 Geist, Arial, sans-serif; cursor: pointer; transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s cubic-bezier(0.16,1,0.3,1); } .ds-cta svg { transition: transform 0.25s cubic-bezier(0.16,1,0.3,1); } .ds-cta:hover { background: rgba(255,90,54,0.16); border-color: rgba(255,90,54,0.55); transform: translateY(-1px); } .ds-cta:hover svg { transform: translateX(3px); } .ds-cta:focus-visible { outline: 2px solid #ff5a36; outline-offset: 3px; }"
+    },
+    {
+      "name": "HUD Deck Navigation",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Pill of anchor links; the current deck is white on a faint fill with aria-current.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Decks\"><a href=\"#about\" class=\"ds-nav-link is-active\" aria-current=\"location\">About</a><a href=\"#security\" class=\"ds-nav-link\">Security</a><a href=\"#projects\" class=\"ds-nav-link\">Projects</a><a href=\"#contact\" class=\"ds-nav-link\">Contact</a></nav>",
+      "css": ".ds-nav { display: inline-flex; gap: 0.3rem; padding: 0.3rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 999px; background: rgba(8,10,14,0.5); backdrop-filter: blur(14px); } .ds-nav-link { display: inline-flex; align-items: center; padding: 0.42rem 0.9rem; border-radius: 999px; font: 400 12.5px/1.2 Geist, Arial, sans-serif; color: #9aa4b1; text-decoration: none; transition: color 0.2s ease, background 0.2s ease; } .ds-nav-link:hover { color: #fff; } .ds-nav-link.is-active { color: #fff; background: rgba(255,255,255,0.1); } .ds-nav-link:focus-visible { outline: 2px solid #ff5a36; outline-offset: 3px; }"
+    },
+    {
+      "name": "Deck Rail Stop",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Elevator-style deck indicator: mono id, flat pip, label revealed when active or focused.",
+      "html": "<div class=\"ds-rail\"><a href=\"#top\" class=\"ds-rail-stop is-past\"><span class=\"ds-rail-label\">Open space</span><span>EXT</span><span class=\"ds-rail-pip\"></span></a><a href=\"#about\" class=\"ds-rail-stop is-active\" aria-current=\"location\"><span class=\"ds-rail-label\">Crew Quarters</span><span>01</span><span class=\"ds-rail-pip\"></span></a><a href=\"#security\" class=\"ds-rail-stop\"><span class=\"ds-rail-label\">Security Ops</span><span>02</span><span class=\"ds-rail-pip\"></span></a></div>",
+      "css": ".ds-rail { display: inline-flex; flex-direction: column; gap: 1.35rem; padding: 1rem; background: #000; } .ds-rail-stop { display: flex; align-items: center; justify-content: flex-end; gap: 0.7rem; font: 400 11px/1 'Geist Mono', ui-monospace, monospace; letter-spacing: 0.18em; color: #9aa4b1; text-decoration: none; } .ds-rail-label { opacity: 0; text-transform: uppercase; transition: opacity 0.3s ease; } .ds-rail-stop:hover .ds-rail-label, .ds-rail-stop:focus-visible .ds-rail-label, .ds-rail-stop.is-active .ds-rail-label { opacity: 1; } .ds-rail-pip { width: 7px; height: 7px; border: 1px solid rgba(255,255,255,0.4); border-radius: 50%; background: #000; } .ds-rail-stop.is-past .ds-rail-pip { background: rgba(255,255,255,0.5); } .ds-rail-stop.is-active { color: #fff; } .ds-rail-stop.is-active .ds-rail-pip { border-color: #ff5a36; background: #ff5a36; } .ds-rail-stop:focus-visible { outline: 2px solid #ff5a36; outline-offset: 3px; }"
+    },
+    {
+      "name": "Location Read-out",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "Mono status line in a tinted pill, bottom-left over the scene; announced politely.",
+      "html": "<p class=\"ds-loc\" aria-live=\"polite\"><span class=\"ds-loc-dot\"></span>Deck 03 · Engineering Bay</p>",
+      "css": ".ds-loc { display: inline-flex; align-items: center; gap: 0.55rem; margin: 0; padding: 0.4rem 0.75rem; border-radius: 999px; background: rgba(3,5,9,0.55); font: 400 11px/1.2 'Geist Mono', ui-monospace, monospace; letter-spacing: 0.22em; text-transform: uppercase; color: #c8cfd8; } .ds-loc-dot { width: 5px; height: 5px; background: #ff5a36; }"
+    },
+    {
+      "name": "Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Static tag for modules and skills.",
+      "html": "<ul class=\"ds-chips\"><li class=\"ds-chip\">CTF</li><li class=\"ds-chip\">Pentest</li><li class=\"ds-chip\">Kali Linux</li></ul>",
+      "css": ".ds-chips { display: flex; flex-wrap: wrap; gap: 0.45rem; margin: 0; padding: 0; list-style: none; } .ds-chip { padding: 0.32rem 0.72rem; border: 1px solid rgba(255,255,255,0.18); border-radius: 999px; background: rgba(255,255,255,0.03); font: 400 12.5px/1.3 Geist, Arial, sans-serif; color: #c8cfd8; }"
+    },
+    {
+      "name": "Deck Panel (instrument)",
+      "kind": "card",
+      "refersTo": "deck-panel",
+      "description": "Tinted-glass instrument panel with the deck accent as a top bar and corner brackets.",
+      "html": "<div class=\"ds-panel\" style=\"--accent:#ff3348\"><span class=\"ds-panel-corner ds-tl\"></span><span class=\"ds-panel-corner ds-br\"></span><header class=\"ds-panel-head\"><span class=\"ds-panel-deck\">Deck 02 <span class=\"ds-panel-of\">/ 04</span></span><span>Security Ops</span></header><h2 class=\"ds-panel-title\">Cybersecurity</h2><p class=\"ds-panel-lead\">CTF, pentest &amp; security projects — soon.</p></div>",
+      "css": ".ds-panel { position: relative; width: min(31rem, 100%); padding: 1.55rem 1.7rem 1.7rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; background: linear-gradient(180deg, rgba(12,14,20,0.84), rgba(6,8,12,0.76)); backdrop-filter: blur(18px) saturate(130%); box-shadow: 0 30px 80px -24px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.06); color: #e9edf2; font-family: Geist, Arial, sans-serif; } .ds-panel::before { content: ''; position: absolute; top: -1px; left: 1.7rem; width: 3.4rem; height: 2px; border-radius: 2px; background: var(--accent); } .ds-panel-corner { position: absolute; width: 14px; height: 14px; border-color: var(--accent); opacity: 0.55; } .ds-tl { top: -7px; left: -7px; border-top: 1px solid; border-left: 1px solid; } .ds-br { right: -7px; bottom: -7px; border-right: 1px solid; border-bottom: 1px solid; } .ds-panel-head { display: flex; justify-content: space-between; gap: 1rem; margin-bottom: 1.25rem; padding-bottom: 0.95rem; border-bottom: 1px solid rgba(255,255,255,0.1); font: 400 11px/1.2 'Geist Mono', ui-monospace, monospace; letter-spacing: 0.22em; text-transform: uppercase; color: #9aa4b1; } .ds-panel-deck { color: var(--accent); } .ds-panel-of { color: #7f8896; } .ds-panel-title { margin: 0; font-size: clamp(1.55rem, 2.3vw, 2.05rem); font-weight: 650; line-height: 1.08; letter-spacing: -0.025em; color: #fff; } .ds-panel-lead { margin: 1.05rem 0 0; font-size: 1.05rem; line-height: 1.5; color: #e9edf2; }"
+    },
+    {
+      "name": "Bento Card (log entry)",
+      "kind": "card",
+      "refersTo": "bento-card",
+      "description": "The live-site card shell: dark ink, hairline, pixel scene under a gradient, playful hover.",
+      "html": "<div class=\"ds-bento\"><div class=\"ds-bento-scene\"></div><div class=\"ds-bento-body\"><p class=\"ds-bento-label\">Contact</p><h2 class=\"ds-bento-title\">Open to the right<br>opportunity.</h2><p class=\"ds-bento-copy\">Editing, dev, or something in between — if the project is interesting, I'm in.</p></div></div>",
+      "css": ".ds-bento { position: relative; width: min(24rem, 100%); padding: 20px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; background: rgba(10,10,18,0.85); backdrop-filter: blur(12px); transition: border-color 0.3s ease, transform 0.25s ease-out; font-family: Geist, Arial, sans-serif; } .ds-bento:hover { border-color: rgba(255,255,255,0.15); transform: scale(1.012); box-shadow: 0 0 0 1px rgba(255,255,255,0.25); } .ds-bento-scene { position: absolute; inset: 0; background: linear-gradient(to top, rgba(7,2,14,0.98) 40%, rgba(7,2,14,0.85)), repeating-linear-gradient(90deg, #120820 0 48px, #1a0a2e 48px 90px); image-rendering: pixelated; } .ds-bento-body { position: relative; } .ds-bento-label { margin: 0 0 0.75rem; font-size: 11px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: #7f8896; } .ds-bento-title { margin: 0; font-size: 1.25rem; font-weight: 600; line-height: 1.375; color: #fff; } .ds-bento-copy { margin: 0.4rem 0 0; font-size: 0.875rem; line-height: 1.6; color: #9aa4b1; }"
+    },
+    {
+      "name": "Repo Row",
+      "kind": "custom",
+      "refersTo": "repo-row",
+      "description": "A GitHub project inside the Projects card: name + stars, one-line description, language.",
+      "html": "<a class=\"ds-repo\" href=\"#\"><span class=\"ds-repo-top\"><span class=\"ds-repo-name\">feather</span><span class=\"ds-repo-meta\">★ 3</span></span><span class=\"ds-repo-desc\">Local voice dictation for Windows and Linux.</span><span class=\"ds-repo-lang\"><span class=\"ds-repo-dot\"></span>JavaScript</span></a>",
+      "css": ".ds-repo { display: flex; flex-direction: column; gap: 6px; width: min(28rem, 100%); padding: 12px 14px; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; background: rgba(0,0,0,0.45); color: #fff; text-decoration: none; font-family: Geist, Arial, sans-serif; transition: border-color 0.2s ease, background 0.2s ease; } .ds-repo:hover { border-color: rgba(255,255,255,0.2); background: rgba(0,0,0,0.3); } .ds-repo:focus-visible { outline: 2px solid #ff5a36; outline-offset: 3px; } .ds-repo-top { display: flex; justify-content: space-between; gap: 8px; } .ds-repo-name { font-size: 14px; font-weight: 600; } .ds-repo-meta { font-size: 12px; color: #9aa4b1; } .ds-repo-desc { font-size: 12px; line-height: 1.6; color: #9aa4b1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .ds-repo-lang { display: inline-flex; align-self: flex-start; align-items: center; gap: 6px; padding: 2px 10px; border-radius: 999px; background: rgba(255,255,255,0.05); font-size: 11px; color: #9aa4b1; } .ds-repo-dot { width: 6px; height: 6px; border-radius: 50%; background: #f1e05a; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Ship's Log",
+    "overview": "The site is the logbook of a ship in orbit. A real-time 3D scene carries the emotion: the stainless-steel hull, the asteroid field, the planet below, then four decks aboard, one per chapter. The HTML layer on top reads like the log's entries and the ship's instruments. It is cinematic in the scene and precise in the interface. The scene is allowed to be spectacular; the interface never competes with it.\n\nComponents are treated by layer. The chrome (HUD, deck rail, location read-out, the Security panel) behaves like instruments: dark tinted glass, hairline borders, mono read-outs, one orange signal. The bento cards on the decks are the owner's live-site cards, kept verbatim with their 8-bit pixel scenes. They are the log's personality, framed by the ship rather than restyled to match it.\n\nThe palette is dark only, because the page is a window onto space. Light comes from the 3D scene: sun, planet bounce and deck lighting. Color in the UI is rationed.",
+    "keyCharacteristics": [
+      "Scroll drives a camera flight, and HTML panels fade in sync with it (chapter time `t`).",
+      "Instrument chrome: tinted glass, 1px hairlines, Geist Mono read-outs at 11px or larger.",
+      "One ignition orange for what is live or focused; each deck owns one accent.",
+      "Pixel-art bento cards as the playful counterpoint, never redrawn.",
+      "Nothing glows in the UI; depth comes from the scene and one deep ambient shadow."
+    ],
+    "rules": [
+      { "name": "The Ignition Rule", "body": "Orange marks the single live thing, whether that is the current stop, the focused control or the hero's full stop. It is never a fill for a surface, and never two competing marks on the same screen.", "section": "colors" },
+      { "name": "The One Ramp Rule", "body": "UI text uses the neutral ramp tokens (`--foreground`, `--soft`, `--muted`, `--faint`, or `text-soft` / `text-muted` / `text-faint` in Tailwind). No ad-hoc grays and no Tailwind `zinc-*`.", "section": "colors" },
+      { "name": "The Deck Accent Rule", "body": "A deck's accent lives in its 3D lighting. In the UI it appears once, as the panel's top bar and its deck number, and nowhere else.", "section": "colors" },
+      { "name": "The 11px Floor", "body": "No functional text is smaller than 11px, including tracked micro-labels, status pills and read-outs.", "section": "typography" },
+      { "name": "The Readout Rule", "body": "Mono is for read-outs, meaning locations, ids, statuses, labels and the terminal prompt. Sentences are set in Geist.", "section": "typography" },
+      { "name": "The No-Halo Rule", "body": "No colored zero-offset glows on dots, pips, bars or borders. A status dot is a flat dot.", "section": "elevation" },
+      { "name": "The Scrim Rule", "body": "Text that must sit on bright scene areas, such as the planet limb, gets a dark gradient scrim or a tinted pill behind it, never a brighter color.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do fade chapter content with `useScrollFade` (opacity plus lift), and keep faded text in the accessibility tree. Focus landing inside flies the camera there.",
+      "Do keep every functional text at 11px or larger, and pick its color from the ramp tokens.",
+      "Do use the global orange `:focus-visible` ring (2px, 3px offset) and keep 44px targets on touch.",
+      "Do put a scrim or tinted pill behind text that crosses bright parts of the scene.",
+      "Do give every loop a paused state (offscreen) and a reduced-motion state.",
+      "Do keep the deck palette in one module (`components/decks.ts`), shared by the HUD and the 3D."
+    ],
+    "donts": [
+      "Don't put an eyebrow or kicker above the hero title. The name carries the page.",
+      "Don't add colored glows to UI marks, or light the interface brighter than the scene.",
+      "Don't redraw or restyle the bento cards' pixel scenes, name block or missions list. They are pinned from the live site.",
+      "Don't introduce grays outside the ramp, Tailwind `zinc-*`, or text under 11px.",
+      "Don't repeat the same fact across layers (deck name on a tag, in the HUD and on the wall). One read-out per fact.",
+      "Don't block the page behind the loader: a timeout and a no-JS rule must always let the content through."
+    ]
+  }
+}
