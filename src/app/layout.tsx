@@ -1,16 +1,18 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { IBM_Plex_Mono, Unbounded } from "next/font/google";
 import "lenis/dist/lenis.css";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+// Two voices: Unbounded (variable, 200–900) for names and headings, IBM Plex Mono for everything else.
+const unbounded = Unbounded({
+  variable: "--font-unbounded",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const plexMono = IBM_Plex_Mono({
+  variable: "--font-plex-mono",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
 // One line for search results and link previews: what the home page shows first, then the editing work.
@@ -49,10 +51,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+    // Font variables on <html> so :root tokens (--display, --mono) can reference them.
+    <html lang="en" className={`${unbounded.variable} ${plexMono.variable}`}>
+      <body className="antialiased">
         {/* Without JavaScript the 3D scene never loads: don't leave the page behind the loader. */}
         <noscript>
           <style>{".loader{display:none}"}</style>

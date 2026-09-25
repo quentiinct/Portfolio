@@ -40,7 +40,7 @@ Personal portfolio told as a 3D scroll story. You arrive in orbit next to a stai
 | 3D | three.js · React Three Fiber · drei · postprocessing |
 | Scroll | Lenis |
 | Animations | Framer Motion 12 (/clients) |
-| Fonts | Geist Sans & Geist Mono |
+| Fonts | Unbounded (display) & IBM Plex Mono (text) |
 
 ## Project Structure
 

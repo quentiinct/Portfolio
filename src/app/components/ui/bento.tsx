@@ -372,7 +372,7 @@ export function HeroCard({ onKill }: { onKill?: () => void }) {
         {/* ── Identity */}
         <div className="mt-2">
           <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-faint">{PROFILE.lastName}</p>
-          <h2 className="font-mono text-[38px] font-black uppercase leading-none tracking-tight text-white">
+          <h2 className="font-display text-[30px] font-black uppercase leading-none tracking-[-0.02em] text-white">
             {PROFILE.firstName}
             <span className="text-white/30 px-twinkle" style={tw(0.3, 0.8, 2.5)} aria-hidden>_</span>
           </h2>
@@ -480,7 +480,7 @@ export function ContactCard() {
 
       <SectionLabel text="Contact" />
       <div>
-        <h2 className="text-xl font-semibold leading-snug text-white">
+        <h2 className="font-display text-lg font-bold leading-snug text-white">
           Open to the right<br />opportunity<span style={{ color: "#ffffff" }}>.</span>
         </h2>
         <p className="mt-1.5 text-sm leading-relaxed text-muted">
@@ -568,7 +568,7 @@ export function GitHubCard() {
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className="text-muted" aria-hidden>
             <path d={GITHUB_PATH} />
           </svg>
-          <h2 className="text-sm font-semibold text-white">GitHub Projects</h2>
+          <h2 className="font-display text-sm font-bold text-white">GitHub Projects</h2>
         </div>
         {repos.length > 0 && (
           <span className="font-mono text-[11px] uppercase tracking-widest text-faint">

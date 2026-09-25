@@ -309,7 +309,7 @@ function Decals() {
     () =>
       labelTexture(
         "hull-name",
-        [{ text: "QC-01", size: 300, weight: 800, color: "#15171b", spacing: 30 }],
+        [{ text: "QC-01", size: 250, weight: 800, color: "#15171b", spacing: 24, font: "display" }],
         1400,
         380,
         { stencil: true }
@@ -321,7 +321,7 @@ function Decals() {
       labelTexture(
         "hull-crew",
         [
-          { text: "CREW ACCESS", size: 64, weight: 800, color: "#15171b", spacing: 8 },
+          { text: "CREW ACCESS", size: 54, weight: 800, color: "#15171b", spacing: 6, font: "display" },
           { text: "DECK 01 · AIRLOCK", size: 40, weight: 600, color: "#2a2d33", spacing: 4 },
         ],
         700,

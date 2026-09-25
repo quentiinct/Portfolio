@@ -8,25 +8,27 @@ import { mulberry32 } from "./config";
 
 const cache = new Map<string, THREE.Texture>();
 
-export function fontFamily(kind: "mono" | "sans") {
+/** The page fonts (next/font variables): IBM Plex Mono for text, Unbounded for names and signs. */
+export function fontFamily(kind: "mono" | "display") {
   if (typeof window === "undefined") return "monospace";
-  const v = getComputedStyle(document.documentElement).getPropertyValue(kind === "mono" ? "--font-geist-mono" : "--font-geist-sans").trim();
+  // The next/font variables are set on <html> (see layout.tsx).
+  const v = getComputedStyle(document.documentElement).getPropertyValue(kind === "mono" ? "--font-plex-mono" : "--font-unbounded").trim();
   return v || (kind === "mono" ? "ui-monospace, Consolas, monospace" : "system-ui, sans-serif");
 }
 
 let fontsPromise: Promise<void> | null = null;
-/** Resolves once the Geist fonts used on canvases are available. */
+/** Resolves once the page fonts used on canvases are available. */
 export function fontsReady() {
   if (!fontsPromise) {
     fontsPromise = (async () => {
       try {
         const mono = fontFamily("mono");
-        const sans = fontFamily("sans");
+        const display = fontFamily("display");
         await Promise.all([
           document.fonts.load(`700 40px ${mono}`),
           document.fonts.load(`400 40px ${mono}`),
-          document.fonts.load(`600 40px ${sans}`),
-          document.fonts.load(`800 40px ${sans}`),
+          document.fonts.load(`600 40px ${display}`),
+          document.fonts.load(`800 40px ${display}`),
         ]);
       } catch {
         /* fall back to system fonts */
@@ -329,7 +331,7 @@ export function hazardTexture() {
 /** Transparent text decal. */
 export function labelTexture(
   key: string,
-  lines: { text: string; size: number; weight?: number; color?: string; font?: "mono" | "sans"; spacing?: number }[],
+  lines: { text: string; size: number; weight?: number; color?: string; font?: "mono" | "display"; spacing?: number }[],
   w: number,
   h: number,
   opts: { align?: CanvasTextAlign; bg?: string; stencil?: boolean } = {}

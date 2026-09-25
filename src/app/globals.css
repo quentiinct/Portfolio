@@ -17,7 +17,9 @@
   --good: #3ddc84;
   --warn: #ffb45e;
   --accent: #ffffff;
-  --mono: var(--font-geist-mono), ui-monospace, monospace;
+  /* Two voices: Unbounded for names and headings, IBM Plex Mono for everything else. */
+  --display: var(--font-unbounded), "Arial Black", sans-serif;
+  --mono: var(--font-plex-mono), ui-monospace, monospace;
   --gutter: clamp(1rem, 5.5vw, 6.5rem);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -30,15 +32,16 @@
   --color-faint: var(--faint);
   --color-line: var(--line);
   --color-good: var(--good);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-plex-mono);
+  --font-mono: var(--font-plex-mono);
+  --font-display: var(--font-unbounded);
 }
 
 body {
   position: relative;
   background: #000;
   color: var(--foreground);
-  font-family: var(--font-geist-sans), Arial, sans-serif;
+  font-family: var(--mono);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -182,11 +185,13 @@ body::after {
 .hero__title {
   display: flex;
   flex-direction: column;
-  margin: 0 0 1.5rem;
-  font-size: clamp(3.3rem, 8.6vw, 8.6rem);
-  font-weight: 700;
-  line-height: 0.86;
-  letter-spacing: -0.04em;
+  margin: 0 0 1.4rem;
+  font-family: var(--display);
+  font-size: clamp(2.3rem, 6.1vw, 6.3rem);
+  font-weight: 900;
+  line-height: 0.94;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
   color: #fff;
   text-shadow: 0 10px 60px rgba(0, 0, 0, 0.45);
 }
@@ -200,6 +205,7 @@ body::after {
   text-shadow: 0 1px 14px rgba(0, 0, 0, 0.85), 0 0 2px rgba(0, 0, 0, 0.6);
 }
 .hero__roles {
+  text-wrap: balance;
   font-family: var(--mono);
   font-size: 12px;
   letter-spacing: 0.22em;
@@ -208,10 +214,12 @@ body::after {
 }
 
 .hero__tagline {
-  max-width: 30rem;
+  /* Wide enough for the tagline on one line on desktop (no break inside "real-world"). */
+  max-width: 38rem;
+  text-wrap: pretty;
   margin-top: 0.9rem;
-  font-size: clamp(1rem, 1.35vw, 1.2rem);
-  line-height: 1.55;
+  font-size: clamp(0.95rem, 1.2vw, 1.1rem);
+  line-height: 1.6;
   color: var(--soft);
 }
 
@@ -227,7 +235,7 @@ body::after {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   color: #fff;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   cursor: pointer;
   transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s var(--ease-out);
@@ -303,9 +311,10 @@ body::after {
   color: var(--warn);
 }
 .boarding__status {
-  font-size: clamp(1.4rem, 2.6vw, 2.2rem);
-  font-weight: 600;
-  letter-spacing: -0.02em;
+  font-family: var(--display);
+  font-size: clamp(1.15rem, 2.1vw, 1.8rem);
+  font-weight: 700;
+  letter-spacing: -0.01em;
   color: #fff;
   text-shadow: 0 4px 30px rgba(0, 0, 0, 0.6);
 }
@@ -395,10 +404,11 @@ body::after {
 }
 
 .panel__title {
-  font-size: clamp(1.55rem, 2.3vw, 2.05rem);
-  font-weight: 650;
-  line-height: 1.08;
-  letter-spacing: -0.025em;
+  font-family: var(--display);
+  font-size: clamp(1.3rem, 1.9vw, 1.7rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
   color: #fff;
 }
 .panel__title--icon {
@@ -420,13 +430,13 @@ body::after {
 
 .lead {
   margin-top: 1.05rem;
-  font-size: 1.05rem;
+  font-size: 1rem;
   line-height: 1.5;
   color: var(--foreground);
 }
 .panel .muted {
   margin-top: 0.45rem;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   line-height: 1.6;
 }
 .block {
@@ -451,7 +461,7 @@ body::after {
   border: 1px solid var(--line-strong);
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.03);
-  font-size: 12.5px;
+  font-size: 12px;
   color: var(--soft);
 }
 
@@ -584,10 +594,10 @@ body.system-killed .experience {
   align-items: center;
   gap: 0.6rem;
   min-height: 44px;
-  font-family: var(--mono);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.24em;
+  font-family: var(--display);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
   color: #fff;
   border-radius: 8px;
 }
@@ -607,7 +617,7 @@ body.system-killed .experience {
   justify-content: center;
   padding: 0.42rem 0.9rem;
   border-radius: 999px;
-  font-size: 12.5px;
+  font-size: 12px;
   white-space: nowrap;
   color: var(--muted);
   transition: color 0.2s ease, background 0.2s ease;
@@ -738,10 +748,10 @@ body.system-killed .experience {
   width: min(18rem, 80vw);
 }
 .loader__logo {
-  font-family: var(--mono);
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.5em;
+  font-family: var(--display);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.3em;
   color: #fff;
 }
 .loader__step {
@@ -839,7 +849,8 @@ body.system-killed .experience {
     padding: 4.5rem 0.75rem 1rem;
   }
   .sticky-screen--hero {
-    padding-bottom: 12vh;
+    /* Clear the scroll hint (3.2vh + label + 42px line) under the CTA. */
+    padding-bottom: calc(3.2vh + 5.75rem);
   }
   .sticky-screen--center {
     padding-bottom: 22vh;
@@ -897,10 +908,10 @@ body.system-killed .experience {
   }
 }
 
-@media (max-width: 350px) {
+@media (max-width: 360px) {
   .hud__link {
-    font-size: 12px;
-    padding-inline: 0.42rem;
+    font-size: 11px;
+    padding-inline: 0.4rem;
   }
 }
 
@@ -928,7 +939,7 @@ body.system-killed .experience {
     padding-bottom: 7vh;
   }
   .hero__title {
-    font-size: clamp(2.4rem, 14vh, 5rem);
+    font-size: clamp(1.9rem, 11vh, 4rem);
     margin-bottom: 1rem;
   }
   .hero__tagline {

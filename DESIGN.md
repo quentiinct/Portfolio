@@ -19,43 +19,43 @@ colors:
   card-ink: "rgba(10, 10, 18, 0.85)"
 typography:
   display:
-    fontFamily: "Geist, Arial, sans-serif"
-    fontSize: "clamp(3.3rem, 8.6vw, 8.6rem)"
-    fontWeight: 700
-    lineHeight: 0.86
-    letterSpacing: "-0.04em"
+    fontFamily: "Unbounded, Arial Black, sans-serif"
+    fontSize: "clamp(2.3rem, 6.1vw, 6.3rem)"
+    fontWeight: 900
+    lineHeight: 0.94
+    letterSpacing: "-0.02em"
   headline:
-    fontFamily: "Geist, Arial, sans-serif"
-    fontSize: "clamp(1.55rem, 2.3vw, 2.05rem)"
-    fontWeight: 650
-    lineHeight: 1.08
-    letterSpacing: "-0.025em"
+    fontFamily: "Unbounded, Arial Black, sans-serif"
+    fontSize: "clamp(1.3rem, 1.9vw, 1.7rem)"
+    fontWeight: 700
+    lineHeight: 1.1
+    letterSpacing: "-0.01em"
   title:
-    fontFamily: "Geist, Arial, sans-serif"
-    fontSize: "1.25rem"
-    fontWeight: 600
+    fontFamily: "Unbounded, Arial Black, sans-serif"
+    fontSize: "1.125rem"
+    fontWeight: 700
     lineHeight: 1.375
   body:
-    fontFamily: "Geist, Arial, sans-serif"
-    fontSize: "clamp(1rem, 1.35vw, 1.2rem)"
+    fontFamily: "IBM Plex Mono, ui-monospace, monospace"
+    fontSize: "clamp(0.95rem, 1.2vw, 1.1rem)"
     fontWeight: 400
-    lineHeight: 1.55
+    lineHeight: 1.6
   body-small:
-    fontFamily: "Geist, Arial, sans-serif"
+    fontFamily: "IBM Plex Mono, ui-monospace, monospace"
     fontSize: "0.875rem"
     fontWeight: 400
     lineHeight: 1.6
   label:
-    fontFamily: "Geist Mono, ui-monospace, monospace"
+    fontFamily: "IBM Plex Mono, ui-monospace, monospace"
     fontSize: "11px"
     fontWeight: 400
     letterSpacing: "0.22em"
   card-name:
-    fontFamily: "Geist Mono, ui-monospace, monospace"
-    fontSize: "38px"
+    fontFamily: "Unbounded, Arial Black, sans-serif"
+    fontSize: "30px"
     fontWeight: 900
     lineHeight: 1
-    letterSpacing: "-0.025em"
+    letterSpacing: "-0.02em"
 rounded:
   row: "12px"
   card: "16px"
@@ -113,13 +113,14 @@ components:
 
 The site is the logbook of a ship in orbit. A real-time 3D scene carries the emotion: the stainless-steel hull, the asteroid field, the planet below, then four decks aboard, one per chapter. The HTML layer on top reads like the log's entries and the ship's instruments. It is cinematic in the scene and precise in the interface. The scene is allowed to be spectacular; the interface never competes with it.
 
-Components are treated by layer. The chrome (HUD, deck rail, location read-out, the Security panel) behaves like instruments: dark tinted glass, hairline borders, mono read-outs, one orange signal. The bento cards on the decks are the owner's live-site cards, kept verbatim with their 8-bit pixel scenes. They are the log's personality, framed by the ship rather than restyled to match it.
+Components are treated by layer. The chrome (HUD, deck rail, location read-out, the Security panel) behaves like instruments: dark tinted glass, hairline borders, mono read-outs, one orange signal. The type speaks in two voices: a heavy, wide display face names things, and a slab-serif mono writes the log. The bento cards on the decks are the owner's live-site cards, kept verbatim with their 8-bit pixel scenes. They are the log's personality, framed by the ship rather than restyled to match it.
 
 The palette is dark only, because the page is a window onto space. Light comes from the 3D scene: sun, planet bounce and deck lighting. Color in the UI is rationed.
 
 **Key Characteristics:**
 - Scroll drives a camera flight, and HTML panels fade in sync with it (chapter time `t`).
-- Instrument chrome: tinted glass, 1px hairlines, Geist Mono read-outs at 11px or larger.
+- Two voices: Unbounded Black for names and headings, IBM Plex Mono for every sentence and read-out (11px floor).
+- Instrument chrome: tinted glass, 1px hairlines, one orange signal.
 - One ignition orange for what is live or focused; each deck owns one accent.
 - Pixel-art bento cards as the playful counterpoint, never redrawn.
 - Nothing glows in the UI; depth comes from the scene and one deep ambient shadow.
@@ -159,24 +160,27 @@ The palette is a black void and cool steel grays, with one ignition orange and o
 
 ## Typography
 
-**Display Font:** Geist (with Arial, sans-serif)
-**Body Font:** Geist (with Arial, sans-serif)
-**Label/Mono Font:** Geist Mono (with ui-monospace, monospace)
+**Display Font:** Unbounded (with Arial Black, sans-serif)
+**Body Font:** IBM Plex Mono (with ui-monospace, monospace)
+**Label/Mono Font:** IBM Plex Mono
 
-**Character:** Geist is a neutral, engineered sans that lets the 3D scene lead, and it tightens into a dense display at hero size. Geist Mono is the ship's instrument voice: locations, deck ids, statuses and labels.
+**Character:** Two voices, taken from the owner's reference (a heavy, wide, rounded-square logo over slab-serif mono copy). Unbounded Black is round, wide and loud: it names the ship, its decks and its crew. IBM Plex Mono writes the log. Its small slabs on i, l and r keep sentences readable, and it carries the labels and read-outs too, so the whole interface feels typed on the ship's terminal.
 
 ### Hierarchy
-- **Display** (700, clamp(3.3rem, 8.6vw, 8.6rem), 0.86, -0.04em): the hero name only, stacked on two lines, with the full stop in ignition orange.
-- **Headline** (650, clamp(1.55rem, 2.3vw, 2.05rem), 1.08): panel titles.
-- **Title** (600, 1.25rem, 1.375): card headings such as the Contact card.
-- **Body** (400, clamp(1rem, 1.35vw, 1.2rem), 1.55): the hero tagline and panel lead copy, at 30–46rem measure.
-- **Label** (Geist Mono 400, 11px, 0.22em, uppercase): HUD read-outs, rail ids, panel meta and card section labels.
-- **Card Name** (Geist Mono 900, 38px, uppercase): the About card's name, part of the pinned bento design.
+- **Display** (Unbounded 900, clamp(2.3rem, 6.1vw, 6.3rem), 0.94, -0.02em, uppercase): the hero name only, stacked on two lines, with the round full stop in ignition orange.
+- **Headline** (Unbounded 700, clamp(1.3rem, 1.9vw, 1.7rem), 1.1): panel titles; the boarding status uses the same voice.
+- **Title** (Unbounded 700, 1.125rem, 1.375): card headings (GitHub Projects, Contact).
+- **Body** (Plex Mono 400, clamp(0.95rem, 1.2vw, 1.1rem), 1.6): the hero tagline and panel lead copy, at up to 38rem.
+- **Label** (Plex Mono 400, 11px, 0.22em, uppercase): HUD read-outs, rail ids, panel meta and card section labels.
+- **Card Name** (Unbounded 900, 30px, uppercase): the About card's name.
+- **Logo** (Unbounded 700, 13–14px, 0.08–0.3em): "QC-01" in the HUD and the loader. In 3D, the wall signs ("DECK 0N") and the hull decals ("QC-01", "CREW ACCESS") use Unbounded too.
 
 ### Named Rules
+**The Two Voices Rule.** Unbounded names things: the hero name, headings, the logo, the 3D signs. IBM Plex Mono says everything else, from sentences to buttons, nav and read-outs. There is no third family.
+
 **The 11px Floor.** No functional text is smaller than 11px, including tracked micro-labels, status pills and read-outs.
 
-**The Readout Rule.** Mono is for read-outs, meaning locations, ids, statuses, labels and the terminal prompt. Sentences are set in Geist.
+**The Width Budget.** Unbounded is about twice as wide as a regular sans. Size display text by the line it must fit (the hero name tops out at 6.3rem), never by habit, and check the narrowest phone.
 
 ## Layout
 
@@ -210,7 +214,7 @@ Controls are pills: the CTA, the nav, chips, the location read-out. Surfaces ste
 ### Buttons
 Quiet glass that warms to orange on intent.
 - **Shape:** full pill (999px).
-- **Primary (hero CTA):** white at 6% on blur(12px), a hairline-strong border, white 14px/500 text with a trailing arrow.
+- **Primary (hero CTA):** white at 6% on blur(12px), a hairline-strong border, white 13px/500 mono text with a trailing arrow.
 - **Hover / Focus:** orange at 16% fill and a 55% orange border, lifted 1px with the arrow nudged 3px (ease-out 250ms). Focus uses the global 2px orange ring at a 3px offset. Reduced motion keeps the color change and drops the movement.
 
 ### Chips

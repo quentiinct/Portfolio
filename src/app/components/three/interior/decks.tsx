@@ -142,12 +142,12 @@ const whoamiCard = (ctx: CanvasRenderingContext2D, w: number, h: number) => {
   ctx.fillStyle = "#0a0e14";
   ctx.fillRect(0, 0, w, h);
   const mono = fontFamily("mono");
-  const sans = fontFamily("sans");
+  const display = fontFamily("display");
   ctx.fillStyle = "#ffb45e";
   ctx.font = `700 18px ${mono}`;
   ctx.fillText("CREW MANIFEST · QC-01", 24, 40);
   ctx.fillStyle = "#f4f6f8";
-  ctx.font = `800 56px ${sans}`;
+  ctx.font = `800 52px ${display}`;
   ctx.fillText(PROFILE.firstName, 24, 112);
   ctx.fillStyle = "#b9c2cd";
   ctx.font = `500 22px ${mono}`;
@@ -195,21 +195,24 @@ function repoScreen(slot: number): DrawFn {
     ctx.lineWidth = 3;
     ctx.stroke();
     const mono = fontFamily("mono");
-    const sans = fontFamily("sans");
+    const display = fontFamily("display");
     ctx.fillStyle = "#4d9dff";
     ctx.font = `700 18px ${mono}`;
     ctx.fillText(`REPO ${String(slot + 1).padStart(2, "0")} · github.com/quentiinct`, 26, 44);
     if (!repo) {
       ctx.fillStyle = "#9fb3c8";
-      ctx.font = `600 30px ${sans}`;
+      ctx.font = `600 26px ${display}`;
       ctx.fillText(status === "error" ? "API offline" : "Fetching repositories…", 26, 110);
       return;
     }
     ctx.fillStyle = "#f4f7fb";
-    ctx.font = `800 40px ${sans}`;
-    ctx.fillText(repo.name.length > 22 ? `${repo.name.slice(0, 21)}…` : repo.name, 26, 104);
+    ctx.font = `800 34px ${display}`;
+    // Unbounded is wide: shorten by measure, not by character count.
+    let name = repo.name;
+    while (name.length > 4 && ctx.measureText(name).width > w - 60) name = name.slice(0, -1);
+    ctx.fillText(name === repo.name ? name : `${name.slice(0, -1)}…`, 26, 104);
     ctx.fillStyle = "#a8b6c6";
-    ctx.font = `400 21px ${sans}`;
+    ctx.font = `400 20px ${mono}`;
     const desc = repo.description ?? "No description.";
     const words = desc.split(" ");
     let line = "";

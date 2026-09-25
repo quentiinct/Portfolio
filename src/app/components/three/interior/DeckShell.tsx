@@ -381,7 +381,7 @@ function DeckLabel({ index, angle }: { index: number; angle: number }) {
       labelTexture(
         `deck-${index}`,
         [
-          { text: `DECK 0${index + 1}`, size: 120, weight: 800, color: "#1b1e23", spacing: 6 },
+          { text: `DECK 0${index + 1}`, size: 104, weight: 800, color: "#1b1e23", spacing: 6, font: "display" },
           { text: DECKS[index].label.toUpperCase(), size: 44, weight: 700, color: "#2a2e35", spacing: 10 },
         ],
         900,
