@@ -145,7 +145,7 @@ export default function Scene({ quality }: { quality: Quality }) {
       <AmbientClock />
       <CameraRig />
       <SpaceEnvironment />
-      <Sky starCount={hi ? 7000 : 3500} />
+      <Sky size={hi ? 2048 : 1024} />
       <Planet />
       <Sun />
       <Asteroids count={hi ? 190 : 90} quality={quality} />

@@ -106,7 +106,7 @@ The site is the logbook of a ship in orbit. A real-time 3D scene carries the emo
 
 Components are treated by layer. The chrome is kept to a minimum: the only fixed element is the deck navigation, bare text links melting into the decor. The Security panel behaves like an instrument: dark tinted glass, hairline borders, mono read-outs, one orange signal. The type speaks in two voices: a heavy, wide display face names things, and a slab-serif mono writes the log. The bento cards on the decks are the owner's live-site cards, kept verbatim with their 8-bit pixel scenes. They are the log's personality, framed by the ship rather than restyled to match it.
 
-The palette is dark only, because the page is a window onto space. Light comes from the 3D scene: sun, planet bounce and deck lighting. Color in the UI is rationed.
+The palette is dark only, because the page is a window onto space. Light comes from the 3D scene: sun, planet bounce and deck lighting. The sky is the real one (NASA's Deep Star Maps 2020: Gaia stars and the Milky Way with its dust lanes), with no twinkling, since stars don't twinkle in space. Color in the UI is rationed.
 
 **Key Characteristics:**
 - Opening (after igloo.inc): a sparse 3D graph draws itself, the decor appears as a hologram and lands as a white flash from the ship outwards; the interface arrives last.
@@ -159,7 +159,7 @@ The palette is a black void and cool steel grays, with one ignition orange and o
 **Character:** Two voices, taken from the owner's reference (a heavy, wide, rounded-square logo over slab-serif mono copy). Unbounded Black is round, wide and loud: it names the ship, its decks and its crew. IBM Plex Mono writes the log. Its small slabs on i, l and r keep sentences readable, and it carries the labels and read-outs too, so the whole interface feels typed on the ship's terminal.
 
 ### Hierarchy
-- **Display** (Unbounded 900, clamp(1.9rem, 4.2vw, 4rem) on desktop, up to 9.5vw on phones, 0.9, -0.02em, uppercase): the hero name only, the first name alone, with a soft ice-white glow.
+- **Display** (Unbounded 900, clamp(1.6rem, 3.1vw, 3rem) on desktop, up to 7.5vw on phones, 0.9, -0.02em, uppercase): the hero name only, the first name alone, with a soft ice-white glow.
 - **Headline** (Unbounded 700, clamp(1.3rem, 1.9vw, 1.7rem), 1.1): panel titles; the boarding status uses the same voice.
 - **Title** (Unbounded 700, 1.125rem, 1.375): card headings (GitHub Projects, Contact).
 - **Body** (Plex Mono 400, clamp(0.95rem, 1.2vw, 1.1rem), 1.6): the hero tagline and panel lead copy, at up to 38rem.
@@ -172,7 +172,7 @@ The palette is a black void and cool steel grays, with one ignition orange and o
 
 **The 11px Floor.** No functional text is smaller than 11px, including tracked micro-labels, status pills and read-outs.
 
-**The Width Budget.** Unbounded is about twice as wide as a regular sans. Size display text by the line it must fit (the hero name tops out at 4rem), never by habit, and check the narrowest phone.
+**The Width Budget.** Unbounded is about twice as wide as a regular sans. Size display text by the line it must fit (the hero name tops out at 3rem), never by habit, and check the narrowest phone.
 
 ## Layout
 

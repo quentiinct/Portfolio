@@ -210,7 +210,7 @@ html[data-intro] .hud {
 .hero__title {
   margin: 0;
   font-family: var(--display);
-  font-size: clamp(1.9rem, 4.2vw, 4rem);
+  font-size: clamp(1.6rem, 3.1vw, 3rem);
   font-weight: 900;
   line-height: 0.9;
   letter-spacing: -0.02em;
@@ -780,7 +780,7 @@ body.system-killed .experience {
     padding: 0 0.5rem;
   }
   .hero__title {
-    font-size: clamp(2rem, 9.5vw, 3rem);
+    font-size: clamp(1.75rem, 7.5vw, 2.4rem);
   }
   .hero__focus {
     margin-top: 0.9rem;
@@ -863,7 +863,7 @@ body.system-killed .experience {
     padding-top: 4.25rem;
   }
   .hero__title {
-    font-size: clamp(1.6rem, 9vh, 2.8rem);
+    font-size: clamp(1.4rem, 7vh, 2.2rem);
   }
   .hero__focus {
     margin-top: 0.6rem;

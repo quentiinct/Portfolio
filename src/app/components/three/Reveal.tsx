@@ -106,7 +106,8 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, const in float depth,
     // The sky just comes up from black (a white wash there reads as a grey wall).
     float settle = smoothstep(0.0, 0.17, s);
     color = sky ? inputColor.rgb * settle : mix(uGlow, inputColor.rgb, settle);
-    color += uGlow * outline * 0.55 * (1.0 - smoothstep(0.08, 0.4, s));
+    // Not on the sky: every star would get a ring.
+    if (!sky) color += uGlow * outline * 0.55 * (1.0 - smoothstep(0.08, 0.4, s));
   }
   outputColor = vec4(color, inputColor.a);
 }
