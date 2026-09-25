@@ -22,7 +22,7 @@ Personal portfolio told as a 3D scroll story. You arrive in orbit next to a stai
 
 ### Features
 
-- **Opening reveal** — A glowing grid over black; the scene forms pixel by pixel from the ship outwards (post-processing pass), then the interface arrives
+- **Opening reveal** — A glowing 3D voxel lattice draws the decor (world positions rebuilt from the depth buffer), then the voxels fill in from the ship outwards; the interface arrives last
 - **Scrollytelling camera** — Scroll position drives a spline camera path (Lenis smooth scroll), synced with sticky HTML panels
 - **Procedural ship** — Lathe-built hull with a stainless-steel shader (weld seams, panel tint, heat tint), aft fins, engines, portholes with real openings, animated airlock, nav lights and RCS gas puffs
 - **Space** — Pre-rendered Milky Way / nebula sky, twinkling star field, procedural ocean planet with clouds, night lights and atmosphere, crater-covered asteroids (instanced)

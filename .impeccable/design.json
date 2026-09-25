@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-25T14:33:48.997Z",
+  "generatedAt": "2026-09-25T14:44:22.873Z",
   "title": "Design System: Quentin Courtade · QC-01",
   "extensions": {
     "colorMeta": {
@@ -230,8 +230,8 @@
     "motion": [
       {
         "name": "opening-reveal",
-        "value": "2.8s: grid fade-in, pixels land from the ship outwards (mosaic → full detail), glow wave at the front",
-        "purpose": "The one authored moment: the ship materialises, then the HTML layer fades in (0.9s)."
+        "value": "3.4s: 3D voxel lattice sweeps over the decor (depth-rebuilt world positions, celestial grid on the sky), voxels land from the ship outwards (block → full detail), glow wave at the front",
+        "purpose": "The one authored moment: the ship materialises in 3D, then the HTML layer fades in (0.9s)."
       },
       {
         "name": "ease-out",
@@ -348,7 +348,7 @@
     "northStar": "The Ship's Log",
     "overview": "The site is the logbook of a ship in orbit. A real-time 3D scene carries the emotion: the stainless-steel hull, the asteroid field, the planet below, then four decks aboard, one per chapter. The HTML layer on top reads like the log's entries and the ship's instruments. It is cinematic in the scene and precise in the interface. The scene is allowed to be spectacular; the interface never competes with it.\n\nComponents are treated by layer. The chrome (HUD, deck rail, location read-out, the Security panel) behaves like instruments: dark tinted glass, hairline borders, mono read-outs, one orange signal. The type speaks in two voices: a heavy, wide display face names things, and a slab-serif mono writes the log. The bento cards on the decks are the owner's live-site cards, kept verbatim with their 8-bit pixel scenes. They are the log's personality, framed by the ship rather than restyled to match it.\n\nThe palette is dark only, because the page is a window onto space. Light comes from the 3D scene: sun, planet bounce and deck lighting. Color in the UI is rationed.",
     "keyCharacteristics": [
-      "Opening: a glowing grid over black, the scene forms pixel by pixel from the ship outwards, then the interface arrives.",
+      "Opening: a glowing 3D lattice draws the decor on black, then the voxels fill in from the ship outwards; the interface arrives last.",
       "Scroll drives a camera flight, and HTML panels fade in sync with it (chapter time `t`).",
       "Two voices: Unbounded Black for names and headings, IBM Plex Mono for every sentence and read-out (11px floor).",
       "Instrument chrome: tinted glass, 1px hairlines, one orange signal.",

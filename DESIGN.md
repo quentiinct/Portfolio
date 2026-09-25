@@ -118,7 +118,7 @@ Components are treated by layer. The chrome (HUD, deck rail, location read-out, 
 The palette is dark only, because the page is a window onto space. Light comes from the 3D scene: sun, planet bounce and deck lighting. Color in the UI is rationed.
 
 **Key Characteristics:**
-- Opening: a glowing grid over black, the scene forms pixel by pixel from the ship outwards, then the interface arrives.
+- Opening: a glowing 3D lattice draws the decor on black, then the voxels fill in from the ship outwards; the interface arrives last.
 - Scroll drives a camera flight, and HTML panels fade in sync with it (chapter time `t`).
 - Two voices: Unbounded Black for names and headings, IBM Plex Mono for every sentence and read-out (11px floor).
 - Instrument chrome: tinted glass, 1px hairlines, one orange signal.
@@ -232,7 +232,7 @@ Quiet glass that warms to orange on intent.
 - **Location read-out:** a mono 11px line in a tinted pill at the bottom left, announced politely to screen readers.
 
 ### Opening reveal (signature)
-The opening reveal is the one authored moment. A grid of glowing ice-white lines fades in over black; the scene then forms pixel by pixel from the ship outwards. Each block lands as a flat mosaic pixel with a brief flash and resolves to full detail, while a bright wave rides the grid at the front. It takes 2.8s, and the interface arrives as the last pixels land. It is a screen-space post pass (`three/Reveal.tsx`) placed before bloom so the lines glow; the loader hands over to it, and the pass is switched off once it ends. Reduced motion skips it.
+The opening reveal is the one authored moment, and it lives in 3D. Each pixel's world position is rebuilt from the depth buffer. A glowing ice-white voxel lattice first draws itself on the decor: the ship, the asteroids and the planet, with a celestial grid (every 7.5°) on the sky. The voxels then fill in by real distance from the ship: each one lands as a flat block with a brief flash and resolves to full detail, while a bright wave rides the lattice at the front. Voxels are 1.6 units near the camera and double with each octave of distance, so the lattice stays about 40px on screen. It takes 3.4s, and the interface arrives as the last voxels land. It is a post pass (`three/Reveal.tsx`, depth-aware) placed before bloom so the lines glow; the loader hands over to it, and the pass is switched off once it ends. Reduced motion skips it.
 
 ### Bento pixel scenes (signature)
 Hand-placed SVG pixel art (`shape-rendering: crispEdges`): the control room, the forest and the city. Their loops are CSS (`.px-twinkle`, `.px-rise`, `.px-ping`) so they cost nothing per frame. They pause while their card is faded out (`[data-idle]`) and stop under reduced motion.
