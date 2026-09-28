@@ -20,9 +20,9 @@ colors:
 typography:
   display:
     fontFamily: "Unbounded, Arial Black, sans-serif"
-    fontSize: "clamp(2.3rem, 6.1vw, 6.3rem)"
+    fontSize: "30.4px"
     fontWeight: 900
-    lineHeight: 0.94
+    lineHeight: 0.9
     letterSpacing: "-0.02em"
   headline:
     fontFamily: "Unbounded, Arial Black, sans-serif"
@@ -159,7 +159,7 @@ The palette is a black void and cool steel grays, with one ignition orange and o
 **Character:** Two voices, taken from the owner's reference (a heavy, wide, rounded-square logo over slab-serif mono copy). Unbounded Black is round, wide and loud: it names the ship, its decks and its crew. IBM Plex Mono writes the log. Its small slabs on i, l and r keep sentences readable, and it carries the labels and read-outs too, so the whole interface feels typed on the ship's terminal.
 
 ### Hierarchy
-- **Display** (Unbounded 900, clamp(1.6rem, 3.1vw, 3rem) on desktop, up to 7.5vw on phones, 0.9, -0.02em, uppercase): the hero name only, the first name alone, with a soft ice-white glow.
+- **Display** (Unbounded 900, 2.533 × the 12px focus line ≈ 30.4px on every screen, 0.9, -0.02em, uppercase): the hero name only, the first name alone, with a soft ice-white glow. It spans exactly the width of the focus line under it (Cybersecurity · AI).
 - **Headline** (Unbounded 700, clamp(1.3rem, 1.9vw, 1.7rem), 1.1): panel titles; the boarding status uses the same voice.
 - **Title** (Unbounded 700, 1.125rem, 1.375): card headings (GitHub Projects, Contact).
 - **Body** (Plex Mono 400, clamp(0.95rem, 1.2vw, 1.1rem), 1.6): the hero tagline and panel lead copy, at up to 38rem.
@@ -172,7 +172,7 @@ The palette is a black void and cool steel grays, with one ignition orange and o
 
 **The 11px Floor.** No functional text is smaller than 11px, including tracked micro-labels, status pills and read-outs.
 
-**The Width Budget.** Unbounded is about twice as wide as a regular sans. Size display text by the line it must fit (the hero name tops out at 3rem), never by habit, and check the narrowest phone.
+**The Width Budget.** Unbounded is about twice as wide as a regular sans. Size display text by the line it must fit (the hero name is as wide as the focus line under it), never by habit, and check the narrowest phone.
 
 ## Layout
 
