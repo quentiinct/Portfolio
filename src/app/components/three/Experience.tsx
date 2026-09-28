@@ -12,6 +12,13 @@ import { scrollStore } from "../scroll/scrollStore";
 // EXPERIENCE — the fixed full-screen WebGL canvas behind the page.
 // ═══════════════════════════════════════════════════════════════
 
+// R3F 9 (up to 9.8.1) still builds its store clock with THREE.Clock, deprecated since
+// three r183: drop that one notice, pass every other three.js message through.
+THREE.setConsoleFunction((type: "log" | "warn" | "error", message: string, ...params: unknown[]) => {
+  if (message.startsWith("THREE.Clock: This module has been deprecated")) return;
+  console[type](message, ...params);
+});
+
 function detectQuality(): Quality {
   if (typeof window === "undefined") return "high";
   const small = window.innerWidth < 820;
