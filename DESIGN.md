@@ -165,10 +165,10 @@ The palette is a black void and cool steel grays, with one ignition orange and o
 - **Body** (Plex Mono 400, clamp(0.95rem, 1.2vw, 1.1rem), 1.6): the hero tagline and panel lead copy, at up to 38rem.
 - **Label** (Plex Mono 400, 11px, 0.18–0.22em, uppercase): the deck navigation, panel meta and card section labels.
 - **Card Name** (Unbounded 900, 30px, uppercase): the About card's name.
-- **Logo** (Unbounded 700, 14px, 0.3em): "QC-01" on the loader only. In 3D, the wall signs ("DECK 0N") and the hull decals ("QC-01", "CREW ACCESS") use Unbounded too.
+- **Loader** (Plex Mono 600, 13px, 0.18em): "QC" alone on black over a row of mono characters that fills as the scene loads ("=" loaded with a sweep of "+", a scrambling front, "-" waiting), after igloo.inc; the name is typed in the same cells as the row. In 3D, the wall signs ("DECK 0N") and the hull decals ("QC-01", "CREW ACCESS") use Unbounded too.
 
 ### Named Rules
-**The Two Voices Rule.** Unbounded names things: the hero name, headings, the logo, the 3D signs. IBM Plex Mono says everything else, from sentences to buttons, nav and read-outs. There is no third family.
+**The Two Voices Rule.** Unbounded names things: the hero name, headings, the 3D signs. IBM Plex Mono says everything else, from sentences to buttons, nav and read-outs. There is no third family.
 
 **The 11px Floor.** No functional text is smaller than 11px, including tracked micro-labels, status pills and read-outs.
 

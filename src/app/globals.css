@@ -654,7 +654,7 @@ body.system-killed .experience {
   z-index: 100;
   display: grid;
   place-items: center;
-  background: radial-gradient(ellipse at 50% 60%, #0a0d16 0%, #000 70%);
+  background: #000;
   transition: opacity 0.6s ease, visibility 0.6s ease;
 }
 .loader--out {
@@ -665,38 +665,24 @@ body.system-killed .experience {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.9rem;
-  width: min(18rem, 80vw);
+  gap: 1.1rem;
 }
-.loader__logo {
-  font-family: var(--display);
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0.3em;
+/* The name is typed in the same mono cells as the row under it. */
+.loader__logo,
+.loader__row {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  white-space: pre;
   color: #fff;
+  /* The tracking adds space after the last cell: pull it back to stay centred. */
+  margin-right: -0.18em;
 }
-.loader__step {
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 0.12em;
-  color: var(--muted);
+.loader__front {
+  color: var(--soft);
 }
-.loader__bar {
-  width: 100%;
-  height: 1px;
-  overflow: hidden;
-  background: rgba(255, 255, 255, 0.12);
-}
-.loader__bar span {
-  display: block;
-  height: 100%;
-  background: linear-gradient(90deg, #fff, var(--brand));
-  transform-origin: left;
-  transition: transform 0.4s ease;
-}
-.loader__pct {
-  font-family: var(--mono);
-  font-size: 11px;
+.loader__todo {
   color: var(--faint);
 }
 
