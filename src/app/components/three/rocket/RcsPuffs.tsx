@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
-import { BODY_TOP, deg, mulberry32, noseRadius, polar } from "../config";
+import { BODY_TOP, RCS_ANGLES, mulberry32, noseRadius, polar } from "../config";
 
 // Short bursts of cold gas from the attitude-control thrusters.
 
@@ -48,7 +48,7 @@ export default function RcsPuffs() {
 
   const nozzles = useMemo(
     () =>
-      [deg(60), deg(150), deg(-30)].flatMap((a) => {
+      RCS_ANGLES.flatMap((a) => {
         const r = noseRadius(1.2) + 0.2;
         const out = polar(a, 1, 0).normalize();
         const side = polar(a + Math.PI / 2, 1, 0).normalize();

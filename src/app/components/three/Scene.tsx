@@ -152,7 +152,7 @@ export default function Scene({ quality }: { quality: Quality }) {
       <SpaceDust count={hi ? 1400 : 700} />
       <ForegroundDust count={hi ? 1800 : 900} />
       <group position={ROCKET_POSITION} rotation={ROCKET_ROTATION}>
-        <Rocket />
+        <Rocket quality={quality} />
         <Interior />
       </group>
       <Effects quality={quality} />

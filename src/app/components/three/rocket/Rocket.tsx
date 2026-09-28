@@ -2,8 +2,10 @@
 
 import { useEffect, useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
+import { useTexture } from "@react-three/drei";
 import * as THREE from "three";
 import {
+  BELLY_ANGLE,
   BODY_BOTTOM,
   BODY_TOP,
   DECK_FLOORS,
@@ -12,6 +14,7 @@ import {
   FIN_ANGLES,
   HULL_R,
   NOSE_TIP,
+  RCS_ANGLES,
   WALL_A,
   WINDOWS,
   WINDOW_R,
@@ -21,14 +24,15 @@ import {
   polar,
   smoothstep,
 } from "../config";
-import { createFinMaterial, createHullMaterial } from "./hullMaterial";
+import { createFlapMaterial, createHullMaterial } from "./hullMaterial";
 import { doorTexture, hazardTexture, labelTexture } from "../textures";
 import { cameraState } from "../CameraRig";
 import RcsPuffs from "./RcsPuffs";
 
 // ═══════════════════════════════════════════════════════════════
-// ROCKET — exterior of the ship: steel hull (lathe), heat shield,
-// flaps, engines, portholes, animated airlock, nav lights, decals.
+// ROCKET — exterior of the ship: steel hull (lathe) with its tiled
+// heat shield, forward and aft flaps joined by chines, hinge
+// aerocovers, engines, portholes, animated airlock, nav lights, decals.
 // ═══════════════════════════════════════════════════════════════
 
 function hullGeometry() {
@@ -92,20 +96,82 @@ function finGeometry() {
   return geo;
 }
 
-/** Two stainless aft fins. */
-function Fins() {
-  const { geometry, material } = useMemo(() => ({ geometry: finGeometry(), material: createFinMaterial() }), []);
+/** Forward flap, drawn in the (radius, height) plane: its root follows the nose. */
+function forwardFlapGeometry() {
+  const root = (u: number) => new THREE.Vector2(noseRadius(u) - 0.06, BODY_TOP + u);
+  const a = root(0.7);
+  const b = root(7.4);
+  const shape = new THREE.Shape();
+  shape.moveTo(a.x, a.y);
+  shape.lineTo(a.x + 1.85, a.y + 0.5);
+  shape.quadraticCurveTo(a.x + 2.3, a.y + 0.7, a.x + 2.25, a.y + 1.25);
+  shape.lineTo(b.x + 1.1, b.y - 1.7);
+  shape.quadraticCurveTo(b.x + 0.8, b.y - 0.75, b.x, b.y);
+  for (let u = 7.0; u > 0.7; u -= 0.4) shape.lineTo(root(u).x, root(u).y);
+  shape.lineTo(a.x, a.y);
+  const geo = new THREE.ExtrudeGeometry(shape, { depth: 0.18, bevelEnabled: true, bevelSize: 0.045, bevelThickness: 0.045, bevelSegments: 3, curveSegments: 10 });
+  geo.translate(0, 0, -0.09);
+  geo.computeVertexNormals();
+  return geo;
+}
+
+/** Chine: the thin strake along each side, from the aft flap up to the forward flap. */
+function chineGeometry() {
+  const y0 = BODY_BOTTOM + 9.4;
+  const shape = new THREE.Shape();
+  shape.moveTo(HULL_R - 0.05, y0);
+  shape.lineTo(HULL_R + 0.26, y0 + 1.4);
+  shape.lineTo(HULL_R + 0.26, BODY_TOP - 1.0);
+  shape.lineTo(noseRadius(0.7) - 0.05, BODY_TOP + 0.7);
+  shape.lineTo(HULL_R - 0.05, y0);
+  const geo = new THREE.ExtrudeGeometry(shape, { depth: 0.1, bevelEnabled: true, bevelSize: 0.03, bevelThickness: 0.03, bevelSegments: 2 });
+  geo.translate(0, 0, -0.05);
+  geo.computeVertexNormals();
+  return geo;
+}
+
+/** Hinge aerocover: a steel fairing along a flap root, on its leeward side. */
+function coverTransform(angle: number, u0: number, u1: number, radius: number) {
+  const leeward = new THREE.Vector3(-Math.sin(BELLY_ANGLE), 0, -Math.cos(BELLY_ANGLE));
+  const r = (u: number) => (u < 0 ? HULL_R : noseRadius(u)) - 0.12;
+  const p0 = polar(angle, r(u0), BODY_TOP + u0);
+  const p1 = polar(angle, r(u1), BODY_TOP + u1);
+  const position = p0.clone().lerp(p1, 0.5).addScaledVector(leeward, radius);
+  const quaternion = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), p1.clone().sub(p0).normalize());
+  return { position, quaternion, length: p0.distanceTo(p1) - radius * 2 };
+}
+
+/** Aft and forward flaps, the chines joining them, and their hinge aerocovers. */
+function Flaps({ material }: { material: THREE.Material }) {
+  const geos = useMemo(() => ({ aft: finGeometry(), fwd: forwardFlapGeometry(), chine: chineGeometry() }), []);
+  const covers = useMemo(
+    () =>
+      FIN_ANGLES.flatMap((angle) => [
+        { ...coverTransform(angle, BODY_BOTTOM - BODY_TOP + 2.2, BODY_BOTTOM - BODY_TOP + 8.4, 0.42), radius: 0.42 },
+        { ...coverTransform(angle, 1.2, 5.6, 0.3), radius: 0.3 },
+      ]).map((c) => ({ ...c, geometry: new THREE.CapsuleGeometry(c.radius, c.length, 6, 20) })),
+    []
+  );
   useEffect(() => () => {
-    geometry.dispose();
-    material.dispose();
-  }, [geometry, material]);
+    Object.values(geos).forEach((g) => g.dispose());
+    covers.forEach((c) => c.geometry.dispose());
+  }, [geos, covers]);
 
   return (
     <>
       {FIN_ANGLES.map((angle) => (
-        <group key={angle} position={polar(angle, HULL_R - 0.02, BODY_BOTTOM + 0.6)} rotation={[0, angle - Math.PI / 2, 0]}>
-          <mesh geometry={geometry} material={material} />
+        <group key={angle}>
+          <group position={polar(angle, HULL_R - 0.02, BODY_BOTTOM + 0.6)} rotation={[0, angle - Math.PI / 2, 0]}>
+            <mesh geometry={geos.aft} material={material} />
+          </group>
+          <group rotation={[0, angle - Math.PI / 2, 0]}>
+            <mesh geometry={geos.fwd} material={material} />
+            <mesh geometry={geos.chine} material={material} />
+          </group>
         </group>
+      ))}
+      {covers.map((c, i) => (
+        <mesh key={i} geometry={c.geometry} material={material} position={c.position} quaternion={c.quaternion} />
       ))}
     </>
   );
@@ -399,7 +465,7 @@ function Details() {
   }, [metal, dark]);
 
   const racewayAngle = deg(120);
-  const rcs = [deg(60), deg(150), deg(-30)];
+  const rcs = RCS_ANGLES;
   return (
     <>
       {/* Raceway (cable tray) running along the body */}
@@ -445,17 +511,25 @@ function Details() {
   );
 }
 
-export default function Rocket() {
-  const { hullGeo, hullMat } = useMemo(() => ({ hullGeo: hullGeometry(), hullMat: createHullMaterial() }), []);
+export default function Rocket({ quality }: { quality: "high" | "low" }) {
+  // Suspends until the scanned steel is loaded, so the loader covers the download.
+  const steel = useTexture(`/hull/${quality === "high" ? 4096 : 2048}/steel.jpg`);
+  const { hullGeo, hullMat, flapMat } = useMemo(() => {
+    steel.wrapS = steel.wrapT = THREE.RepeatWrapping;
+    steel.colorSpace = THREE.NoColorSpace;
+    steel.anisotropy = 16;
+    return { hullGeo: hullGeometry(), hullMat: createHullMaterial(steel), flapMat: createFlapMaterial(steel) };
+  }, [steel]);
   useEffect(() => () => {
     hullGeo.dispose();
     hullMat.dispose();
-  }, [hullGeo, hullMat]);
+    flapMat.dispose();
+  }, [hullGeo, hullMat, flapMat]);
 
   return (
     <group>
       <mesh geometry={hullGeo} material={hullMat} />
-      <Fins />
+      <Flaps material={flapMat} />
       <Engines />
       <Windows />
       <Airlock />

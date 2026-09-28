@@ -18,8 +18,12 @@ export const BODY_BOTTOM = -24;
 export const BODY_TOP = 16;
 export const NOSE_TIP = 28.5;
 
-/** Angles of the two aft fins (kept away from the windows and the airlock). */
+/** Angles of the flaps and chines (kept away from the windows and the airlock). */
 export const FIN_ANGLES = [deg(-15), deg(165)] as const;
+/** Centre of the heat shield: the windward half between the flaps, opposite the windows. */
+export const BELLY_ANGLE = deg(255);
+/** RCS thruster pods near the nose, clear of the forward flaps. */
+export const RCS_ANGLES = [deg(60), deg(125), deg(-55)] as const;
 
 // ─── Interior ─────────────────────────────────────────────────
 export const SIDES = 24;
