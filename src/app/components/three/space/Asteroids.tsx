@@ -1,169 +1,65 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
+import { useGLTF } from "@react-three/drei";
 import * as THREE from "three";
-import { mergeVertices } from "three/examples/jsm/utils/BufferGeometryUtils.js";
-import { createNoise3D, type NoiseFunction3D } from "simplex-noise";
-import { GLSL_BUMP, GLSL_SIMPLEX } from "../glsl";
 import { mulberry32 } from "../config";
 import { exteriorPathSamples, rocketMatrix } from "../cameraPath";
 import { cameraState } from "../CameraRig";
 
 // ═══════════════════════════════════════════════════════════════
-// ASTEROIDS — procedural rocks: noise-displaced icosphere with real
-// crater profiles (bowl + raised rim), baked cavity occlusion in the
-// vertex colours, and fine bump noise evaluated in object space in
-// the shader so the micro relief sticks to each rock as it tumbles.
+// ASTEROIDS — real scanned rocks: Poly Haven's Moon Rock collection
+// (photogrammetry of regolith-dusted rocks, CC0), baked from their 8K
+// maps by scripts/build-asteroids.mjs. Seven scans fill the field: the
+// four hero models carry 2048px maps (1024px on low-end devices), the
+// three others 1024px (512px). Near rocks draw the full scan, far ones
+// a simplified mesh sharing the same vertices and maps.
+//
+// Credit: Poly Haven. Photography: Greg Zaal, Rico Cilliers.
+// Processing: Jenelle van Heerden, Dario Barresi.
 // ═══════════════════════════════════════════════════════════════
 
-type Crater = { c: THREE.Vector3; r: number; depth: number };
+const HERO_MODELS = ["moon_rock_02", "moon_rock_04", "moon_rock_06", "moon_rock_03"];
+const FIELD_MODELS = ["moon_rock_01", "moon_rock_05", "moon_rock_07"];
+const MODEL_COUNT = HERO_MODELS.length + FIELD_MODELS.length;
 
-function smoothMin(a: number, b: number, k: number) {
-  const h = Math.min(1, Math.max(0, (b - a + k) / (2 * k)));
-  return a * h + b * (1 - h) - k * h * (1 - h);
-}
+/** The scans are pale regolith (about 0.19 linear albedo): tinted down to dark asteroid rock. */
+const ROCK_TINT = new THREE.Color(0.38, 0.37, 0.36);
 
-/** Crater cross-section: flat floor, bowl, raised rim, fading ejecta. */
-function craterShape(x: number) {
-  const cavity = x * x - 1;
-  const rimX = Math.min(x - 1.7, 0);
-  const rim = 0.42 * rimX * rimX;
-  const shape = -smoothMin(-cavity, 0.55, 0.3);
-  return smoothMin(shape, rim, 0.3);
-}
+type RockModel = { near: THREE.BufferGeometry; far: THREE.BufferGeometry; material: THREE.MeshStandardMaterial };
 
-function fbm(noise: NoiseFunction3D, x: number, y: number, z: number, octaves: number) {
-  let sum = 0;
-  let amp = 0.5;
-  let f = 1;
-  for (let i = 0; i < octaves; i++) {
-    sum += amp * noise(x * f, y * f, z * f);
-    f *= 2.03;
-    amp *= 0.5;
-  }
-  return sum;
-}
-
-function ridged(noise: NoiseFunction3D, x: number, y: number, z: number, octaves: number) {
-  let sum = 0;
-  let amp = 0.5;
-  let f = 1;
-  for (let i = 0; i < octaves; i++) {
-    const n = 1 - Math.abs(noise(x * f + 11, y * f + 7, z * f + 3));
-    sum += amp * n * n;
-    f *= 2.1;
-    amp *= 0.5;
-  }
-  return sum;
-}
-
-export function makeAsteroidGeometry(seed: number, detail: number) {
-  const rng = mulberry32(seed);
-  const noise = createNoise3D(rng);
-  let geo: THREE.BufferGeometry = new THREE.IcosahedronGeometry(1, detail);
-  geo.deleteAttribute("normal");
-  geo.deleteAttribute("uv");
-  geo = mergeVertices(geo);
-
-  const stretch = new THREE.Vector3(0.75 + rng() * 0.45, 0.6 + rng() * 0.3, 0.8 + rng() * 0.4);
-  stretch.divideScalar(Math.max(stretch.x, stretch.y, stretch.z));
-  const lumpiness = 0.22 + rng() * 0.22;
-
-  const craters: Crater[] = [];
-  const craterCount = 8 + Math.floor(rng() * 14);
-  for (let i = 0; i < craterCount; i++) {
-    const c = new THREE.Vector3(rng() * 2 - 1, rng() * 2 - 1, rng() * 2 - 1).normalize();
-    craters.push({ c, r: 0.08 + Math.pow(rng(), 2.2) * 0.5, depth: 0.22 + rng() * 0.25 });
-  }
-
-  const tone = 0.62 + rng() * 0.25;
-  const warm = rng();
-  const pos = geo.attributes.position as THREE.BufferAttribute;
-  const colors = new Float32Array(pos.count * 3);
-  const v = new THREE.Vector3();
-
-  for (let i = 0; i < pos.count; i++) {
-    v.fromBufferAttribute(pos, i).normalize();
-    let h = fbm(noise, v.x * 1.1, v.y * 1.1, v.z * 1.1, 4) * lumpiness;
-    h += (ridged(noise, v.x * 2.4, v.y * 2.4, v.z * 2.4, 3) - 0.35) * 0.09;
-
-    let craterSum = 0;
-    for (const cr of craters) {
-      const ang = Math.acos(Math.min(1, Math.max(-1, v.dot(cr.c))));
-      const x = ang / cr.r;
-      if (x < 1.75) craterSum += craterShape(x) * cr.r * cr.depth;
-    }
-    h += craterSum;
-    h += fbm(noise, v.x * 7 + 3, v.y * 7 + 1, v.z * 7 + 5, 3) * 0.035;
-
-    const r = 1 + h;
-    pos.setXYZ(i, v.x * r * stretch.x, v.y * r * stretch.y, v.z * r * stretch.z);
-
-    // Albedo: dark rock, occluded crater floors, brighter ejecta on the rims.
-    const patch = fbm(noise, v.x * 2.6 + 40, v.y * 2.6, v.z * 2.6, 3);
-    const cavity = Math.max(0, -craterSum) * 3.2;
-    const rimGlow = Math.max(0, craterSum) * 1.6;
-    const g = Math.max(0.12, tone * (0.82 + patch * 0.35) * (1 - Math.min(0.55, cavity)) * (1 + Math.min(0.35, rimGlow)));
-    colors[i * 3] = g * (1.0 + warm * 0.09);
-    colors[i * 3 + 1] = g * (0.97 + warm * 0.02);
-    colors[i * 3 + 2] = g * (0.93 - warm * 0.08);
-  }
-  geo.setAttribute("color", new THREE.BufferAttribute(colors, 3));
-  geo.computeVertexNormals();
-  geo.computeBoundingSphere();
-  return geo;
-}
-
-/** Rock material: vertex colours + object-space micro relief. */
-export function makeRockMaterial(base = new THREE.Color("#5a534c")) {
-  const mat = new THREE.MeshStandardMaterial({ color: base, vertexColors: true, roughness: 0.94, metalness: 0.0, envMapIntensity: 0.7 });
-  mat.onBeforeCompile = (shader) => {
-    shader.vertexShader = shader.vertexShader
-      .replace("#include <common>", "#include <common>\nvarying vec3 vRock;\nvarying float vRockScale;")
-      .replace(
-        "#include <begin_vertex>",
-        `#include <begin_vertex>
-        vRock = position;
-        #ifdef USE_INSTANCING
-          vRockScale = length(instanceMatrix[0].xyz);
-        #else
-          vRockScale = 1.0;
-        #endif
-        vRockScale *= length(modelMatrix[0].xyz);`
-      );
-    shader.fragmentShader = shader.fragmentShader
-      .replace("#include <common>", `#include <common>\nvarying vec3 vRock;\nvarying float vRockScale;\n${GLSL_SIMPLEX}\n${GLSL_BUMP}`)
-      .replace(
-        "#include <color_fragment>",
-        `#include <color_fragment>
-        float rockN = snoise(vRock * 4.0) * 0.5 + snoise(vRock * 11.0) * 0.25;
-        float speck = smoothstep(0.55, 0.9, snoise(vRock * 38.0));
-        diffuseColor.rgb *= 0.85 + rockN * 0.28 + speck * 0.18;`
-      )
-      .replace(
-        "#include <normal_fragment_maps>",
-        `#include <normal_fragment_maps>
-        float rockH = (snoise(vRock * 9.0) * 0.012 + snoise(vRock * 23.0) * 0.006 + snoise(vRock * 57.0) * 0.0028) * vRockScale;
-        normal = bumpNormalH(-vViewPosition, normal, rockH);`
-      );
-  };
-  mat.customProgramCacheKey = () => "rock-v1";
-  return mat;
+function useRockModels(quality: "high" | "low"): RockModel[] {
+  const [hero, field] = quality === "high" ? [2048, 1024] : [1024, 512];
+  const urls = [...HERO_MODELS.map((m) => `/asteroids/${hero}/${m}.glb`), ...FIELD_MODELS.map((m) => `/asteroids/${field}/${m}.glb`)];
+  // Suspends until every model is loaded, so the loader covers the download.
+  const gltfs = useGLTF(urls, false, false);
+  return useMemo(
+    () =>
+      gltfs.map((gltf) => {
+        const near = gltf.nodes.lod0 as THREE.Mesh;
+        const far = gltf.nodes.lod1 as THREE.Mesh;
+        const material = near.material as THREE.MeshStandardMaterial;
+        material.color.copy(ROCK_TINT);
+        material.envMapIntensity = 0.7;
+        // Grazing sunlight across the rock faces: keep the relief sharp at an angle.
+        for (const map of [material.map, material.normalMap]) if (map) map.anisotropy = 8;
+        return { near: near.geometry, far: far.geometry, material };
+      }),
+    [gltfs]
+  );
 }
 
 type Instance = {
   pos: THREE.Vector3;
-  scale: number;
+  scale: THREE.Vector3;
   axis: THREE.Vector3;
   spin: number;
   phase: number;
   drift: number;
   q0: THREE.Quaternion;
+  tone: THREE.Color;
 };
-
-const NEAR_GEOS = 6;
-const FAR_GEOS = 3;
 
 function useField(count: number) {
   return useMemo(() => {
@@ -172,8 +68,8 @@ function useField(count: number) {
     const axis = new THREE.Vector3(0, 1, 0).applyMatrix4(new THREE.Matrix4().extractRotation(rocketMatrix));
     const origin = new THREE.Vector3().setFromMatrixPosition(rocketMatrix);
     const tmp = new THREE.Vector3();
-    const near: Instance[][] = Array.from({ length: NEAR_GEOS }, () => []);
-    const far: Instance[][] = Array.from({ length: FAR_GEOS }, () => []);
+    const near: Instance[][] = Array.from({ length: MODEL_COUNT }, () => []);
+    const far: Instance[][] = Array.from({ length: MODEL_COUNT }, () => []);
 
     let placed = 0;
     let guard = 0;
@@ -201,26 +97,40 @@ function useField(count: number) {
       }
       if (blocked) continue;
 
+      // Seven scans, each squashed a little differently, so no two rocks read the same.
+      const stretch = new THREE.Vector3(0.8 + rng() * 0.2, 0.8 + rng() * 0.2, 0.8 + rng() * 0.2);
+      const shade = 0.82 + rng() * 0.36;
+      const warm = rng() * 0.08;
       const inst: Instance = {
         pos,
-        scale,
+        scale: stretch.multiplyScalar(scale),
         axis: new THREE.Vector3(rng() - 0.5, rng() - 0.5, rng() - 0.5).normalize(),
         spin: ((0.03 + rng() * 0.14) * (rng() < 0.5 ? -1 : 1)) / Math.sqrt(Math.max(0.6, scale)),
         phase: rng() * Math.PI * 2,
         drift: 0.2 + rng() * 0.7,
         q0: new THREE.Quaternion().setFromEuler(new THREE.Euler(rng() * 6.28, rng() * 6.28, rng() * 6.28)),
+        tone: new THREE.Color(shade * (1 + warm), shade, shade * (1 - warm)),
       };
-      if (isFar) far[Math.floor(rng() * FAR_GEOS)].push(inst);
-      else near[Math.floor(rng() * NEAR_GEOS)].push(inst);
+      (isFar ? far : near)[Math.floor(rng() * MODEL_COUNT)].push(inst);
       placed++;
     }
     return { near, far };
   }, [count]);
 }
 
-function RockSet({ groups, geometries, material }: { groups: Instance[][]; geometries: THREE.BufferGeometry[]; material: THREE.Material }) {
+function RockSet({ groups, models, lod }: { groups: Instance[][]; models: RockModel[]; lod: "near" | "far" }) {
   const meshes = useRef<(THREE.InstancedMesh | null)[]>([]);
-  const tmp = useMemo(() => ({ m: new THREE.Matrix4(), q: new THREE.Quaternion(), qs: new THREE.Quaternion(), p: new THREE.Vector3(), s: new THREE.Vector3() }), []);
+  const tmp = useMemo(() => ({ m: new THREE.Matrix4(), q: new THREE.Quaternion(), qs: new THREE.Quaternion(), p: new THREE.Vector3() }), []);
+  // Per-rock tone, multiplied into the scan's colour.
+  const tones = useMemo(
+    () =>
+      groups.map((list) => {
+        const colors = new Float32Array(Math.max(1, list.length) * 3);
+        list.forEach((a, i) => a.tone.toArray(colors, i * 3));
+        return colors;
+      }),
+    [groups]
+  );
 
   useFrame((state) => {
     const time = state.clock.elapsedTime;
@@ -237,8 +147,7 @@ function RockSet({ groups, geometries, material }: { groups: Instance[][]; geome
           a.pos.y + Math.sin(time * 0.07 * a.drift + a.phase * 2.0) * a.drift * 0.6,
           a.pos.z + Math.cos(time * 0.04 * a.drift + a.phase) * a.drift
         );
-        tmp.s.setScalar(a.scale);
-        tmp.m.compose(tmp.p, tmp.q, tmp.s);
+        tmp.m.compose(tmp.p, tmp.q, a.scale);
         mesh.setMatrixAt(i, tmp.m);
       });
       mesh.instanceMatrix.needsUpdate = true;
@@ -253,28 +162,28 @@ function RockSet({ groups, geometries, material }: { groups: Instance[][]; geome
           ref={(el) => {
             meshes.current[i] = el;
           }}
-          args={[geometries[i], material, Math.max(1, list.length)]}
+          args={[models[i][lod], models[i].material, Math.max(1, list.length)]}
           count={list.length}
           frustumCulled={false}
-        />
+        >
+          <instancedBufferAttribute attach="instanceColor" args={[tones[i], 3]} />
+        </instancedMesh>
       ))}
     </>
   );
 }
 
-/** A few big, high-detail rocks composed around the hero shot. */
+/** A few big rocks composed around the hero shot, one per hero model. */
 const HERO_ROCKS = [
-  { pos: [13.5, -3.5, 45.5], scale: 3.4, seed: 901, axis: [0.3, 1, 0.2], spin: 0.035 },
-  { pos: [-27, 13, -32], scale: 5.5, seed: 902, axis: [1, 0.4, 0.1], spin: -0.02 },
-  { pos: [-11, 18, 33], scale: 1.9, seed: 903, axis: [0.2, 0.3, 1], spin: 0.06 },
-  { pos: [24, 24, -14], scale: 2.6, seed: 904, axis: [0.8, 0.2, 0.5], spin: -0.045 },
+  { pos: [13.5, -3.5, 45.5], scale: 3.4, axis: [0.3, 1, 0.2], spin: 0.035 },
+  { pos: [-27, 13, -32], scale: 5.5, axis: [1, 0.4, 0.1], spin: -0.02 },
+  { pos: [-11, 18, 33], scale: 1.9, axis: [0.2, 0.3, 1], spin: 0.06 },
+  { pos: [24, 24, -14], scale: 2.6, axis: [0.8, 0.2, 0.5], spin: -0.045 },
 ] as const;
 
-function HeroRocks({ material, detail }: { material: THREE.Material; detail: number }) {
+function HeroRocks({ models }: { models: RockModel[] }) {
   const refs = useRef<(THREE.Mesh | null)[]>([]);
-  const geometries = useMemo(() => HERO_ROCKS.map((r) => makeAsteroidGeometry(r.seed, detail)), [detail]);
   const axes = useMemo(() => HERO_ROCKS.map((r) => new THREE.Vector3(...r.axis).normalize()), []);
-  useEffect(() => () => geometries.forEach((g) => g.dispose()), [geometries]);
 
   useFrame((state) => {
     const time = state.clock.elapsedTime;
@@ -289,12 +198,12 @@ function HeroRocks({ material, detail }: { material: THREE.Material; detail: num
     <>
       {HERO_ROCKS.map((r, i) => (
         <mesh
-          key={r.seed}
+          key={i}
           ref={(el) => {
             refs.current[i] = el;
           }}
-          geometry={geometries[i]}
-          material={material}
+          geometry={models[i].near}
+          material={models[i].material}
           position={r.pos as unknown as [number, number, number]}
           scale={r.scale}
         />
@@ -305,28 +214,13 @@ function HeroRocks({ material, detail }: { material: THREE.Material; detail: num
 
 export default function Asteroids({ count = 190, quality = "high" }: { count?: number; quality?: "high" | "low" }) {
   const { near, far } = useField(count);
-  const hi = quality === "high";
-
-  const { nearGeos, farGeos, material } = useMemo(
-    () => ({
-      nearGeos: Array.from({ length: NEAR_GEOS }, (_, i) => makeAsteroidGeometry(101 + i * 17, hi ? 5 : 4)),
-      farGeos: Array.from({ length: FAR_GEOS }, (_, i) => makeAsteroidGeometry(501 + i * 29, 3)),
-      material: makeRockMaterial(),
-    }),
-    [hi]
-  );
-
-  useEffect(() => () => {
-    nearGeos.forEach((g) => g.dispose());
-    farGeos.forEach((g) => g.dispose());
-    material.dispose();
-  }, [nearGeos, farGeos, material]);
+  const models = useRockModels(quality);
 
   return (
     <group>
-      <RockSet groups={near} geometries={nearGeos} material={material} />
-      <RockSet groups={far} geometries={farGeos} material={material} />
-      <HeroRocks material={material} detail={hi ? 6 : 5} />
+      <RockSet groups={near} models={models} lod="near" />
+      <RockSet groups={far} models={models} lod="far" />
+      <HeroRocks models={models} />
     </group>
   );
 }

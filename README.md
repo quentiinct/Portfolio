@@ -25,11 +25,11 @@ Personal portfolio told as a 3D scroll story. You arrive in orbit next to a stai
 - **Opening** — After igloo.inc: a 3D point graph draws itself while the decor appears as a hologram (outlines from the depth buffer) and lands as a white flash from the ship outwards; the interface arrives last
 - **Scrollytelling camera** — Scroll position drives a spline camera path (Lenis smooth scroll), synced with sticky HTML panels
 - **Procedural ship** — Lathe-built hull with a stainless-steel shader (weld seams, panel tint, heat tint), aft fins, engines, portholes with real openings, animated airlock, nav lights and RCS gas puffs
-- **Space** — The real sky: NASA's Deep Star Maps 2020 (Gaia stars and the Milky Way) baked into a 2048px cube map (1024px on low-end devices) by `scripts/build-sky.mjs`; procedural ocean planet with clouds, night lights and atmosphere, crater-covered asteroids (instanced)
+- **Space** — The real sky: NASA's Deep Star Maps 2020 (Gaia stars and the Milky Way) baked into a 2048px cube map (1024px on low-end devices) by `scripts/build-sky.mjs`; procedural ocean planet with clouds, night lights and atmosphere; asteroids made from seven real photogrammetry scans (Poly Haven's Moon Rocks), baked from their 8K maps into 2048px textures (1024px on low-end devices) by `scripts/build-asteroids.mjs`, instanced with a simplified mesh for the far field
 - **Four decks** — Crew quarters (memoji hologram), security ops (server racks, holo shield), engineering bay (git graph hologram, live repo screens), comms bay (transmitter) — each with its own lighting mood
 - **Zero gravity** — Props float and tumble; sweep the cursor through them to push them around
 - **GitHub integration** — Live repositories via the GitHub API (5 min cache), shown in the panel and on 3D screens
-- **Procedural everything else** — No 3D model downloads: geometry, shaders and canvas textures are generated at load; the sky is the only image asset
+- **Procedural everything else** — Apart from the sky and the asteroid scans, geometry, shaders and canvas textures are generated at load
 
 ## Tech Stack
 
@@ -103,6 +103,8 @@ Deployed on [Vercel](https://vercel.com). Push to `main` triggers automatic buil
 ## Credits
 
 Sky: NASA/Goddard Space Flight Center Scientific Visualization Studio, [Deep Star Maps 2020](https://svs.gsfc.nasa.gov/4851). Gaia DR2: ESA/Gaia/DPAC.
+
+Asteroids: [Poly Haven](https://polyhaven.com/models?s=moon%20rock), Moon Rock 01–07 (CC0). Photography: Greg Zaal, Rico Cilliers. Processing: Jenelle van Heerden, Dario Barresi.
 
 ## License
 
